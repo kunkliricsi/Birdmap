@@ -33,7 +33,7 @@ namespace Birdmap.Controllers
         public async Task<IActionResult> AuthenticateAsync([FromBody] AuthenticateRequest model)
         {
             var user = await _service.AuthenticateUserAsync(model.Username, model.Password);
-            var expires = DateTime.UtcNow.AddHours(2);
+            var expiresInSeconds = TimeSpan.FromHours(2).TotalSeconds;
             var tokenHandler = new JwtSecurityTokenHandler();
             var key = Encoding.ASCII.GetBytes(_configuration["BasicAuth:Secret"]);
             var tokenDescriptor = new SecurityTokenDescriptor
@@ -42,7 +42,7 @@ namespace Birdmap.Controllers
                     {
                         new Claim(ClaimTypes.Name, user.Name)
                     }),
-                Expires = expires,
+                Expires = DateTime.UtcNow.AddHours(expiresInSeconds),
                 SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256Signature)
             };
             var token = tokenHandler.CreateToken(tokenDescriptor);
@@ -51,9 +51,10 @@ namespace Birdmap.Controllers
             return Ok(
                 new
                 {
-                    Name = user.Name,
-                    Token = tokenString,
-                    Expires = expires,
+                    user_name = user.Name,
+                    access_token = tokenString,
+                    token_type = "Bearer",
+                    expires_in = expiresInSeconds,
                 });
         }
     }

@@ -26,7 +26,10 @@
   </ItemGroup>
 
   <ItemGroup>
+    <None Remove="ClientApp\src\common\ErrorDispatcher.ts" />
+    <None Remove="ClientApp\src\common\ServiceBase.ts" />
     <None Remove="ClientApp\src\components\auth\Auth.tsx" />
+    <None Remove="ClientApp\src\components\auth\AuthService.ts" />
   </ItemGroup>
 
   <ItemGroup>
