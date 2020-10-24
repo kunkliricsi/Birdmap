@@ -10,6 +10,7 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="AutoMapper" Version="10.1.1" />
     <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="3.1.9" />
     <PackageReference Include="Microsoft.AspNetCore.SpaServices.Extensions" Version="3.1.9" />
     <PackageReference Include="Microsoft.TypeScript.MSBuild" Version="4.0.3">
@@ -42,6 +43,10 @@
     <Folder Include="ClientApp\src\components\dashboard\" />
     <Folder Include="ClientApp\src\components\devices\" />
     <Folder Include="ClientApp\src\components\heatmap\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Birdmap.BLL\Birdmap.BLL.csproj" />
   </ItemGroup>
 
   <Target Name="DebugEnsureNodeEnv" BeforeTargets="Build" Condition=" '$(Configuration)' == 'Debug' And !Exists('$(SpaRoot)node_modules') ">

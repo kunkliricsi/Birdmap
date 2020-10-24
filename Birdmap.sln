@@ -3,7 +3,11 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
 VisualStudioVersion = 16.0.30611.23
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Birdmap", "Birdmap\Birdmap.csproj", "{88855E5F-9555-49E5-92F2-4E8C1194F60B}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Birdmap.API", "Birdmap\Birdmap.API.csproj", "{88855E5F-9555-49E5-92F2-4E8C1194F60B}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Birdmap.BLL", "Birdmap.BLL\Birdmap.BLL.csproj", "{879D7B8D-6865-4EBE-B346-E0CA37D3C06A}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Birdmap.DAL", "Birdmap.DAL\Birdmap.DAL.csproj", "{543FAB06-B960-41A9-8865-1624A2ED2170}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -15,6 +19,14 @@ Global
 		{88855E5F-9555-49E5-92F2-4E8C1194F60B}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{88855E5F-9555-49E5-92F2-4E8C1194F60B}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{88855E5F-9555-49E5-92F2-4E8C1194F60B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{879D7B8D-6865-4EBE-B346-E0CA37D3C06A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{879D7B8D-6865-4EBE-B346-E0CA37D3C06A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{879D7B8D-6865-4EBE-B346-E0CA37D3C06A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{879D7B8D-6865-4EBE-B346-E0CA37D3C06A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{543FAB06-B960-41A9-8865-1624A2ED2170}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{543FAB06-B960-41A9-8865-1624A2ED2170}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{543FAB06-B960-41A9-8865-1624A2ED2170}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{543FAB06-B960-41A9-8865-1624A2ED2170}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

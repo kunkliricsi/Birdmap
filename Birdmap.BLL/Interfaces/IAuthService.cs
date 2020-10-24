@@ -1,7 +1,7 @@
-﻿using Birdmap.Models;
+﻿using Birdmap.DAL.Entities;
 using System.Threading.Tasks;
 
-namespace Birdmap.Services.Interfaces
+namespace Birdmap.BLL.Interfaces
 {
     public interface IAuthService
     {

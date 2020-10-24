@@ -1,9 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 
-namespace Birdmap.Exceptions
+namespace Birdmap.BLL.Exceptions
 {
     public class AuthenticationException : Exception
     {

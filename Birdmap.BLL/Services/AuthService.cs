@@ -1,5 +1,5 @@
-﻿using Birdmap.Models;
-using Birdmap.Services.Interfaces;
+﻿using Birdmap.DAL.Entities;
+using Birdmap.BLL.Interfaces;
 using Microsoft.Extensions.Configuration;
 using System;
 using System.Collections.Generic;
@@ -7,25 +7,31 @@ using System.Linq;
 using System.Security.Authentication;
 using System.Text;
 using System.Threading.Tasks;
+using Birdmap.DAL;
+using Microsoft.EntityFrameworkCore;
 
-namespace Birdmap.Services
+namespace Birdmap.BLL.Services
 {
     public class AuthService : IAuthService
     {
-        private readonly IConfiguration _configuration;
+        private readonly BirdmapContext _context;
 
-        public AuthService(IConfiguration configuration)
+        public AuthService(BirdmapContext context)
         {
-            _configuration = configuration;
+            _context = context;
         }
 
-        public async Task<User> AuthenticateUserAsync(string username, string password)
+        public Task<User> AuthenticateUserAsync(string username, string password)
         {
             if (string.IsNullOrWhiteSpace(username) || string.IsNullOrEmpty(password))
                 throw new ArgumentException("Username or password cannot be null or empty.");
 
-            //var user = await _context.Users.SingleOrDefaultAsync(u => u.Name == username)
-            var user = await Temp_GetUserAsync(_configuration)
+            return AuthenticateUserInternalAsync(username, password);
+        }
+
+        private async Task<User> AuthenticateUserInternalAsync(string username, string password)
+        {
+            var user = await _context.Users.SingleOrDefaultAsync(u => u.Name == username)
                 ?? throw new AuthenticationException();
 
             if (!VerifyPasswordHash(password, user.PasswordHash, user.PasswordSalt))
@@ -60,9 +66,9 @@ namespace Birdmap.Services
 
         private static bool VerifyPasswordHash(string password, byte[] storedHash, byte[] storedSalt)
         {
-            if (string.IsNullOrWhiteSpace(password)) throw new ArgumentException("Value cannot be null or empty.", "password");
-            if (storedHash.Length != 64) throw new ArgumentException("Invalid length of password hash (64 bytes expected).", "passwordHash");
-            if (storedSalt.Length != 128) throw new ArgumentException("Invalid length of password salt (128 bytes expected).", "passwordHash");
+            if (string.IsNullOrWhiteSpace(password)) throw new ArgumentException("Value cannot be null or empty.", nameof(password));
+            if (storedHash.Length != 64) throw new ArgumentException("Invalid length of password hash (64 bytes expected).", nameof(storedHash));
+            if (storedSalt.Length != 128) throw new ArgumentException("Invalid length of password salt (128 bytes expected).", nameof(storedSalt));
 
             using var hmac = new System.Security.Cryptography.HMACSHA512(storedSalt);
 

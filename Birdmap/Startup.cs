@@ -1,18 +1,15 @@
-using Birdmap.Services;
-using Birdmap.Services.Interfaces;
+using Birdmap.BLL;
+using Birdmap.BLL.Interfaces;
+using Birdmap.DAL;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.HttpsPolicy;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.SpaServices.ReactDevelopmentServer;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.IdentityModel.Tokens;
-using System;
 using System.Text;
-using System.Text.Json;
 
 namespace Birdmap
 {
@@ -34,9 +31,10 @@ namespace Birdmap
                     //opt.JsonSerializerOptions.PropertyNamingPolicy = new JsonNamingPolicy()
                 });
 
-            services.AddTransient<IAuthService, AuthService>();
+            services.ConfigureBLL(Configuration);
+            services.ConfigureDAL(Configuration);
 
-            var key = Encoding.ASCII.GetBytes(Configuration["BasicAuth:Secret"]);
+            var key = Encoding.ASCII.GetBytes(Configuration["Secret"]);
             services.AddAuthentication(opt =>
             {
                 opt.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
