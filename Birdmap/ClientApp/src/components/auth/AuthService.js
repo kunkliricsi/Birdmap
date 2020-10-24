@@ -1,7 +1,7 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 var ServiceBase_1 = require("../../common/ServiceBase");
-var login_url = '/auth/authenticate';
+var login_url = 'api/auth/authenticate';
 exports.default = {
     isAuthenticated: function () {
         return sessionStorage.getItem('user') !== null;

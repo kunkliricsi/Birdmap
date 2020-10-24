@@ -1,6 +1,6 @@
 ﻿import ErrorDispatcher from './ErrorDispatcher';
 
-function get(url) {
+function get(url: string) {
     let options = {
         method: 'GET',
         headers: {
@@ -12,7 +12,7 @@ function get(url) {
     return makeRequest(url, options);
 }
 
-function post(url, request) {
+function post(url: string, request: any) {
     let options = {
         method: 'POST',
         headers: {
@@ -28,22 +28,22 @@ function post(url, request) {
     return makeRequest(url, options);
 }
 
-function makeRequest(url, options) {
+function makeRequest(url: string, options: any) {
     return fetch(url, options)
         .then(ensureResponseSuccess)
         .catch(errorHandler);
 }
 
-function ensureResponseSuccess(response) {
+function ensureResponseSuccess(response: any) {
     if (!response.ok)
         return response.json()
-            .then(data => errorHandler(data));
+            .then((data: any) => errorHandler(data));
 
     return response.text()
-        .then(text => text.length ? JSON.parse(text) : {});
+        .then((text: any) => text.length ? JSON.parse(text) : {});
 }
 
-function errorHandler(response) {
+function errorHandler(response: any) {
     console.log(response);
 
     if (response && response.Error)

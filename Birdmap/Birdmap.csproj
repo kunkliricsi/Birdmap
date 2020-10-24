@@ -26,6 +26,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <None Remove="ClientApp\src\common\components\BirdmapTitle.tsx" />
     <None Remove="ClientApp\src\common\ErrorDispatcher.ts" />
     <None Remove="ClientApp\src\common\ServiceBase.ts" />
     <None Remove="ClientApp\src\components\auth\Auth.tsx" />
@@ -34,6 +35,13 @@
 
   <ItemGroup>
     <TypeScriptCompile Include="ClientApp\src\components\auth\Auth.tsx" />
+	<TypeScriptCompile Include="ClientApp\src\common\components\BirdmapTitle.tsx" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="ClientApp\src\components\dashboard\" />
+    <Folder Include="ClientApp\src\components\devices\" />
+    <Folder Include="ClientApp\src\components\heatmap\" />
   </ItemGroup>
 
   <Target Name="DebugEnsureNodeEnv" BeforeTargets="Build" Condition=" '$(Configuration)' == 'Debug' And !Exists('$(SpaRoot)node_modules') ">

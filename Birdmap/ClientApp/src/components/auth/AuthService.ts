@@ -1,13 +1,13 @@
 ﻿import ServiceBase from '../../common/ServiceBase';
 
-const login_url = '/auth/authenticate';
+const login_url = 'api/auth/authenticate';
 
 export default {
     isAuthenticated() {
         return sessionStorage.getItem('user') !== null;
     },
 
-    login(username, password) {
+    login(username: string, password: string) {
         let body = {
             username: username,
             password: password
