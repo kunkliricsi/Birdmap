@@ -1,5 +1,6 @@
+using AutoMapper;
+using Birdmap.API.Middlewares;
 using Birdmap.BLL;
-using Birdmap.BLL.Interfaces;
 using Birdmap.DAL;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
@@ -33,6 +34,8 @@ namespace Birdmap
 
             services.ConfigureBLL(Configuration);
             services.ConfigureDAL(Configuration);
+
+            services.AddAutoMapper(typeof(Startup));
 
             var key = Encoding.ASCII.GetBytes(Configuration["Secret"]);
             services.AddAuthentication(opt =>
@@ -70,9 +73,7 @@ namespace Birdmap
             }
             else
             {
-                app.UseExceptionHandler("/Error");
-                // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
-                app.UseHsts();
+                app.UseMiddleware<ExceptionHandlerMiddleware>();
             }
 
             app.UseHttpsRedirection();
@@ -86,6 +87,7 @@ namespace Birdmap
 
             app.UseEndpoints(endpoints =>
             {
+                endpoints.MapHealthChecks("/health").RequireAuthorization();
                 endpoints.MapControllers();
             });
 

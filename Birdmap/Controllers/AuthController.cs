@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Logging;
 using Microsoft.IdentityModel.Tokens;
 using System;
 using System.IdentityModel.Tokens.Jwt;
@@ -23,12 +24,14 @@ namespace Birdmap.Controllers
         private readonly IAuthService _service;
         private readonly IConfiguration _configuration;
         private readonly IMapper _mapper;
+        private readonly ILogger<AuthController> _logger;
 
-        public AuthController(IAuthService service, IConfiguration configuration, IMapper mapper)
+        public AuthController(IAuthService service, IConfiguration configuration, IMapper mapper, ILogger<AuthController> logger)
         {
             _service = service;
             _configuration = configuration;
             _mapper = mapper;
+            _logger = logger;
         }
 
         [AllowAnonymous]
@@ -36,7 +39,12 @@ namespace Birdmap.Controllers
         [ProducesResponseType(typeof(object), StatusCodes.Status200OK)]
         public async Task<IActionResult> AuthenticateAsync([FromBody] AuthenticateRequest model)
         {
+            _logger.LogInformation($"Authenticating user [{model.Username}] with password [*******]...");
+
             var user = await _service.AuthenticateUserAsync(model.Username, model.Password);
+
+            _logger.LogInformation($"Authenticated user [{user.Name}]. Returning token...");
+
             var expiresInSeconds = TimeSpan.FromHours(2).TotalSeconds;
             var tokenHandler = new JwtSecurityTokenHandler();
             var key = Encoding.ASCII.GetBytes(_configuration["Secret"]);
@@ -59,6 +67,18 @@ namespace Birdmap.Controllers
             response.ExpiresIn = expiresInSeconds;
 
             return Ok(response);
+        }
+
+        [AllowAnonymous]
+        [HttpPost("register")]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        public async Task<IActionResult> RegisterAsync([FromBody] RegisterRequest model)
+        {
+            _logger.LogInformation($"Registering user [{model.Username}]...");
+            var created = await _service.RegisterUserAsync(model.Username, model.Password);
+
+            _logger.LogInformation($"Registered user [{created.Id}.");
+            return NoContent();
         }
     }
 }

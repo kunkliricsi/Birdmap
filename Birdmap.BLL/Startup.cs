@@ -10,6 +10,7 @@ namespace Birdmap.BLL
         public static IServiceCollection ConfigureBLL(this IServiceCollection services, IConfiguration configuration)
         {
             services.AddTransient<IAuthService, AuthService>();
+            services.AddTransient<IUserService, UserService>();
 
             return services;
         }

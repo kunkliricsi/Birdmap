@@ -8,20 +8,13 @@ namespace Birdmap.DAL
     {
         public DbSet<User> Users { get; set; }
 
-        public BirdmapContext([NotNull] DbContextOptions options) : base(options)
+        public BirdmapContext([NotNull] DbContextOptions<BirdmapContext> options) : base(options)
         {
         }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.ApplyConfigurationsFromAssembly(typeof(BirdmapContext).Assembly);
-
-            SeedDatabase(modelBuilder);
-        }
-
-        private void SeedDatabase(ModelBuilder modelBuilder)
-        {
-
         }
     }
 }

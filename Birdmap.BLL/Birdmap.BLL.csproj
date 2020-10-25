@@ -5,6 +5,7 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\Birdmap.Common\Birdmap.Common.csproj" />
     <ProjectReference Include="..\Birdmap.DAL\Birdmap.DAL.csproj" />
   </ItemGroup>
 

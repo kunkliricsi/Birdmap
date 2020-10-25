@@ -1,24 +1,19 @@
-﻿using Birdmap.DAL.Entities;
-using Birdmap.BLL.Interfaces;
-using Microsoft.Extensions.Configuration;
+﻿using Birdmap.BLL.Interfaces;
+using Birdmap.DAL.Entities;
 using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Security.Authentication;
-using System.Text;
 using System.Threading.Tasks;
-using Birdmap.DAL;
-using Microsoft.EntityFrameworkCore;
+using static Birdmap.Common.PasswordHelper;
 
 namespace Birdmap.BLL.Services
 {
     public class AuthService : IAuthService
     {
-        private readonly BirdmapContext _context;
+        private readonly IUserService _userService;
 
-        public AuthService(BirdmapContext context)
+        public AuthService(IUserService userService)
         {
-            _context = context;
+            _userService = userService;
         }
 
         public Task<User> AuthenticateUserAsync(string username, string password)
@@ -29,9 +24,17 @@ namespace Birdmap.BLL.Services
             return AuthenticateUserInternalAsync(username, password);
         }
 
+        public Task<User> RegisterUserAsync(string username, string password)
+        {
+            if (string.IsNullOrWhiteSpace(username) || string.IsNullOrEmpty(password))
+                throw new ArgumentException("Username or password cannot be null or empty.");
+
+            return RegisterUserInternalAsync(username, password);
+        }
+
         private async Task<User> AuthenticateUserInternalAsync(string username, string password)
         {
-            var user = await _context.Users.SingleOrDefaultAsync(u => u.Name == username)
+            var user = await _userService.GetUserAsync(username)
                 ?? throw new AuthenticationException();
 
             if (!VerifyPasswordHash(password, user.PasswordHash, user.PasswordSalt))
@@ -40,45 +43,18 @@ namespace Birdmap.BLL.Services
             return user;
         }
 
-        private Task<User> Temp_GetUserAsync(IConfiguration configuration)
+        private Task<User> RegisterUserInternalAsync(string username, string password)
         {
-            var name = configuration["BasicAuth:Username"];
-            var pass = configuration["BasicAuth:Password"];
-
-            CreatePasswordHash(pass, out var hash, out var salt);
-            return Task.FromResult(new User
+            CreatePasswordHash(password, out var hash, out var salt);
+            var user = new User
             {
-                Name = name,
+                Name = username,
                 PasswordHash = hash,
                 PasswordSalt = salt,
-            });
-        }
+                Role = Roles.User,
+            };
 
-        private static void CreatePasswordHash(string password, out byte[] passwordHash, out byte[] passwordSalt)
-        {
-            if (string.IsNullOrWhiteSpace(password)) throw new ArgumentException("Value cannot be null or empty.", "password");
-
-            using var hmac = new System.Security.Cryptography.HMACSHA512();
-
-            passwordSalt = hmac.Key;
-            passwordHash = hmac.ComputeHash(Encoding.UTF8.GetBytes(password));
-        }
-
-        private static bool VerifyPasswordHash(string password, byte[] storedHash, byte[] storedSalt)
-        {
-            if (string.IsNullOrWhiteSpace(password)) throw new ArgumentException("Value cannot be null or empty.", nameof(password));
-            if (storedHash.Length != 64) throw new ArgumentException("Invalid length of password hash (64 bytes expected).", nameof(storedHash));
-            if (storedSalt.Length != 128) throw new ArgumentException("Invalid length of password salt (128 bytes expected).", nameof(storedSalt));
-
-            using var hmac = new System.Security.Cryptography.HMACSHA512(storedSalt);
-
-            var computedHash = hmac.ComputeHash(Encoding.UTF8.GetBytes(password));
-            for (int i = 0; i < computedHash.Length; i++)
-            {
-                if (computedHash[i] != storedHash[i]) return false;
-            }
-
-            return true;
+            return _userService.CreateUserAsync(user);
         }
     }
 }
