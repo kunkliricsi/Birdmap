@@ -3,7 +3,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
 VisualStudioVersion = 16.0.30611.23
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Birdmap.API", "Birdmap\Birdmap.API.csproj", "{88855E5F-9555-49E5-92F2-4E8C1194F60B}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Birdmap.API", "Birdmap.API\Birdmap.API.csproj", "{88855E5F-9555-49E5-92F2-4E8C1194F60B}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Birdmap.BLL", "Birdmap.BLL\Birdmap.BLL.csproj", "{879D7B8D-6865-4EBE-B346-E0CA37D3C06A}"
 EndProject
