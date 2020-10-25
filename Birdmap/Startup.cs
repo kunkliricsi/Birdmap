@@ -29,6 +29,8 @@ namespace Birdmap
             services.AddControllersWithViews()
                 .AddJsonOptions(opt =>
                 {
+                    opt.JsonSerializerOptions.Converters.Add(new System.Text.Json.Serialization.JsonStringEnumConverter());
+                    opt.JsonSerializerOptions.IgnoreNullValues = true;
                     //opt.JsonSerializerOptions.PropertyNamingPolicy = new JsonNamingPolicy()
                 });
 
@@ -87,7 +89,7 @@ namespace Birdmap
 
             app.UseEndpoints(endpoints =>
             {
-                endpoints.MapHealthChecks("/health").RequireAuthorization();
+                endpoints.MapHealthChecks("/health");
                 endpoints.MapControllers();
             });
 

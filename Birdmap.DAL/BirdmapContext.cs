@@ -7,6 +7,7 @@ namespace Birdmap.DAL
     public class BirdmapContext : DbContext
     {
         public DbSet<User> Users { get; set; }
+        public DbSet<Service> Services { get; set; }
 
         public BirdmapContext([NotNull] DbContextOptions<BirdmapContext> options) : base(options)
         {
