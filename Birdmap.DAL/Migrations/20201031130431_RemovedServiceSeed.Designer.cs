@@ -4,14 +4,16 @@ using Birdmap.DAL;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace Birdmap.DAL.Migrations
 {
     [DbContext(typeof(BirdmapContext))]
-    partial class BirdmapContextModelSnapshot : ModelSnapshot
+    [Migration("20201031130431_RemovedServiceSeed")]
+    partial class RemovedServiceSeed
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -51,11 +53,6 @@ namespace Birdmap.DAL.Migrations
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<bool>("IsFromConfig")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("bit")
-                        .HasDefaultValue(false);
-
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasColumnType("nvarchar(450)");
@@ -77,6 +74,24 @@ namespace Birdmap.DAL.Migrations
                         .IsUnique();
 
                     b.ToTable("Users");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            Name = "admin",
+                            PasswordHash = new byte[] { 199, 171, 130, 140, 205, 64, 247, 225, 175, 173, 122, 115, 103, 75, 199, 52, 110, 6, 250, 217, 154, 54, 240, 42, 3, 235, 36, 247, 213, 195, 209, 45, 161, 149, 109, 240, 191, 73, 6, 222, 92, 173, 78, 160, 236, 108, 81, 151, 221, 151, 118, 74, 147, 210, 52, 93, 30, 121, 64, 45, 183, 14, 197, 48 },
+                            PasswordSalt = new byte[] { 42, 203, 231, 146, 232, 253, 34, 97, 157, 190, 210, 214, 228, 134, 176, 104, 226, 45, 199, 167, 8, 244, 230, 73, 222, 203, 152, 158, 65, 237, 80, 34, 88, 138, 227, 34, 136, 218, 137, 164, 16, 10, 3, 67, 104, 199, 27, 100, 116, 169, 57, 12, 17, 2, 204, 87, 20, 218, 204, 228, 148, 219, 150, 34, 165, 57, 51, 245, 13, 208, 206, 131, 226, 200, 212, 147, 223, 97, 227, 152, 136, 131, 98, 72, 143, 9, 130, 214, 187, 102, 164, 92, 147, 34, 171, 149, 52, 12, 140, 213, 223, 85, 199, 63, 43, 70, 100, 240, 13, 150, 199, 7, 56, 14, 11, 38, 151, 115, 129, 20, 31, 193, 54, 69, 79, 244, 189, 211 },
+                            Role = 1
+                        },
+                        new
+                        {
+                            Id = 2,
+                            Name = "user",
+                            PasswordHash = new byte[] { 199, 171, 130, 140, 205, 64, 247, 225, 175, 173, 122, 115, 103, 75, 199, 52, 110, 6, 250, 217, 154, 54, 240, 42, 3, 235, 36, 247, 213, 195, 209, 45, 161, 149, 109, 240, 191, 73, 6, 222, 92, 173, 78, 160, 236, 108, 81, 151, 221, 151, 118, 74, 147, 210, 52, 93, 30, 121, 64, 45, 183, 14, 197, 48 },
+                            PasswordSalt = new byte[] { 42, 203, 231, 146, 232, 253, 34, 97, 157, 190, 210, 214, 228, 134, 176, 104, 226, 45, 199, 167, 8, 244, 230, 73, 222, 203, 152, 158, 65, 237, 80, 34, 88, 138, 227, 34, 136, 218, 137, 164, 16, 10, 3, 67, 104, 199, 27, 100, 116, 169, 57, 12, 17, 2, 204, 87, 20, 218, 204, 228, 148, 219, 150, 34, 165, 57, 51, 245, 13, 208, 206, 131, 226, 200, 212, 147, 223, 97, 227, 152, 136, 131, 98, 72, 143, 9, 130, 214, 187, 102, 164, 92, 147, 34, 171, 149, 52, 12, 140, 213, 223, 85, 199, 63, 43, 70, 100, 240, 13, 150, 199, 7, 56, 14, 11, 38, 151, 115, 129, 20, 31, 193, 54, 69, 79, 244, 189, 211 },
+                            Role = 0
+                        });
                 });
 #pragma warning restore 612, 618
         }

@@ -1,4 +1,7 @@
+using Birdmap.API;
+using Birdmap.DAL;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using NLog;
@@ -15,8 +18,14 @@ namespace Birdmap
 
             try
             {
-                logger.Debug("Main called...");
-                CreateHostBuilder(args).Build().Run();
+                logger.Debug("Building host...");
+                var host = CreateHostBuilder(args).Build();
+
+                logger.Debug("Seeding database...");
+                SeedDatabase(host);
+
+                logger.Debug("Running host...");
+                host.Run();
             }
             catch (Exception ex)
             {
@@ -41,5 +50,13 @@ namespace Birdmap
                     logging.SetMinimumLevel(Microsoft.Extensions.Logging.LogLevel.Trace);
                 })
                 .UseNLog();
+
+        private static void SeedDatabase(IHost host)
+        {
+            using var scope = host.Services.CreateScope();
+            var dbInitializer = scope.ServiceProvider.GetRequiredService<DbInitializer>();
+
+            dbInitializer.Initialize();
+        }
     }
 }

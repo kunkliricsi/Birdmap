@@ -14,6 +14,8 @@ namespace Birdmap.DAL
             services.AddHealthChecks()
                 .AddDbContextCheck<BirdmapContext>();
 
+            services.AddTransient<DbInitializer>();
+
             return services;
         }
     }

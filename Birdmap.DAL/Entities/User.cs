@@ -14,5 +14,7 @@
         public byte[] PasswordSalt { get; set; }
 
         public Roles Role { get; set; }
+
+        public bool IsFromConfig { get; set; }
     }
 }

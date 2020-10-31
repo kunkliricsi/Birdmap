@@ -1,4 +1,5 @@
 using AutoMapper;
+using Birdmap.API;
 using Birdmap.API.Middlewares;
 using Birdmap.BLL;
 using Birdmap.DAL;

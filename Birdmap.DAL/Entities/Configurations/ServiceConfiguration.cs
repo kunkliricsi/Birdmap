@@ -15,19 +15,9 @@ namespace Birdmap.DAL.Entities.Configurations
                 .HasConversion(u => u.ToString(), u => new Uri(u))
                 .IsRequired();
 
-            builder.HasData(
-                new Service
-                {
-                    Id = 1,
-                    Name = "KMLabz services",
-                    Uri = new Uri("https://birb.k8s.kmlabz.com/devices")
-                },
-                new Service
-                {
-                    Id = 2,
-                    Name = "Local Database",
-                    Uri = new Uri("/health", UriKind.Relative)
-                });
+            builder.Property(s => s.IsFromConfig)
+                .HasDefaultValue(false)
+                .IsRequired();
         }
     }
 }
