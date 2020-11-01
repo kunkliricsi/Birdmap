@@ -17,13 +17,13 @@ namespace Birdmap.API.Controllers
     [Authorize]
     [ApiController]
     [Route("api/[controller]")]
-    public class ServiceController : ControllerBase
+    public class ServicesController : ControllerBase
     {
         private readonly IServiceService _service;
         private readonly IMapper _mapper;
-        private readonly ILogger<ServiceController> _logger;
+        private readonly ILogger<ServicesController> _logger;
 
-        public ServiceController(IServiceService service, IMapper mapper, ILogger<ServiceController> logger)
+        public ServicesController(IServiceService service, IMapper mapper, ILogger<ServicesController> logger)
         {
             _service = service;
             _mapper = mapper;
