@@ -5,13 +5,11 @@ using Birdmap.DAL.Entities;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http;
-using System.Runtime.InteropServices.ComTypes;
 using System.Threading.Tasks;
 
 namespace Birdmap.API.Controllers
@@ -45,14 +43,14 @@ namespace Birdmap.API.Controllers
             {
                 try
                 {
-                    _logger.LogInformation($"Sending a request to service '{si.Service.Name}' with url '{si.Service.Uri}'...");
+                    _logger.LogInformation($"Sending a request to service [{si.Service.Name}] with url [{si.Service.Uri}]...");
                     var response = await client.GetAsync(si.Service.Uri);
                     si.StatusCode = response.StatusCode;
                     si.Response = await response.Content.ReadAsStringAsync();
                 }
                 catch (Exception ex)
                 {
-                    _logger.LogWarning($"Requesting service '{si.Service.Name}' faulted.");
+                    _logger.LogWarning($"Requesting service [{si.Service.Name}] faulted.");
                     si.StatusCode = System.Net.HttpStatusCode.ServiceUnavailable;
                     si.Response = ex.ToString();
                 }
@@ -65,7 +63,7 @@ namespace Birdmap.API.Controllers
         [ProducesResponseType(StatusCodes.Status201Created)]
         public async Task<ActionResult<ServiceRequest>> PostAsync(ServiceRequest request)
         {
-            _logger.LogInformation($"Creating service {request.Name}...");
+            _logger.LogInformation($"Creating service [{request.Name}]...");
             var created = await _service.CreateServiceAsync(
                 _mapper.Map<Service>(request));
 
@@ -80,7 +78,7 @@ namespace Birdmap.API.Controllers
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         public async Task<IActionResult> PutAsync(ServiceRequest request)
         {
-            _logger.LogInformation($"Updating service {request.Name}...");
+            _logger.LogInformation($"Updating service [{request.Name}]...");
             var service = _mapper.Map<Service>(request);
             service.IsFromConfig = false;
 
