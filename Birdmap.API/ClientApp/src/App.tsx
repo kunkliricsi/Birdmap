@@ -1,4 +1,5 @@
-import { Box, Container } from '@material-ui/core';
+import { Box, Container, IconButton, Menu, MenuItem } from '@material-ui/core';
+import AccountCircle from '@material-ui/icons/AccountCircle';
 import AppBar from '@material-ui/core/AppBar';
 import blue from '@material-ui/core/colors/blue';
 import orange from '@material-ui/core/colors/orange';
@@ -86,6 +87,16 @@ const PrivateRoute = ({ component: Component, authenticated: Authenticated, ...r
 
 const DefaultLayout = ({ component: Component, authenticated: Authenticated, ...rest }: { [x: string]: any, component: any, authenticated: any }) => {
     const classes = useDefaultLayoutStyles();
+    const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
+    const open = Boolean(anchorEl);
+
+    const handleMenu = (event: React.MouseEvent<HTMLElement>) => {
+        setAnchorEl(event.currentTarget);
+    };
+
+    const handleClose = () => {
+        setAnchorEl(null);
+    };
 
     const renderNavLinks = () => {
         return Authenticated
@@ -93,6 +104,29 @@ const DefaultLayout = ({ component: Component, authenticated: Authenticated, ...
                 <NavLink exact to="/" className={classes.nav_menu_item} activeClassName={classes.nav_menu_item_active}>Dashboard</NavLink>
                 <NavLink exact to="/devices" className={classes.nav_menu_item} activeClassName={classes.nav_menu_item_active}>Devices</NavLink>
                 <NavLink exact to="/heatmap" className={classes.nav_menu_item} activeClassName={classes.nav_menu_item_active}>Heatmap</NavLink>
+                <IconButton className={classes.nav_menu_icon}
+                    aria-haspopup="true"
+                    aria-controls="menu-appbar"
+                    aria-label="account of current user"
+                    onClick={handleMenu}>
+                    <AccountCircle/>
+                </IconButton>
+                <Menu
+                    id="menu-appbar"
+                    anchorEl={anchorEl}
+                    anchorOrigin={{
+                        vertical: 'bottom',
+                        horizontal: 'right',
+                    }}
+                    keepMounted
+                    transformOrigin={{
+                        vertical: 'top',
+                        horizontal: 'right',
+                    }}
+                    open={open}
+                    onClose={handleClose}>
+                    <MenuItem onClick={handleClose}>Logout</MenuItem>
+                </Menu>
             </Container>
             : null;
     };
@@ -123,6 +157,14 @@ const useDefaultLayoutStyles = makeStyles((theme: Theme) =>
         nav_menu: {
             display: 'flex',
             flexDirection: 'row',
+            alignItems: 'center',
+        },
+        nav_menu_icon: {
+            color: 'inherit',
+            marginLeft: '24px',
+            '&:hover': {
+                color: 'inherit',
+            }
         },
         nav_menu_item: {
             textDecoration: 'none',

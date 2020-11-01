@@ -6,6 +6,9 @@ exports.default = {
     isAuthenticated: function () {
         return sessionStorage.getItem('user') !== null;
     },
+    isAdmin: function () {
+        return sessionStorage.getItem('role') === 'Admin';
+    },
     login: function (username, password) {
         var body = {
             username: username,
@@ -21,6 +24,7 @@ exports.default = {
         return ServiceBase_1.default.makeRequest(login_url, options)
             .then(function (response) {
             sessionStorage.setItem('user', response.token_type + " " + response.access_token);
+            sessionStorage.setItem('role', response.role);
             return Promise.resolve();
         });
     }

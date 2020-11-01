@@ -7,6 +7,10 @@ export default {
         return sessionStorage.getItem('user') !== null;
     },
 
+    isAdmin() {
+        return sessionStorage.getItem('role') === 'Admin';
+    },
+
     login(username: string, password: string) {
         let body = {
             username: username,
@@ -23,6 +27,7 @@ export default {
         return ServiceBase.makeRequest(login_url, options)
             .then(response => {
                 sessionStorage.setItem('user', `${response.token_type} ${response.access_token}`);
+                sessionStorage.setItem('role', response.role);
                 return Promise.resolve();
             });
     }
