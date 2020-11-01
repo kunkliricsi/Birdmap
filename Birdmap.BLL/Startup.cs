@@ -11,6 +11,7 @@ namespace Birdmap.BLL
         {
             services.AddTransient<IAuthService, AuthService>();
             services.AddTransient<IUserService, UserService>();
+            services.AddTransient<IServiceService, ServiceService>();
 
             return services;
         }
