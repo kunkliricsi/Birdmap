@@ -1,4 +1,4 @@
-import { Box, Container, IconButton, Menu, MenuItem } from '@material-ui/core';
+import { Box, Container, IconButton, Menu, MenuItem, MenuList, Paper, Grow, Popper } from '@material-ui/core';
 import AccountCircle from '@material-ui/icons/AccountCircle';
 import AppBar from '@material-ui/core/AppBar';
 import blue from '@material-ui/core/colors/blue';
@@ -7,11 +7,12 @@ import { createMuiTheme, createStyles, makeStyles, Theme } from '@material-ui/co
 import Toolbar from '@material-ui/core/Toolbar';
 import Typography from '@material-ui/core/Typography';
 import { ThemeProvider } from '@material-ui/styles';
-import React, { useState } from 'react';
-import { BrowserRouter, NavLink, Redirect, Route, Switch } from 'react-router-dom';
+import React, { useState, } from 'react';
+import { BrowserRouter, NavLink, Redirect, Route, Switch, Link } from 'react-router-dom';
 import BirdmapTitle from './common/components/BirdmapTitle';
 import Auth from './components/auth/Auth';
 import AuthService from './components/auth/AuthService';
+import { ClickAwayListener } from '@material-ui/core';
 
 
 const theme = createMuiTheme({
@@ -87,16 +88,46 @@ const PrivateRoute = ({ component: Component, authenticated: Authenticated, ...r
 
 const DefaultLayout = ({ component: Component, authenticated: Authenticated, ...rest }: { [x: string]: any, component: any, authenticated: any }) => {
     const classes = useDefaultLayoutStyles();
-    const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
-    const open = Boolean(anchorEl);
+    const [open, setOpen] = React.useState(false);
+    const anchorRef = React.useRef<HTMLButtonElement>(null);
 
-    const handleMenu = (event: React.MouseEvent<HTMLElement>) => {
-        setAnchorEl(event.currentTarget);
+    const handleToggle = () => {
+        setOpen((prevOpen) => !prevOpen);
     };
 
-    const handleClose = () => {
-        setAnchorEl(null);
+    const handleClose = (event: React.MouseEvent<EventTarget>) => {
+        if (anchorRef.current && anchorRef.current.contains(event.target as HTMLElement)) {
+            return;
+        }
+
+        setOpen(false);
     };
+
+    const handleLogout = (event: React.MouseEvent<EventTarget>) => {
+        if (anchorRef.current && anchorRef.current.contains(event.target as HTMLElement)) {
+            return;
+        }
+
+        AuthService.logout();
+        setOpen(false);
+    };
+
+    function handleListKeyDown(event: React.KeyboardEvent) {
+        if (event.key === 'Tab') {
+            event.preventDefault();
+            setOpen(false);
+        }
+    }
+
+    const prevOpen = React.useRef(open);
+    React.useEffect(() => {
+        if (prevOpen.current === true && open === false) {
+            anchorRef.current!.focus();
+        }
+
+        prevOpen.current = open;
+    }, [open]);
+
 
     const renderNavLinks = () => {
         return Authenticated
@@ -105,28 +136,28 @@ const DefaultLayout = ({ component: Component, authenticated: Authenticated, ...
                 <NavLink exact to="/devices" className={classes.nav_menu_item} activeClassName={classes.nav_menu_item_active}>Devices</NavLink>
                 <NavLink exact to="/heatmap" className={classes.nav_menu_item} activeClassName={classes.nav_menu_item_active}>Heatmap</NavLink>
                 <IconButton className={classes.nav_menu_icon}
+                    ref={anchorRef}
                     aria-haspopup="true"
-                    aria-controls="menu-appbar"
+                    aria-controls={open ? 'menu-list-grow' : undefined}
                     aria-label="account of current user"
-                    onClick={handleMenu}>
+                    onClick={handleToggle}>
                     <AccountCircle/>
                 </IconButton>
-                <Menu
-                    id="menu-appbar"
-                    anchorEl={anchorEl}
-                    anchorOrigin={{
-                        vertical: 'bottom',
-                        horizontal: 'right',
-                    }}
-                    keepMounted
-                    transformOrigin={{
-                        vertical: 'top',
-                        horizontal: 'right',
-                    }}
-                    open={open}
-                    onClose={handleClose}>
-                    <MenuItem onClick={handleClose}>Logout</MenuItem>
-                </Menu>
+                <Popper open={open} anchorEl={anchorRef.current} role={undefined} transition disablePortal>
+                    {({ TransitionProps, placement }) => (
+                        <Grow
+                            {...TransitionProps}
+                            style={{ transformOrigin: placement === 'bottom' ? 'center top' : 'center bottom' }}>
+                            <Paper>
+                                <ClickAwayListener onClickAway={handleClose}>
+                                    <MenuList autoFocusItem={open} id="menu-list-grow" onKeyDown={handleListKeyDown}>
+                                        <MenuItem onClick={handleLogout} component={Link} {...{ to: '/login' }}>Logout</MenuItem>
+                                    </MenuList>
+                                </ClickAwayListener>
+                            </Paper>
+                        </Grow>
+                    )}
+                </Popper>
             </Container>
             : null;
     };

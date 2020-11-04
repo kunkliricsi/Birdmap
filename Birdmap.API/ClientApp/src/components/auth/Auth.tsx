@@ -5,6 +5,7 @@ import { makeStyles, createStyles, Theme } from '@material-ui/core/styles';
 import AuthService from './AuthService';
 
 export default function Auth(props: any) {
+    props.onAuthenticated();
     const history = useHistory();
     const classes = useStyles();
 
@@ -36,7 +37,6 @@ export default function Auth(props: any) {
     };
 
     const onLoginClicked = () => {
-        setIsLoggingIn(true);
 
         if (!username) {
             setShowError(true);
@@ -52,6 +52,7 @@ export default function Auth(props: any) {
             return;
         }
 
+        setIsLoggingIn(true);
         AuthService.login(username, password)
         .then(() => {
             props.onAuthenticated();
@@ -86,7 +87,7 @@ export default function Auth(props: any) {
                         </Typography>
                     </Grid>
                     <Grid item xs={12} >
-                        <TextField label="Username" type="text" onChange={onUsernameChanged} />
+                        <TextField autoFocus label="Username" type="text" onChange={onUsernameChanged} />
                     </Grid>
                     <Grid item xs={12} >
                         <TextField label="Password" type="password" onChange={onPasswordChanged} onKeyPress={onPasswordKeyPress} />

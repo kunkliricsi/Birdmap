@@ -11,6 +11,11 @@ export default {
         return sessionStorage.getItem('role') === 'Admin';
     },
 
+    logout() {
+        sessionStorage.removeItem('user');
+        sessionStorage.removeItem('role');
+    },
+
     login(username: string, password: string) {
         let body = {
             username: username,

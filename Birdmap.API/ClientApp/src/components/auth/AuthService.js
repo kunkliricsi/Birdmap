@@ -9,6 +9,10 @@ exports.default = {
     isAdmin: function () {
         return sessionStorage.getItem('role') === 'Admin';
     },
+    logout: function () {
+        sessionStorage.removeItem('user');
+        sessionStorage.removeItem('role');
+    },
     login: function (username, password) {
         var body = {
             username: username,
