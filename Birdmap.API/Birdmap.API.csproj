@@ -46,6 +46,8 @@
     <None Remove="ClientApp\src\common\ServiceBase.ts" />
     <None Remove="ClientApp\src\components\auth\Auth.tsx" />
     <None Remove="ClientApp\src\components\auth\AuthService.ts" />
+    <None Remove="ClientApp\src\components\devices\DeviceService.ts" />
+    <None Remove="ClientApp\src\components\heatmap\heatmap.tsx" />
   </ItemGroup>
 
   <ItemGroup>
@@ -55,8 +57,6 @@
 
   <ItemGroup>
     <Folder Include="ClientApp\src\components\dashboard\" />
-    <Folder Include="ClientApp\src\components\devices\" />
-    <Folder Include="ClientApp\src\components\heatmap\" />
   </ItemGroup>
 
   <ItemGroup>
