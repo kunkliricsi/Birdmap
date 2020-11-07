@@ -30,8 +30,7 @@ namespace Birdmap.API.Controllers
             _logger = logger;
         }
 
-        [HttpGet]
-        [ProducesResponseType(StatusCodes.Status200OK)]
+        [HttpGet, ProducesResponseType(StatusCodes.Status200OK)]
         public async Task<ActionResult<List<ServiceInfo>>> GetAsync()
         {
             _logger.LogInformation($"Getting all services from db...");
@@ -59,8 +58,7 @@ namespace Birdmap.API.Controllers
             return serviceInfos.ToList();
         }
 
-        [HttpPost]
-        [ProducesResponseType(StatusCodes.Status201Created)]
+        [HttpPost, ProducesResponseType(StatusCodes.Status201Created)]
         public async Task<ActionResult<ServiceRequest>> PostAsync(ServiceRequest request)
         {
             _logger.LogInformation($"Creating service [{request.Name}]...");
@@ -74,8 +72,7 @@ namespace Birdmap.API.Controllers
                 _mapper.Map<ServiceRequest>(created));
         }
 
-        [HttpPut]
-        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        [HttpPut, ProducesResponseType(StatusCodes.Status204NoContent)]
         public async Task<IActionResult> PutAsync(ServiceRequest request)
         {
             _logger.LogInformation($"Updating service [{request.Name}]...");
@@ -87,8 +84,7 @@ namespace Birdmap.API.Controllers
             return NoContent();
         }
 
-        [HttpDelete("{id}")]
-        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        [HttpDelete("{id}"), ProducesResponseType(StatusCodes.Status204NoContent)]
         public async Task<IActionResult> DeleteAsync(int id)
         {
             _logger.LogInformation($"Deleting service [{id}]...");

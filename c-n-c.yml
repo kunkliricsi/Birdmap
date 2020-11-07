@@ -1,0 +1,272 @@
+openapi: 3.0.3
+info:
+  title: Command and Control Service
+  description: This service s responsible for controlling and handling information
+    about IoT devices in the Birbnetes system.
+  contact:
+    email: tormakristof@tormakristof.eu
+  license:
+    name: Apache 2.0
+    url: http://www.apache.org/licenses/LICENSE-2.0.html
+  version: 1.0.0
+servers:
+- url: https://birb.k8s.kmlabz.com
+tags:
+- name: cnc
+  description: Command and Control Service interaction
+paths:
+  /devices:
+    get:
+      tags:
+      - cnc
+      summary: Get all device info
+      operationId: getall
+      responses:
+        200:
+          description: Array of devices
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ListOfDevices'
+        404:
+          description: No device found
+          content: {}
+  /devices/offline:
+    post:
+      tags:
+      - cnc
+      summary: Shut down all devices
+      operationId: offlineall
+      responses:
+        200:
+          description: Message sent
+          content: {}
+        500:
+          description: Message sending unsuccessful
+          content: {}
+  /devices/online:
+    post:
+      tags:
+      - cnc
+      summary: Bring all devices online
+      operationId: onlineall
+      responses:
+        200:
+          description: Message sent
+          content: {}
+        500:
+          description: Message sending unsuccessful
+          content: {}
+  /devices/{deviceID}:
+    get:
+      tags:
+      - cnc
+      summary: Get all device info
+      operationId: getdevice
+      parameters:
+      - name: deviceID
+        in: path
+        description: ID of device to query
+        required: true
+        schema:
+          type: string
+          format: uuid
+      responses:
+        200:
+          description: Information about a particular device
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Device'
+        404:
+          description: Device not found
+          content: {}
+  /devices/{deviceID}/offline:
+    post:
+      tags:
+      - cnc
+      summary: Shut down device
+      operationId: offlinedevice
+      parameters:
+      - name: deviceID
+        in: path
+        description: ID of device to shut down
+        required: true
+        schema:
+          type: string
+          format: uuid
+      responses:
+        200:
+          description: Message sent
+          content: {}
+        500:
+          description: Message sending unsuccessful
+          content: {}
+  /devices/{deviceID}/online:
+    post:
+      tags:
+      - cnc
+      summary: Bring device online
+      operationId: onlinedevice
+      parameters:
+      - name: deviceID
+        in: path
+        description: ID of device to bring online
+        required: true
+        schema:
+          type: string
+          format: uuid
+      responses:
+        200:
+          description: Message sent
+          content: {}
+        500:
+          description: Message sending unsuccessful
+          content: {}
+  /devices/{deviceID}/{sensorID}:
+    get:
+      tags:
+      - cnc
+      summary: Get info about a particular device's sensor
+      operationId: getsensor
+      parameters:
+      - name: deviceID
+        in: path
+        description: ID of device to query
+        required: true
+        schema:
+          type: string
+          format: uuid
+      - name: sensorID
+        in: path
+        description: ID of sensor to query
+        required: true
+        schema:
+          type: string
+          format: uuid
+      responses:
+        200:
+          description: Information about a sensor
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Sensor'
+        404:
+          description: Device or sensor not found
+          content: {}
+  /devices/{deviceID}/{sensorID}/offline:
+    post:
+      tags:
+      - cnc
+      summary: Shut down sensor
+      operationId: offlinesensor
+      parameters:
+      - name: deviceID
+        in: path
+        description: ID of device to query
+        required: true
+        schema:
+          type: string
+          format: uuid
+      - name: sensorID
+        in: path
+        description: ID of sensor to query
+        required: true
+        schema:
+          type: string
+          format: uuid
+      responses:
+        200:
+          description: Message sent
+          content: {}
+        500:
+          description: Message sending unsuccessful
+          content: {}
+  /devices/{deviceID}/{sensorID}/online:
+    post:
+      tags:
+      - cnc
+      summary: Bring sensor online
+      operationId: onlinesensor
+      parameters:
+      - name: deviceID
+        in: path
+        description: ID of device to query
+        required: true
+        schema:
+          type: string
+          format: uuid
+      - name: sensorID
+        in: path
+        description: ID of sensor to query
+        required: true
+        schema:
+          type: string
+          format: uuid
+      responses:
+        200:
+          description: Message sent
+          content: {}
+        500:
+          description: Message sending unsuccessful
+          content: {}
+components:
+  schemas:
+    ListOfDevices:
+      type: array
+      items:
+        $ref: '#/components/schemas/Device'
+    Device:
+      required:
+      - id
+      - sensors
+      - status
+      - url
+      - coordinates
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        status:
+          type: string
+          enum:
+          - online
+          - error
+          - offline
+        url:
+          type: string
+          format: url
+        coordinates:
+          required:
+          - latitude
+          - longitude
+          type: object
+          properties:
+            latitude:
+              type: number
+              format: double
+            longitude:
+              type: number
+              format: double
+        sensors:
+          $ref: '#/components/schemas/ArrayofSensors'
+    ArrayofSensors:
+      type: array
+      items:
+        $ref: '#/components/schemas/Sensor'
+    Sensor:
+      required:
+      - id
+      - status
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        status:
+          type: string
+          enum:
+          - online
+          - unknown
+          - offline

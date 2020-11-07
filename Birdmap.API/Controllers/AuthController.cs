@@ -35,8 +35,7 @@ namespace Birdmap.Controllers
         }
 
         [AllowAnonymous]
-        [HttpPost("authenticate")]
-        [ProducesResponseType(typeof(object), StatusCodes.Status200OK)]
+        [HttpPost("authenticate"), ProducesResponseType(typeof(object), StatusCodes.Status200OK)]
         public async Task<IActionResult> AuthenticateAsync([FromBody] AuthenticateRequest model)
         {
             _logger.LogInformation($"Authenticating user [{model.Username}] with password [*******]...");
@@ -70,8 +69,7 @@ namespace Birdmap.Controllers
         }
 
         [AllowAnonymous]
-        [HttpPost("register")]
-        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        [HttpPost("register"), ProducesResponseType(StatusCodes.Status204NoContent)]
         public async Task<IActionResult> RegisterAsync([FromBody] RegisterRequest model)
         {
             _logger.LogInformation($"Registering user [{model.Username}]...");
