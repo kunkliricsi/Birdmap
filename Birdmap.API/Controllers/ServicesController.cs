@@ -14,7 +14,7 @@ using System.Threading.Tasks;
 
 namespace Birdmap.API.Controllers
 {
-    [Authorize]
+    [Authorize(Roles = "Admin")]
     [ApiController]
     [Route("api/[controller]")]
     public class ServicesController : ControllerBase
@@ -30,6 +30,7 @@ namespace Birdmap.API.Controllers
             _logger = logger;
         }
 
+        [Authorize(Roles = "User,Admin")]
         [HttpGet, ProducesResponseType(StatusCodes.Status200OK)]
         public async Task<ActionResult<List<ServiceInfo>>> GetAsync()
         {

@@ -6,8 +6,12 @@ using System.Threading.Tasks;
 
 namespace Birdmap.BLL.Services
 {
-    public abstract class DeviceServiceBase : IDeviceService
+    public abstract class DeviceAndInputServiceBase : IDeviceService, IInputService
     {
+        public virtual Task<InputSingeResponse> GetInputAsync(Guid tagID)
+            => GetInputAsync(tagID, CancellationToken.None);
+        public abstract Task<InputSingeResponse> GetInputAsync(Guid tagID, CancellationToken cancellationToken);
+
         public virtual Task<ICollection<Device>> GetallAsync()
             => GetallAsync(CancellationToken.None);
         public abstract Task<ICollection<Device>> GetallAsync(CancellationToken cancellationToken);

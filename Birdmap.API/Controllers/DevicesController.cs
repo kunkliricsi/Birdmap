@@ -10,7 +10,7 @@ using Microsoft.AspNetCore.Authorization;
 
 namespace Birdmap.API.Controllers
 {
-    [Authorize]
+    [Authorize(Roles = "Admin")]
     [ApiController]
     [Route("api/[controller]")]
     public class DevicesController : ControllerBase
@@ -26,6 +26,7 @@ namespace Birdmap.API.Controllers
 
         /// <summary>Get all device info</summary>
         /// <returns>Array of devices</returns>
+        [Authorize(Roles = "User,Admin")]
         [HttpGet]
         public async Task<ActionResult<List<Device>>> Getall()
         {
@@ -61,6 +62,7 @@ namespace Birdmap.API.Controllers
         /// <summary>Get all device info</summary>
         /// <param name="deviceID">ID of device to query</param>
         /// <returns>Information about a particular device</returns>
+        [Authorize(Roles = "User,Admin")]
         [HttpGet, Route("{deviceID}")]
         public async Task<ActionResult<Device>> Getdevice([BindRequired] Guid deviceID)
         {
@@ -99,6 +101,7 @@ namespace Birdmap.API.Controllers
         /// <param name="deviceID">ID of device to query</param>
         /// <param name="sensorID">ID of sensor to query</param>
         /// <returns>Information about a sensor</returns>
+        [Authorize(Roles = "User,Admin")]
         [HttpGet, Route("{deviceID}/{sensorID}")]
         public async Task<ActionResult<Sensor>> Getsensor([BindRequired] Guid deviceID, [BindRequired] Guid sensorID)
         {

@@ -1,4 +1,5 @@
-﻿using Birdmap.BLL.Interfaces;
+﻿using Birdmap.BLL.Helpers;
+using Birdmap.BLL.Interfaces;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -7,33 +8,40 @@ using System.Threading.Tasks;
 
 namespace Birdmap.BLL.Services
 {
-    public class DummyDeviceService : DeviceServiceBase
+    public class DummyDeviceAndInputService : DeviceAndInputServiceBase
     {
+        private const int numberOfDevices = 15;
+
         private const double centerLong = 21.469640;
         private const double centerLat = 48.275939;
         private const double radius = 0.000200;
 
-        private readonly Lazy<ICollection<Device>> _devices = new Lazy<ICollection<Device>>(GenerateDevices);
+        private static readonly Random Rand = new Random();
+
+        private static readonly Lazy<ICollection<Device>> Devices = new Lazy<ICollection<Device>>(GenerateDevices);
+
+        private static readonly Dictionary<Guid, InputSingeResponse> TagToInput = new Dictionary<Guid, InputSingeResponse>();
+        private static readonly object InputLock = new object();
+
         private static ListOfDevices GenerateDevices()
         {
             var devices = new ListOfDevices();
-            var rand = new Random();
 
             T GetRandomEnum<T>()
             {
                 var values = Enum.GetValues(typeof(T));
-                return (T)values.GetValue(rand.Next(values.Length));
+                return (T)values.GetValue(Rand.Next(values.Length));
             }
 
             double GetPlusMinus(double center, double radius)
             {
-                return center - radius + rand.NextDouble() * radius * 2;
+                return center - radius + Rand.NextDouble() * radius * 2;
             }
 
-            for (int d = 0; d < 15; d++)
+            for (int d = 0; d < numberOfDevices; d++)
             {
                 var sensors = new ArrayofSensors();
-                for (int s = 0; s < rand.Next(1, 5); s++)
+                for (int s = 0; s < Rand.Next(1, 6); s++)
                 {
                     sensors.Add(new Sensor
                     {
@@ -61,17 +69,17 @@ namespace Birdmap.BLL.Services
 
         public override Task<ICollection<Device>> GetallAsync(CancellationToken cancellationToken)
         {
-            return Task.FromResult(_devices.Value);
+            return Task.FromResult(Devices.Value);
         }
 
         public override Task<Device> GetdeviceAsync(Guid deviceID, CancellationToken cancellationToken)
         {
-            return Task.FromResult(_devices.Value.SingleOrDefault(d => d.Id == deviceID));
+            return Task.FromResult(Devices.Value.SingleOrDefault(d => d.Id == deviceID));
         }
 
         public override Task<Sensor> GetsensorAsync(Guid deviceID, Guid sensorID, CancellationToken cancellationToken)
         {
-            return Task.FromResult(_devices.Value.SingleOrDefault(d => d.Id == deviceID)?.Sensors.SingleOrDefault(s => s.Id == sensorID));
+            return Task.FromResult(Devices.Value.SingleOrDefault(d => d.Id == deviceID)?.Sensors.SingleOrDefault(s => s.Id == sensorID));
         }
 
         public override Task OfflineallAsync(CancellationToken cancellationToken)
@@ -114,7 +122,7 @@ namespace Birdmap.BLL.Services
 
         private void SetStatus(DeviceStatus deviceStatus, SensorStatus sensorStatus)
         {
-            foreach (var device in _devices.Value)
+            foreach (var device in Devices.Value)
             {
                 device.Status = deviceStatus;
                 foreach (var sensor in device.Sensors)
@@ -134,6 +142,30 @@ namespace Birdmap.BLL.Services
         {
             var sensor = GetsensorAsync(deviceId, sensorID).Result;
             sensor.Status = status;
+        }
+
+        public override Task<InputSingeResponse> GetInputAsync(Guid tagID, CancellationToken cancellationToken)
+        {
+            lock (InputLock)
+            {
+                if (!TagToInput.TryGetValue(tagID, out var value))
+                {
+                    value = new InputSingeResponse
+                    {
+                        Status = "Dummy_OK",
+                        Message = new InputObject
+                        {
+                            Tag = tagID,
+                            Date = DateTime.Now,
+                            Device_id = Devices.Value.Where(d => d.Status == DeviceStatus.Online).RandomElementAt(Rand).Id,
+                        }
+                    };
+
+                    TagToInput.TryAdd(tagID, value);
+                }
+
+                return Task.FromResult(value);
+            }
         }
     }
 }

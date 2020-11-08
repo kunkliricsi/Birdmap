@@ -14,9 +14,15 @@ namespace Birdmap.BLL
             services.AddTransient<IServiceService, ServiceService>();
 
             if (configuration.GetValue<bool>("UseDummyServices"))
-                services.AddTransient<IDeviceService, DummyDeviceService>();
+            {
+                services.AddTransient<IInputService, DummyDeviceAndInputService>();
+                services.AddTransient<IDeviceService, DummyDeviceAndInputService>();
+            }
             else
+            {
+                services.AddTransient<IInputService, LiveInputService>();
                 services.AddTransient<IDeviceService, LiveDummyService>();
+            }
 
             return services;
         }

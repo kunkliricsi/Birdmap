@@ -9,7 +9,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Birdmap.BLL", "Birdmap.BLL\
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Birdmap.DAL", "Birdmap.DAL\Birdmap.DAL.csproj", "{543FAB06-B960-41A9-8865-1624A2ED2170}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Birdmap.Common", "Birdmap.Common\Birdmap.Common.csproj", "{CE96BAFA-A0FD-4010-8EF2-700451091F71}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Birdmap.Common", "Birdmap.Common\Birdmap.Common.csproj", "{CE96BAFA-A0FD-4010-8EF2-700451091F71}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MQTTnet.TestApp.WinForm", "MQTTnet.TestApp.WinForm\MQTTnet.TestApp.WinForm.csproj", "{E1707FE7-4A65-42AC-B71C-6CC1A55FC42A}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -33,6 +35,10 @@ Global
 		{CE96BAFA-A0FD-4010-8EF2-700451091F71}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{CE96BAFA-A0FD-4010-8EF2-700451091F71}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{CE96BAFA-A0FD-4010-8EF2-700451091F71}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E1707FE7-4A65-42AC-B71C-6CC1A55FC42A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E1707FE7-4A65-42AC-B71C-6CC1A55FC42A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E1707FE7-4A65-42AC-B71C-6CC1A55FC42A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E1707FE7-4A65-42AC-B71C-6CC1A55FC42A}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
