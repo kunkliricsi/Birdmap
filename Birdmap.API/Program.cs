@@ -1,4 +1,3 @@
-using Birdmap.API;
 using Birdmap.DAL;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.DependencyInjection;
@@ -8,7 +7,7 @@ using NLog;
 using NLog.Web;
 using System;
 
-namespace Birdmap
+namespace Birdmap.API
 {
     public class Program
     {

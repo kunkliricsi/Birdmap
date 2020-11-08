@@ -1,5 +1,4 @@
 using AutoMapper;
-using Birdmap.API;
 using Birdmap.API.Middlewares;
 using Birdmap.BLL;
 using Birdmap.DAL;
@@ -13,7 +12,7 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
 
-namespace Birdmap
+namespace Birdmap.API
 {
     public class Startup
     {
