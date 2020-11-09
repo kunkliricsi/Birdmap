@@ -29,9 +29,11 @@ const theme = createMuiTheme({
 function App() {
 
     const [authenticated, setAuthenticated] = useState(AuthService.isAuthenticated());
+    const [isAdmin, setIsAdmin] = useState(AuthService.isAdmin());
 
     const onAuthenticated = () => {
         setAuthenticated(AuthService.isAuthenticated());
+        setIsAdmin(AuthService.isAdmin());
     };
 
     const AuthComponent = () => {
@@ -57,9 +59,9 @@ function App() {
                 <BrowserRouter>
                     <Switch>
                         <PublicRoute path="/login" component={AuthComponent} />
-                        <PrivateRoute path="/" exact authenticated={authenticated} component={DashboardComponent} />
-                        <PrivateRoute path="/devices" exact authenticated={authenticated} component={DevicesComponent} />
-                        <PrivateRoute path="/heatmap" exact authenticated={authenticated} component={HeatmapComponent} />
+                        <PrivateRoute path="/" exact authenticated={authenticated} isAdmin={isAdmin} component={DashboardComponent} />
+                        <PrivateRoute path="/devices" exact authenticated={authenticated} isAdmin={isAdmin} component={DevicesComponent} />
+                        <PrivateRoute path="/heatmap" exact authenticated={authenticated} isAdmin={isAdmin} component={HeatmapComponent} />
                     </Switch>
                 </BrowserRouter>
         </ThemeProvider>
@@ -71,22 +73,22 @@ export default App;
 const PublicRoute = ({ component: Component, ...rest }: { [x: string]: any, component: any}) => {
     return (
         <Route {...rest} render={matchProps => (
-            <DefaultLayout component={Component} authenticated={false} {...matchProps} />
+            <DefaultLayout component={Component} authenticated={false} isAdmin={false} {...matchProps} />
         )} />
     );
 }
 
-const PrivateRoute = ({ component: Component, authenticated: Authenticated, ...rest }: { [x: string]: any, component: any, authenticated: any }) => {
+const PrivateRoute = ({ component: Component, authenticated: Authenticated, isAdmin: IsAdmin, ...rest }: { [x: string]: any, component: any, authenticated: any, isAdmin: any }) => {
     return (
         <Route {...rest} render={matchProps => (
             Authenticated
-                ? <DefaultLayout component={Component} authenticated={Authenticated} {...matchProps} />
+                ? <DefaultLayout component={Component} authenticated={Authenticated} isAdmin={IsAdmin} {...matchProps} />
                 : <Redirect to='/login' />
         )} />
     );
 };
 
-const DefaultLayout = ({ component: Component, authenticated: Authenticated, ...rest }: { [x: string]: any, component: any, authenticated: any }) => {
+const DefaultLayout = ({ component: Component, authenticated: Authenticated, isAdmin: IsAdmin, ...rest }: { [x: string]: any, component: any, authenticated: any, isAdmin: any }) => {
     const classes = useDefaultLayoutStyles();
     const [open, setOpen] = React.useState(false);
     const anchorRef = React.useRef<HTMLButtonElement>(null);
@@ -173,7 +175,7 @@ const DefaultLayout = ({ component: Component, authenticated: Authenticated, ...
                 </Toolbar>
             </AppBar>
             <Box style={{ margin: '32px' }}>
-                <Component {...rest} />
+                <Component isAdmin={IsAdmin} {...rest} />
             </Box>
         </React.Fragment>
     );
