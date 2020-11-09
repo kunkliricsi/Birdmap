@@ -1,5 +1,7 @@
 using AutoMapper;
+using Birdmap.API.Extensions;
 using Birdmap.API.Middlewares;
+using Birdmap.API.Services.Hubs;
 using Birdmap.BLL;
 using Birdmap.DAL;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
@@ -39,6 +41,8 @@ namespace Birdmap.API
 
             services.AddAutoMapper(typeof(Startup));
 
+            services.AddSignalR();
+
             var key = Encoding.ASCII.GetBytes(Configuration["Secret"]);
             services.AddAuthentication(opt =>
             {
@@ -57,6 +61,33 @@ namespace Birdmap.API
                     ValidateIssuer = false,
                     ValidateAudience = false
                 };
+            });
+
+            services.AddMqttClientServiceWithConfig(opt =>
+            {
+                var mqtt = Configuration.GetSection("Mqtt");
+
+                var mqttClient = mqtt.GetSection("ClientSettings");
+                var clientSettings = new
+                {
+                    Id = mqttClient.GetValue<string>("Id"),
+                    Username = mqttClient.GetValue<string>("Username"),
+                    Password = mqttClient.GetValue<string>("Password"),
+                    Topic = mqttClient.GetValue<string>("Topic"),
+                };
+
+                var mqttBrokerHost = mqtt.GetSection("BrokerHostSettings");
+                var brokerHostSettings = new
+                {
+                    Host = mqttBrokerHost.GetValue<string>("Host"),
+                    Port = mqttBrokerHost.GetValue<int>("Port"),
+                };
+
+                opt
+                .WithTopic(clientSettings.Topic)
+                .WithCredentials(clientSettings.Username, clientSettings.Password)
+                .WithClientId(clientSettings.Id)
+                .WithTcpServer(brokerHostSettings.Host, brokerHostSettings.Port);
             });
 
             // In production, the React files will be served from this directory
@@ -91,6 +122,7 @@ namespace Birdmap.API
             {
                 endpoints.MapHealthChecks("/health");
                 endpoints.MapControllers();
+                endpoints.MapHub<DevicesHub>("/hubs/devices");
             });
 
             app.UseSpa(spa =>
