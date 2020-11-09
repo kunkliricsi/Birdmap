@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Threading.Tasks;
 
-namespace Birdmap.API.Services.Hubs
+namespace Birdmap.API.Services
 {
     public interface IDevicesHubClient
     {
