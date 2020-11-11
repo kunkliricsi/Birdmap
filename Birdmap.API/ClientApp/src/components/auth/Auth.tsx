@@ -54,15 +54,15 @@ export default function Auth(props: any) {
 
         setIsLoggingIn(true);
         AuthService.login(username, password)
-        .then(() => {
-            props.onAuthenticated();
-            history.push('/');
-        }).catch(() => {
-            setShowError(true);
-            setErrorMessage('Invalid credentials');
-        }).finally(() => {
-            setIsLoggingIn(false);
-        });
+            .then(() => {
+                setIsLoggingIn(false);
+                props.onAuthenticated();
+                history.push('/');
+            }).catch(() => {
+                setShowError(true);
+                setIsLoggingIn(false);
+                setErrorMessage('Invalid credentials');
+            });
     };
 
     const renderErrorLabel = () => {

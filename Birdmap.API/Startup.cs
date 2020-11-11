@@ -12,6 +12,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.IdentityModel.Tokens;
+using NSwag.Generation.Processors.Security;
 using System.Text;
 
 namespace Birdmap.API
@@ -51,7 +52,7 @@ namespace Birdmap.API
             })
             .AddJwtBearer(opt =>
             {
-                // opt.RequireHttpsMetadata = false;
+                //opt.RequireHttpsMetadata = false;
                 opt.SaveToken = true;
                 opt.IncludeErrorDetails = true;
                 opt.TokenValidationParameters = new TokenValidationParameters
@@ -95,6 +96,20 @@ namespace Birdmap.API
             {
                 configuration.RootPath = "ClientApp/build";
             });
+
+            services.AddSwaggerDocument(opt =>
+            {
+                opt.Title = "Birdmap";
+                opt.OperationProcessors.Add(new OperationSecurityScopeProcessor("Jwt Token"));
+                opt.AddSecurity("Jwt Token", new string[] { },
+                    new NSwag.OpenApiSecurityScheme
+                    {
+                        Type = NSwag.OpenApiSecuritySchemeType.ApiKey,
+                        Name = "Authorization",
+                        In = NSwag.OpenApiSecurityApiKeyLocation.Header,
+                        Description = "Bearer {token}",
+                    });
+            });
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -104,19 +119,20 @@ namespace Birdmap.API
             {
                 app.UseDeveloperExceptionPage();
             }
-            else
-            {
-                app.UseMiddleware<ExceptionHandlerMiddleware>();
-            }
+
+            app.UseMiddleware<ExceptionHandlerMiddleware>();
+
+            app.UseOpenApi();
+            app.UseSwaggerUi3();
 
             app.UseHttpsRedirection();
             app.UseStaticFiles();
             app.UseSpaStaticFiles();
 
-            app.UseRouting();
 
-            app.UseAuthorization();
             app.UseAuthentication();
+            app.UseRouting();
+            app.UseAuthorization();
 
             app.UseEndpoints(endpoints =>
             {

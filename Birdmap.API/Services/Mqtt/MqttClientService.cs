@@ -57,10 +57,17 @@ namespace Birdmap.API.Services.Mqtt
             _logger.LogInformation($"Recieved [{eventArgs.ClientId}] " +
                 $"Topic: {eventArgs.ApplicationMessage.Topic} | Payload: {message} | QoS: {eventArgs.ApplicationMessage.QualityOfServiceLevel} | Retain: {eventArgs.ApplicationMessage.Retain}");
 
-            var payload = JsonConvert.DeserializeObject<Payload>(message);
-            var inputResponse = await _inputService.GetInputAsync(payload.TagID);
+            try
+            {
+                var payload = JsonConvert.DeserializeObject<Payload>(message);
+                var inputResponse = await _inputService.GetInputAsync(payload.TagID);
 
-            await _hubContext.Clients.All.NotifyDeviceAsync(inputResponse.Message.Device_id, inputResponse.Message.Date.UtcDateTime, payload.Probability);
+                await _hubContext.Clients.All.NotifyDeviceAsync(inputResponse.Message.Device_id, inputResponse.Message.Date.UtcDateTime, payload.Probability);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, $"Could not handle application message.");
+            }
         }
 
         public async Task HandleConnectedAsync(MqttClientConnectedEventArgs eventArgs)

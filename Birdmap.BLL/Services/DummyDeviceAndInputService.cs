@@ -10,11 +10,11 @@ namespace Birdmap.BLL.Services
 {
     public class DummyDeviceAndInputService : DeviceAndInputServiceBase
     {
-        private const int numberOfDevices = 15;
+        private const int numberOfDevices = 50;
 
         private const double centerLong = 21.469640;
         private const double centerLat = 48.275939;
-        private const double radius = 0.000200;
+        private const double radius = 0.001;
 
         private static readonly Random Rand = new Random();
 

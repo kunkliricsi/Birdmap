@@ -10,7 +10,7 @@ using Microsoft.AspNetCore.Authorization;
 
 namespace Birdmap.API.Controllers
 {
-    [Authorize(Roles = "Admin")]
+    [Authorize(Roles = "User, Admin")]
     [ApiController]
     [Route("api/[controller]")]
     public class DevicesController : ControllerBase
@@ -26,7 +26,6 @@ namespace Birdmap.API.Controllers
 
         /// <summary>Get all device info</summary>
         /// <returns>Array of devices</returns>
-        [Authorize(Roles = "User,Admin")]
         [HttpGet]
         public async Task<ActionResult<List<Device>>> Getall()
         {
@@ -37,6 +36,7 @@ namespace Birdmap.API.Controllers
 
         /// <summary>Shut down all devices</summary>
         /// <returns>Message sent</returns>
+        [Authorize(Roles = "Admin")]
         [HttpPost, Route("offline")]
         public async Task<IActionResult> Offlineall()
         {
@@ -49,6 +49,7 @@ namespace Birdmap.API.Controllers
 
         /// <summary>Bring all devices online</summary>
         /// <returns>Message sent</returns>
+        [Authorize(Roles = "Admin")]
         [HttpPost, Route("online")]
         public async Task<IActionResult> Onlineall()
         {
@@ -62,7 +63,6 @@ namespace Birdmap.API.Controllers
         /// <summary>Get all device info</summary>
         /// <param name="deviceID">ID of device to query</param>
         /// <returns>Information about a particular device</returns>
-        [Authorize(Roles = "User,Admin")]
         [HttpGet, Route("{deviceID}")]
         public async Task<ActionResult<Device>> Getdevice([BindRequired] Guid deviceID)
         {
@@ -74,6 +74,7 @@ namespace Birdmap.API.Controllers
         /// <summary>Shut down device</summary>
         /// <param name="deviceID">ID of device to shut down</param>
         /// <returns>Message sent</returns>
+        [Authorize(Roles = "Admin")]
         [HttpPost, Route("{deviceID}/offline")]
         public async Task<IActionResult> Offlinedevice([BindRequired] Guid deviceID)
         {
@@ -87,6 +88,7 @@ namespace Birdmap.API.Controllers
         /// <summary>Bring device online</summary>
         /// <param name="deviceID">ID of device to bring online</param>
         /// <returns>Message sent</returns>
+        [Authorize(Roles = "Admin")]
         [HttpPost, Route("{deviceID}/online")]
         public async Task<IActionResult> Onlinedevice([BindRequired] Guid deviceID)
         {
@@ -101,7 +103,6 @@ namespace Birdmap.API.Controllers
         /// <param name="deviceID">ID of device to query</param>
         /// <param name="sensorID">ID of sensor to query</param>
         /// <returns>Information about a sensor</returns>
-        [Authorize(Roles = "User,Admin")]
         [HttpGet, Route("{deviceID}/{sensorID}")]
         public async Task<ActionResult<Sensor>> Getsensor([BindRequired] Guid deviceID, [BindRequired] Guid sensorID)
         {
@@ -114,6 +115,7 @@ namespace Birdmap.API.Controllers
         /// <param name="deviceID">ID of device to query</param>
         /// <param name="sensorID">ID of sensor to query</param>
         /// <returns>Message sent</returns>
+        [Authorize(Roles = "Admin")]
         [HttpPost, Route("{deviceID}/{sensorID}/offline")]
         public async Task<IActionResult> Offlinesensor([BindRequired] Guid deviceID, [BindRequired] Guid sensorID)
         {
@@ -128,6 +130,7 @@ namespace Birdmap.API.Controllers
         /// <param name="deviceID">ID of device to query</param>
         /// <param name="sensorID">ID of sensor to query</param>
         /// <returns>Message sent</returns>
+        [Authorize(Roles = "Admin")]
         [HttpPost, Route("{deviceID}/{sensorID}/online")]
         public async Task<IActionResult> Onlinesensor([BindRequired] Guid deviceID, [BindRequired] Guid sensorID)
         {

@@ -27,7 +27,8 @@ export class DeviceService {
         let options_ = <RequestInit>{
             method: "GET",
             headers: {
-                "Accept": "application/json"
+                "Accept": "application/json",
+                'Authorization': sessionStorage.getItem('user')
             }
         };
 
@@ -73,6 +74,7 @@ export class DeviceService {
         let options_ = <RequestInit>{
             method: "POST",
             headers: {
+                'Authorization': sessionStorage.getItem('user')
             }
         };
 
@@ -111,6 +113,7 @@ export class DeviceService {
         let options_ = <RequestInit>{
             method: "POST",
             headers: {
+                'Authorization': sessionStorage.getItem('user')
             }
         };
 
@@ -153,7 +156,8 @@ export class DeviceService {
         let options_ = <RequestInit>{
             method: "GET",
             headers: {
-                "Accept": "application/json"
+                "Accept": "application/json",
+                'Authorization': sessionStorage.getItem('user')
             }
         };
 
@@ -199,6 +203,7 @@ export class DeviceService {
         let options_ = <RequestInit>{
             method: "POST",
             headers: {
+                'Authorization': sessionStorage.getItem('user')
             }
         };
 
@@ -241,6 +246,7 @@ export class DeviceService {
         let options_ = <RequestInit>{
             method: "POST",
             headers: {
+                'Authorization': sessionStorage.getItem('user')
             }
         };
 
@@ -287,7 +293,8 @@ export class DeviceService {
         let options_ = <RequestInit>{
             method: "GET",
             headers: {
-                "Accept": "application/json"
+                "Accept": "application/json",
+                'Authorization': sessionStorage.getItem('user')
             }
         };
 
@@ -337,6 +344,7 @@ export class DeviceService {
         let options_ = <RequestInit>{
             method: "POST",
             headers: {
+                'Authorization': sessionStorage.getItem('user')
             }
         };
 

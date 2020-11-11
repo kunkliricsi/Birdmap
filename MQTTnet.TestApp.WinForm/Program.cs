@@ -10,6 +10,7 @@
 namespace MQTTnet.TestApp.WinForm
 {
     using System;
+    using System.Threading;
     using System.Windows.Forms;
 
     /// <summary>
@@ -17,16 +18,28 @@ namespace MQTTnet.TestApp.WinForm
     /// </summary>
     internal static class Program
     {
+        static readonly Mutex mutex = new Mutex(true, "{B9D725A5-48F1-4907-974F-B6C3B9C8C4BB}");
+
         /// <summary>
         ///     The main entry point for the application.
         /// </summary>
         [STAThread]
         private static void Main()
         {
-            Application.SetHighDpiMode(HighDpiMode.SystemAware);
-            Application.EnableVisualStyles();
-            Application.SetCompatibleTextRenderingDefault(false);
-            Application.Run(new Form1());
+            if (!mutex.WaitOne(TimeSpan.Zero, true))
+                return;
+
+            try
+            {
+                Application.SetHighDpiMode(HighDpiMode.SystemAware);
+                Application.EnableVisualStyles();
+                Application.SetCompatibleTextRenderingDefault(false);
+                Application.Run(new Form1());
+            }
+            finally
+            {
+                mutex.ReleaseMutex();
+            }
         }
     }
 }

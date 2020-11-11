@@ -1,10 +1,9 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-var ServiceBase_1 = require("../../common/ServiceBase");
-var login_url = 'api/auth/authenticate';
+var AuthClient_1 = require("./AuthClient");
 exports.default = {
     isAuthenticated: function () {
-        return sessionStorage.getItem('user') !== null;
+        return sessionStorage.getItem('user') !== null && sessionStorage.getItem('user') !== undefined;
     },
     isAdmin: function () {
         return sessionStorage.getItem('role') === 'Admin';
@@ -14,21 +13,16 @@ exports.default = {
         sessionStorage.removeItem('role');
     },
     login: function (username, password) {
-        var body = {
+        var service = new AuthClient_1.default();
+        var request = new AuthClient_1.AuthenticateRequest({
             username: username,
             password: password
-        };
-        var options = {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify(body),
-        };
-        return ServiceBase_1.default.makeRequest(login_url, options)
+        });
+        return service.authenticate(request)
             .then(function (response) {
-            sessionStorage.setItem('user', response.token_type + " " + response.access_token);
-            sessionStorage.setItem('role', response.role);
+            console.log(response);
+            sessionStorage.setItem('user', response.tokenType + " " + response.accessToken);
+            sessionStorage.setItem('role', response.userRole);
             return Promise.resolve();
         });
     }

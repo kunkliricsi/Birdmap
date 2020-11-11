@@ -38,7 +38,8 @@ var DeviceService = /** @class */ (function () {
         var options_ = {
             method: "GET",
             headers: {
-                "Accept": "application/json"
+                "Accept": "application/json",
+                'Authorization': sessionStorage.getItem('user')
             }
         };
         return this.http.fetch(url_, options_).then(function (_response) {
@@ -89,7 +90,9 @@ var DeviceService = /** @class */ (function () {
         url_ = url_.replace(/[?&]$/, "");
         var options_ = {
             method: "POST",
-            headers: {}
+            headers: {
+                'Authorization': sessionStorage.getItem('user')
+            }
         };
         return this.http.fetch(url_, options_).then(function (_response) {
             return _this.processOfflineall(_response);
@@ -129,7 +132,9 @@ var DeviceService = /** @class */ (function () {
         url_ = url_.replace(/[?&]$/, "");
         var options_ = {
             method: "POST",
-            headers: {}
+            headers: {
+                'Authorization': sessionStorage.getItem('user')
+            }
         };
         return this.http.fetch(url_, options_).then(function (_response) {
             return _this.processOnlineall(_response);
@@ -174,7 +179,8 @@ var DeviceService = /** @class */ (function () {
         var options_ = {
             method: "GET",
             headers: {
-                "Accept": "application/json"
+                "Accept": "application/json",
+                'Authorization': sessionStorage.getItem('user')
             }
         };
         return this.http.fetch(url_, options_).then(function (_response) {
@@ -223,7 +229,9 @@ var DeviceService = /** @class */ (function () {
         url_ = url_.replace(/[?&]$/, "");
         var options_ = {
             method: "POST",
-            headers: {}
+            headers: {
+                'Authorization': sessionStorage.getItem('user')
+            }
         };
         return this.http.fetch(url_, options_).then(function (_response) {
             return _this.processOfflinedevice(_response);
@@ -267,7 +275,9 @@ var DeviceService = /** @class */ (function () {
         url_ = url_.replace(/[?&]$/, "");
         var options_ = {
             method: "POST",
-            headers: {}
+            headers: {
+                'Authorization': sessionStorage.getItem('user')
+            }
         };
         return this.http.fetch(url_, options_).then(function (_response) {
             return _this.processOnlinedevice(_response);
@@ -316,7 +326,8 @@ var DeviceService = /** @class */ (function () {
         var options_ = {
             method: "GET",
             headers: {
-                "Accept": "application/json"
+                "Accept": "application/json",
+                'Authorization': sessionStorage.getItem('user')
             }
         };
         return this.http.fetch(url_, options_).then(function (_response) {
@@ -369,7 +380,9 @@ var DeviceService = /** @class */ (function () {
         url_ = url_.replace(/[?&]$/, "");
         var options_ = {
             method: "POST",
-            headers: {}
+            headers: {
+                'Authorization': sessionStorage.getItem('user')
+            }
         };
         return this.http.fetch(url_, options_).then(function (_response) {
             return _this.processOfflinesensor(_response);

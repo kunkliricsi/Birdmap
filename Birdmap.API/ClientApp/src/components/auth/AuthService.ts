@@ -1,10 +1,8 @@
-﻿import ServiceBase from '../../common/ServiceBase';
-
-const login_url = 'api/auth/authenticate';
+﻿import AuthClient, { AuthenticateRequest } from './AuthClient';
 
 export default {
     isAuthenticated() {
-        return sessionStorage.getItem('user') !== null;
+        return sessionStorage.getItem('user') !== null && sessionStorage.getItem('user') !== undefined;
     },
 
     isAdmin() {
@@ -17,22 +15,18 @@ export default {
     },
 
     login(username: string, password: string) {
-        let body = {
+        const service = new AuthClient();
+
+        let request = new AuthenticateRequest({
             username: username,
             password: password
-        };
-        let options = {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify(body),
-        };
+        });
 
-        return ServiceBase.makeRequest(login_url, options)
+        return service.authenticate(request)
             .then(response => {
-                sessionStorage.setItem('user', `${response.token_type} ${response.access_token}`);
-                sessionStorage.setItem('role', response.role);
+                console.log(response);
+                sessionStorage.setItem('user', `${response.tokenType} ${response.accessToken}`);
+                sessionStorage.setItem('role', response.userRole);
                 return Promise.resolve();
             });
     }

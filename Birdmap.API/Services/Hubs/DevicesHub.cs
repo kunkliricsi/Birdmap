@@ -28,7 +28,7 @@ namespace Birdmap.API.Services.Hubs
             return base.OnDisconnectedAsync(exception);
         }
 
-        public Task UserJoinedAsync(Guid deviceId, DateTime date, double probability)
+        public Task SendNotification(Guid deviceId, DateTime date, double probability)
         {
             return Clients.All.NotifyDeviceAsync(deviceId, date, probability);
         }

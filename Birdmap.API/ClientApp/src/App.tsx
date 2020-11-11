@@ -3,6 +3,7 @@ import AccountCircle from '@material-ui/icons/AccountCircle';
 import AppBar from '@material-ui/core/AppBar';
 import blue from '@material-ui/core/colors/blue';
 import orange from '@material-ui/core/colors/orange';
+import { positions } from '@material-ui/system';
 import { createMuiTheme, createStyles, makeStyles, Theme } from '@material-ui/core/styles';
 import Toolbar from '@material-ui/core/Toolbar';
 import Typography from '@material-ui/core/Typography';
@@ -13,6 +14,7 @@ import BirdmapTitle from './common/components/BirdmapTitle';
 import Auth from './components/auth/Auth';
 import AuthService from './components/auth/AuthService';
 import { ClickAwayListener } from '@material-ui/core';
+import MapContainer from './components/heatmap/Heatmap';
 
 
 const theme = createMuiTheme({
@@ -51,7 +53,11 @@ function App() {
 
     };
     const HeatmapComponent = () => {
-        return <Typography>Heatmap</Typography>;
+        return (
+            <Paper elevation={0}>
+                <MapContainer />
+            </Paper>
+        );
     };
 
     return (
@@ -174,7 +180,7 @@ const DefaultLayout = ({ component: Component, authenticated: Authenticated, isA
                     </Typography>
                 </Toolbar>
             </AppBar>
-            <Box style={{ margin: '32px' }}>
+            <Box zIndex="modal">
                 <Component isAdmin={IsAdmin} {...rest} />
             </Box>
         </React.Fragment>

@@ -14,7 +14,7 @@ using System.Threading.Tasks;
 
 namespace Birdmap.API.Controllers
 {
-    [Authorize(Roles = "Admin")]
+    [Authorize(Roles = "User, Admin")]
     [ApiController]
     [Route("api/[controller]")]
     public class ServicesController : ControllerBase
@@ -30,7 +30,6 @@ namespace Birdmap.API.Controllers
             _logger = logger;
         }
 
-        [Authorize(Roles = "User,Admin")]
         [HttpGet, ProducesResponseType(StatusCodes.Status200OK)]
         public async Task<ActionResult<List<ServiceInfo>>> GetAsync()
         {
@@ -59,6 +58,7 @@ namespace Birdmap.API.Controllers
             return serviceInfos.ToList();
         }
 
+        [Authorize(Roles = "Admin")]
         [HttpPost, ProducesResponseType(StatusCodes.Status201Created)]
         public async Task<ActionResult<ServiceRequest>> PostAsync(ServiceRequest request)
         {
@@ -73,6 +73,7 @@ namespace Birdmap.API.Controllers
                 _mapper.Map<ServiceRequest>(created));
         }
 
+        [Authorize(Roles = "Admin")]
         [HttpPut, ProducesResponseType(StatusCodes.Status204NoContent)]
         public async Task<IActionResult> PutAsync(ServiceRequest request)
         {
@@ -85,6 +86,7 @@ namespace Birdmap.API.Controllers
             return NoContent();
         }
 
+        [Authorize(Roles = "Admin")]
         [HttpDelete("{id}"), ProducesResponseType(StatusCodes.Status204NoContent)]
         public async Task<IActionResult> DeleteAsync(int id)
         {
