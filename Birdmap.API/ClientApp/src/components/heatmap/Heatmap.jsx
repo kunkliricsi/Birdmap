@@ -26,12 +26,12 @@ export default class MapContainer extends Component {
 
     handleAllDevicesUpdated(service = null) {
         if (service === null) {
-            service = new DevicesService()
+            service = new DevicesService();
         }
         service.getall().then(result => {
-            this.setState({ devices: result })
+            this.setState({ devices: result });
         }).catch(ex => {
-            console.log(ex)
+            console.log(ex);
         });
     }
 
@@ -57,7 +57,7 @@ export default class MapContainer extends Component {
                         var device = this.state.devices.filter(function (x) { return x.id === id })[0]
                         var newPoint = { lat: device.coordinates.latitude, lng: device.coordinates.longitude };
                         this.setState({
-                            heatmapPoints: [...this.state.heatmapPoints, newPoint ]
+                            heatmapPoints: [...this.state.heatmapPoints, newPoint]
                         });
 
                         if (this._googleMap !== undefined) {
@@ -73,14 +73,13 @@ export default class MapContainer extends Component {
 
                 newConnection.on(update_method_name, (id) => {
                     service.getdevice(id).then(result => {
-                        var index = this.state.devices.findIndex((d => d.id == id))
-                        this.state.devices[index] = result;
-                    }).catch(ex => {
-                        console.log("Device update error", ex);
-                    });
-                });
-            })
-            .catch(e => console.log('Hub Connection failed: ', e));
+                        var index = this.state.devices.findIndex((d => d.id == id));
+                        const newDevices = [...this.state.devices];
+                        newDevices[index] = result;
+                        this.setState({ devices: newDevices });
+                    }).catch(ex => console.log("Device update failed.", ex));
+                })
+            }).catch(e => console.log('Hub Connection failed: ', e));
     }
 
     componentWillUnmount() {
