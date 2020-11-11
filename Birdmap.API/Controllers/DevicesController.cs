@@ -7,6 +7,9 @@ using System.Collections.Generic;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
 using System.Linq;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.SignalR;
+using Birdmap.API.Services.Hubs;
+using Birdmap.API.Services;
 
 namespace Birdmap.API.Controllers
 {
@@ -16,11 +19,13 @@ namespace Birdmap.API.Controllers
     public class DevicesController : ControllerBase
     {
         private readonly IDeviceService _service;
+        private readonly IHubContext<DevicesHub, IDevicesHubClient> _hubContext;
         private readonly ILogger<ServicesController> _logger;
 
-        public DevicesController(IDeviceService service, ILogger<ServicesController> logger)
+        public DevicesController(IDeviceService service, IHubContext<DevicesHub, IDevicesHubClient> hubContext, ILogger<ServicesController> logger)
         {
             _service = service;
+            _hubContext = hubContext;
             _logger = logger;
         }
 
@@ -43,6 +48,7 @@ namespace Birdmap.API.Controllers
             _logger.LogInformation("Turning off all devices and sensors...");
 
             await _service.OfflineallAsync();
+            await _hubContext.Clients.All.NotifyAllUpdatedAsync();
 
             return Ok();
         }
@@ -56,6 +62,7 @@ namespace Birdmap.API.Controllers
             _logger.LogInformation("Turning on all devices and sensors...");
 
             await _service.OnlineallAsync();
+            await _hubContext.Clients.All.NotifyAllUpdatedAsync();
 
             return Ok();
         }
@@ -81,6 +88,7 @@ namespace Birdmap.API.Controllers
             _logger.LogInformation($"Turning off device [{deviceID}]...");
 
             await _service.OfflinedeviceAsync(deviceID);
+            await _hubContext.Clients.All.NotifyDeviceUpdatedAsync(deviceID);
 
             return Ok();
         }
@@ -95,6 +103,7 @@ namespace Birdmap.API.Controllers
             _logger.LogInformation($"Turning on device [{deviceID}]...");
 
             await _service.OnlinedeviceAsync(deviceID);
+            await _hubContext.Clients.All.NotifyDeviceUpdatedAsync(deviceID);
 
             return Ok();
         }

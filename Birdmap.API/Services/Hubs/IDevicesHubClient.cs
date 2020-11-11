@@ -6,5 +6,7 @@ namespace Birdmap.API.Services
     public interface IDevicesHubClient
     {
         Task NotifyDeviceAsync(Guid deviceId, DateTime date, double probability);
+        Task NotifyDeviceUpdatedAsync(Guid deviceId);
+        Task NotifyAllUpdatedAsync();
     }
 }

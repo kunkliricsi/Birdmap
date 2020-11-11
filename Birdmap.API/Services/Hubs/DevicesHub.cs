@@ -16,21 +16,31 @@ namespace Birdmap.API.Services.Hubs
 
         public override Task OnConnectedAsync()
         {
-            _logger.LogInformation("Client connected.");
+            _logger.LogInformation("Hub Client connected.");
 
             return base.OnConnectedAsync();
         }
 
         public override Task OnDisconnectedAsync(Exception exception)
         {
-            _logger.LogInformation("Client disconnected.");
+            _logger.LogInformation("Hub Client disconnected.");
 
             return base.OnDisconnectedAsync(exception);
         }
 
-        public Task SendNotification(Guid deviceId, DateTime date, double probability)
+        public Task SendProbabilityAsync(Guid deviceId, DateTime date, double probability)
         {
             return Clients.All.NotifyDeviceAsync(deviceId, date, probability);
+        }
+
+        public Task SendDeviceUpdateAsync(Guid deviceId)
+        {
+            return Clients.All.NotifyDeviceUpdatedAsync(deviceId);
+        }
+
+        public Task SendAllUpdatedAsync()
+        {
+            return Clients.All.NotifyAllUpdatedAsync();
         }
     }
 }

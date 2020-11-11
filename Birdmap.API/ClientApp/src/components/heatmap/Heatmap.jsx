@@ -5,7 +5,9 @@ import DevicesService, { DeviceService } from '../devices/DeviceService'
 import { HubConnectionBuilder } from '@microsoft/signalr';
 
 const hub_url = '/hubs/devices';
-const method_name = 'NotifyDeviceAsync';
+const probability_method_name = 'NotifyDeviceAsync';
+const update_method_name = 'NotifyDeviceUpdatedAsync';
+const update_all_method_name = 'NotifyAllUpdatedAsync';
 
 export default class MapContainer extends Component {
     constructor(props) {
@@ -22,13 +24,20 @@ export default class MapContainer extends Component {
         }
     }
 
-    componentDidMount() {
-        const service = new DeviceService();
+    handleAllDevicesUpdated(service = null) {
+        if (service === null) {
+            service = new DevicesService()
+        }
         service.getall().then(result => {
             this.setState({ devices: result })
         }).catch(ex => {
             console.log(ex)
         });
+    }
+
+    componentDidMount() {
+        const service = new DeviceService();
+        this.handleAllDevicesUpdated(service);
 
         const newConnection = new HubConnectionBuilder()
             .withUrl(hub_url)
@@ -41,7 +50,7 @@ export default class MapContainer extends Component {
             .then(result => {
                 console.log('Hub Connected!');
 
-                newConnection.on(method_name, (id, date, prob) => {
+                newConnection.on(probability_method_name, (id, date, prob) => {
                     this.state.points.push({ id, date, prob });
                     //console.log(method_name + " recieved: [id: " + id + ", date: " + date + ", prob: " + prob + "]");
                     if (prob > 0.5) {
@@ -57,13 +66,28 @@ export default class MapContainer extends Component {
                         }
                     }
                 });
+
+                newConnection.on(update_all_method_name, () => {
+                    this.handleAllDevicesUpdated(service);
+                });
+
+                newConnection.on(update_method_name, (id) => {
+                    service.getdevice(id).then(result => {
+                        var index = this.state.devices.findIndex((d => d.id == id))
+                        this.state.devices[index] = result;
+                    }).catch(ex => {
+                        console.log("Device update error", ex);
+                    });
+                });
             })
             .catch(e => console.log('Hub Connection failed: ', e));
     }
 
     componentWillUnmount() {
         if (this.state.connection) {
-            this.state.connection.off(method_name);
+            this.state.connection.off(probability_method_name);
+            this.state.connection.off(update_all_method_name);
+            this.state.connection.off(update_method_name);
         }
     }
 
