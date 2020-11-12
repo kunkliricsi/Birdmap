@@ -2,6 +2,7 @@
 import GoogleMapReact from 'google-map-react';
 import React, { Component } from 'react';
 import DevicesService, { DeviceService } from '../devices/DeviceService'
+import DeviceMarker from './DeviceMarker'
 import { HubConnectionBuilder } from '@microsoft/signalr';
 
 const hub_url = '/hubs/devices';
@@ -100,12 +101,26 @@ export default class MapContainer extends Component {
         }
 
         const mapOptions = {
+            disableDefaultUI: true,
+            zoomControl: true,
+            mapTypeControl: true,
             overviewMapControl: true,
-            mapTypeId: 'terrain'
+            streetViewControl: false,
+            scaleControl: true,
+            mapTypeId: 'satellite'
         }
 
+        const Markers = this.state.devices.map((device, index) => (
+            <DeviceMarker
+                key={device.id}
+                lat={device.coordinates.latitude}
+                lng={device.coordinates.longitude}
+                device={device}
+            />
+        ));
+
         return (
-            <div style={{ height: '91vh', width: '100%' }}>
+            <div style={{ height: '93.5vh', width: '100%' }}>
                 <GoogleMapReact
                     bootstrapURLKeys={{
                         key: ["AIzaSyCZ51VFfxqZ2GkCmVrcNZdUKsM0fuBQUCY"],
@@ -117,6 +132,7 @@ export default class MapContainer extends Component {
                     heatmapLibrary={true}
                     heatmap={heatMapData}
                     defaultCenter={this.state.center}>
+                    {Markers}
                 </GoogleMapReact>
             </div>
         );
