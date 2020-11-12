@@ -45,7 +45,7 @@ function App() {
     }
 
     const DashboardComponent = () => {
-        return <Typography>Dashboard</Typography>;
+        return <Link to="/devices/5">This is a link</Link>;
     };
 
     const DevicesComponent = () => {
@@ -66,7 +66,7 @@ function App() {
                     <Switch>
                         <PublicRoute path="/login" component={AuthComponent} />
                         <PrivateRoute path="/" exact authenticated={authenticated} isAdmin={isAdmin} component={DashboardComponent} />
-                        <PrivateRoute path="/devices" exact authenticated={authenticated} isAdmin={isAdmin} component={DevicesComponent} />
+                        <PrivateRoute path="/devices/:id?" exact authenticated={authenticated} isAdmin={isAdmin} component={DevicesComponent} />
                         <PrivateRoute path="/heatmap" exact authenticated={authenticated} isAdmin={isAdmin} component={HeatmapComponent} />
                     </Switch>
                 </BrowserRouter>
