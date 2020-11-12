@@ -9,6 +9,9 @@ const hub_url = '/hubs/devices';
 const probability_method_name = 'NotifyDeviceAsync';
 const update_method_name = 'NotifyDeviceUpdatedAsync';
 const update_all_method_name = 'NotifyAllUpdatedAsync';
+const lat_offset = 0.000038;
+const lng_offset = -0.000058;
+const heatmapPoints_session_name = 'heatmapPoints';
 
 export default class MapContainer extends Component {
     constructor(props) {
@@ -88,6 +91,7 @@ export default class MapContainer extends Component {
             this.state.connection.off(probability_method_name);
             this.state.connection.off(update_all_method_name);
             this.state.connection.off(update_method_name);
+            console.log('Hub Disconnected!');
         }
     }
 
@@ -113,8 +117,8 @@ export default class MapContainer extends Component {
         const Markers = this.state.devices.map((device, index) => (
             <DeviceMarker
                 key={device.id}
-                lat={device.coordinates.latitude}
-                lng={device.coordinates.longitude}
+                lat={device.coordinates.latitude + lat_offset}
+                lng={device.coordinates.longitude + lng_offset}
                 device={device}
             />
         ));

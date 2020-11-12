@@ -1,7 +1,8 @@
 ﻿import RadioButtonCheckedIcon from '@material-ui/icons/RadioButtonChecked';
+import PlayCircleFilledIcon from '@material-ui/icons/PlayCircleFilled';
 import { shadows } from '@material-ui/system';
-import { Box, Popover, Typography, Tooltip } from '@material-ui/core';
-import { green, red, yellow } from '@material-ui/core/colors';
+import { Box, Popover, Typography, Tooltip, Grid } from '@material-ui/core';
+import { blue, red, yellow } from '@material-ui/core/colors';
 import React, { Component } from 'react';
 import { useHistory, withRouter  } from 'react-router-dom';
 import { makeStyles } from '@material-ui/styles';
@@ -18,25 +19,22 @@ class DeviceMarker extends Component {
     getColor() {
         const { device } = this.props;
         if (device.status == "Online") {
-            return { color: green[500] };
+            return { color: blue[800] };
         } else if (device.status == "Offline") {
-            return { color: red[500] };
+            return { color: yellow[800] };
         } else /* if (device.status == "unknown") */ {
-            return { color: yellow[500] };
+            return { color: red[800] };
         }
     }
 
     useStyles() {
         return makeStyles(theme => ({
             root: {
+                display: 'grid'
             },
-            popover: {
-                pointerEvents: 'none',
-                zIndex: 1000000
-            },
-            paper: {
-                padding: theme.spacing(1),
-            },
+            icon: {
+
+            }
         }));
     }
 
@@ -51,7 +49,7 @@ class DeviceMarker extends Component {
         const open = Boolean(this.state.AnchorEl);
 
         return (
-            <Box>
+            <Box className={classes.root} boxShadow={5}>
                 <Tooltip title={<div>ID: {device.id}<br />Status: {device.status}</div>} placement="top" leaveDelay={200} arrow>
                     <RadioButtonCheckedIcon fontSize="small" style={this.getColor()}
                         onClick={onClick}>
