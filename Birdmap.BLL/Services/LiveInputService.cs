@@ -9,6 +9,7 @@
 #pragma warning disable 472 // Disable "CS0472 The result of the expression is always 'false' since a value of type 'Int32' is never equal to 'null' of type 'Int32?'
 #pragma warning disable 1573 // Disable "CS1573 Parameter '...' has no matching param tag in the XML comment for ...
 #pragma warning disable 1591 // Disable "CS1591 Missing XML comment for publicly visible type or member ..."
+#pragma warning disable 8073 // Disable "CS8073 The result of the expression is always 'false' since a value of type '...' is never equal to 'null' of type '...?'"
 
 namespace Birdmap.BLL.Services
 {
@@ -470,6 +471,7 @@ namespace Birdmap.BLL.Services
 
 }
 
+#pragma warning restore 8703
 #pragma warning restore 1591
 #pragma warning restore 1573
 #pragma warning restore 472

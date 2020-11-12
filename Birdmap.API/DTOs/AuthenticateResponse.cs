@@ -3,7 +3,7 @@ using Newtonsoft.Json;
 
 namespace Birdmap.API.DTOs
 {
-    public class AuthenticateResponse
+    public record AuthenticateResponse
     {
         [JsonProperty("user_name")]
         public string Username { get; set; }

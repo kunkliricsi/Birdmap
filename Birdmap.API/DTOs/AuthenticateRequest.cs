@@ -2,7 +2,7 @@
 
 namespace Birdmap.Models
 {
-    public class AuthenticateRequest
+    public record AuthenticateRequest
     {
         [Required(AllowEmptyStrings = false, ErrorMessage = "Username is required.")]
         public string Username { get; set; }

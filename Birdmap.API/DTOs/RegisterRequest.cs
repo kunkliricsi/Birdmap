@@ -2,7 +2,7 @@
 
 namespace Birdmap.API.DTOs
 {
-    public class RegisterRequest
+    public record RegisterRequest
     {
         [Required(AllowEmptyStrings = false, ErrorMessage = "Username is required.")]
         public string Username { get; set; }

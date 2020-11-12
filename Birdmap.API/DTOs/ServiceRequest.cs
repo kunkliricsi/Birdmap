@@ -1,6 +1,6 @@
 ﻿namespace Birdmap.API.DTOs
 {
-    public class ServiceRequest
+    public record ServiceRequest
     {
         public int Id { get; set; }
         public string Name { get; set; }

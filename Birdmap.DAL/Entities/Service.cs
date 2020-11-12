@@ -2,7 +2,7 @@
 
 namespace Birdmap.DAL.Entities
 {
-    public class Service
+    public record Service
     {
         public int Id { get; set; }
         public string Name { get; set; }
