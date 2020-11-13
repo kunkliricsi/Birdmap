@@ -141,7 +141,7 @@ const DefaultLayout = ({ component: Component, authenticated: Authenticated, isA
         return Authenticated
             ? <Container className={classes.nav_menu}>
                 <NavLink exact to="/" className={classes.nav_menu_item} activeClassName={classes.nav_menu_item_active}>Dashboard</NavLink>
-                <NavLink exact to="/devices" className={classes.nav_menu_item} activeClassName={classes.nav_menu_item_active}>Devices</NavLink>
+                <NavLink to="/devices" className={classes.nav_menu_item} activeClassName={classes.nav_menu_item_active}>Devices</NavLink>
                 <NavLink exact to="/heatmap" className={classes.nav_menu_item} activeClassName={classes.nav_menu_item_active}>Heatmap</NavLink>
                 <IconButton className={classes.nav_menu_icon}
                     ref={anchorRef}
