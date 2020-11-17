@@ -8,14 +8,8 @@ export default class SensorComponent extends Component {
     }
 
     render() {
-        const Sensors = this.props.device.sensors.map((sensor, index) => (
-            <Typography>Sensor {this.props.index}</Typography>
-        ));
 
         return (
-            <AccordionDetails>
-                {Sensors}
-            </AccordionDetails>
         );
     }
 }

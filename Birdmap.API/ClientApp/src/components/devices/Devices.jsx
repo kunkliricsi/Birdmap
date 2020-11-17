@@ -10,7 +10,7 @@ import { grey } from '@material-ui/core/colors';
 const styles = theme => ({
     root: {
         padding: '64px',
-        color: theme.palette.primary.main,
+        backgroundColor: theme.palette.primary.dark,
     }
 });
 

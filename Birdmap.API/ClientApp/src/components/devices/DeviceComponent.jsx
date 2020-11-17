@@ -6,6 +6,7 @@ import AccordionDetails from '@material-ui/core/AccordionDetails';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import { Grid, Typography, Paper } from '@material-ui/core';
 import { withStyles } from '@material-ui/styles';
+import { withRouter } from "react-router";
 
 const styles = theme => ({
     grid_typo: {
@@ -37,6 +38,10 @@ const styles = theme => ({
 class DeviceComponent extends Component {
     constructor(props) {
         super(props);
+
+        this.state = {
+            expanded: "",
+        }
     }
 
     getColor(status) {
@@ -49,17 +54,26 @@ class DeviceComponent extends Component {
         }
     }
 
+    componentDidMount() {
+        const id = this.props.match.params.id;
+        this.setState({ expanded: id });
+    }
+
     render() {
         const { classes } = this.props;
         const Sensors = this.props.device.sensors.map((sensor, index) => (
             <Grid item className={classes.grid_item} key={sensor.id}>
                 <Typography className={classes.grid_item_typo}>Sensor {index}</Typography>
-                <Typography className={classes.grid_item_typo_2}>S{sensor.id}</Typography>
+                <Typography className={classes.grid_item_typo_2}>{sensor.id}</Typography>
             </Grid>
         ));
 
+        const handleChange = (panel) => (event, isExpanded) => {
+            this.setState({ expanded: isExpanded ? panel : "" });
+        };
+
         return (
-            <Accordion>
+            <Accordion expanded={this.state.expanded === this.props.device.id} onChange={handleChange(this.props.device.id)}>
                 <AccordionSummary
                     expandIcon={<ExpandMoreIcon />}
                     aria-controls={"device-panel-/" + this.props.device.id}
@@ -82,4 +96,4 @@ class DeviceComponent extends Component {
     }
 }
 
-export default withStyles(styles)(DeviceComponent);
+export default withRouter(withStyles(styles)(DeviceComponent));

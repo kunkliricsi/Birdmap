@@ -1,9 +1,6 @@
 import { Box, Container, IconButton, Menu, MenuItem, MenuList, Paper, Grow, Popper } from '@material-ui/core';
 import AccountCircle from '@material-ui/icons/AccountCircle';
 import AppBar from '@material-ui/core/AppBar';
-import blue from '@material-ui/core/colors/blue';
-import orange from '@material-ui/core/colors/orange';
-import grey from '@material-ui/core/colors/grey';
 import { positions } from '@material-ui/system';
 import { createMuiTheme, createStyles, makeStyles, Theme } from '@material-ui/core/styles';
 import Toolbar from '@material-ui/core/Toolbar';
@@ -17,17 +14,18 @@ import AuthService from './components/auth/AuthService';
 import { ClickAwayListener } from '@material-ui/core';
 import MapContainer from './components/heatmap/Heatmap';
 import Devices from './components/devices/Devices';
+import { blueGrey, blue, orange, grey } from '@material-ui/core/colors';
 
 
 const theme = createMuiTheme({
     palette: {
         primary: {
             main: blue[900],
-            dark: grey[400],
+            dark: blueGrey[50],
         },
         secondary: {
             main: orange[200],
-            dark: grey[400],
+            dark: blueGrey[50],
         }
     },
 });
