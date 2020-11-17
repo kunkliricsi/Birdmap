@@ -3,6 +3,7 @@ import AccountCircle from '@material-ui/icons/AccountCircle';
 import AppBar from '@material-ui/core/AppBar';
 import blue from '@material-ui/core/colors/blue';
 import orange from '@material-ui/core/colors/orange';
+import grey from '@material-ui/core/colors/grey';
 import { positions } from '@material-ui/system';
 import { createMuiTheme, createStyles, makeStyles, Theme } from '@material-ui/core/styles';
 import Toolbar from '@material-ui/core/Toolbar';
@@ -15,15 +16,18 @@ import Auth from './components/auth/Auth';
 import AuthService from './components/auth/AuthService';
 import { ClickAwayListener } from '@material-ui/core';
 import MapContainer from './components/heatmap/Heatmap';
+import Devices from './components/devices/Devices';
 
 
 const theme = createMuiTheme({
     palette: {
         primary: {
             main: blue[900],
+            dark: grey[400],
         },
         secondary: {
             main: orange[200],
+            dark: grey[400],
         }
     },
 });
@@ -49,7 +53,7 @@ function App() {
     };
 
     const DevicesComponent = () => {
-        return <Typography>Devices</Typography>;
+        return <Devices/>;
 
     };
     const HeatmapComponent = () => {
@@ -180,7 +184,7 @@ const DefaultLayout = ({ component: Component, authenticated: Authenticated, isA
                     </Typography>
                 </Toolbar>
             </AppBar>
-            <Box zIndex="modal">
+            <Box zIndex="modal" className={classes.box_root}>
                 <Component isAdmin={IsAdmin} {...rest} />
             </Box>
         </React.Fragment>
@@ -189,6 +193,9 @@ const DefaultLayout = ({ component: Component, authenticated: Authenticated, isA
 
 const useDefaultLayoutStyles = makeStyles((theme: Theme) =>
     createStyles({
+        box_root: {
+            color: theme.palette.secondary.dark,
+        },
         typo: {
             marginLeft: 'auto',
             color: 'white',
