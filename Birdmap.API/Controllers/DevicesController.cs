@@ -75,6 +75,7 @@ namespace Birdmap.API.Controllers
         {
             _logger.LogInformation($"Getting device [{deviceID}]...");
 
+            await _hubContext.Clients.All.NotifyDeviceUpdatedAsync(deviceID);
             return await _service.GetdeviceAsync(deviceID);
         }
 
@@ -117,6 +118,7 @@ namespace Birdmap.API.Controllers
         {
             _logger.LogInformation($"Getting sensor [{sensorID}] of device [{deviceID}]...");
 
+            await _hubContext.Clients.All.NotifyDeviceUpdatedAsync(deviceID);
             return await _service.GetsensorAsync(deviceID, sensorID);
         }
 
@@ -131,6 +133,7 @@ namespace Birdmap.API.Controllers
             _logger.LogInformation($"Turning off sensor [{sensorID}] of device [{deviceID}]...");
 
             await _service.OfflinesensorAsync(deviceID, sensorID);
+            await _hubContext.Clients.All.NotifyDeviceUpdatedAsync(deviceID);
 
             return Ok();
         }
@@ -146,6 +149,7 @@ namespace Birdmap.API.Controllers
             _logger.LogInformation($"Turning on sensor [{sensorID}] of device [{deviceID}]...");
 
             await _service.OnlinesensorAsync(deviceID, sensorID);
+            await _hubContext.Clients.All.NotifyDeviceUpdatedAsync(deviceID);
 
             return Ok();
         }

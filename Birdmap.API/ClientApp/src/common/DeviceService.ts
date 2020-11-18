@@ -391,6 +391,7 @@ export default class DeviceService {
         let options_ = <RequestInit>{
             method: "POST",
             headers: {
+                'Authorization': sessionStorage.getItem('user')
             }
         };
 

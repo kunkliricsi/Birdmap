@@ -430,7 +430,9 @@ var DeviceService = /** @class */ (function () {
         url_ = url_.replace(/[?&]$/, "");
         var options_ = {
             method: "POST",
-            headers: {}
+            headers: {
+                'Authorization': sessionStorage.getItem('user')
+            }
         };
         return this.http.fetch(url_, options_).then(function (_response) {
             return _this.processOnlinesensor(_response);

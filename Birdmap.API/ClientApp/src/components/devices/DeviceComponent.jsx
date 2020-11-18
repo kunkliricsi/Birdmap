@@ -1,14 +1,22 @@
 ﻿import React, { Component } from 'react';
 import Accordion from '@material-ui/core/Accordion';
-import { blue, red, yellow } from '@material-ui/core/colors';
+import { blue, blueGrey, green, orange, red, yellow } from '@material-ui/core/colors';
 import AccordionSummary from '@material-ui/core/AccordionSummary';
 import AccordionDetails from '@material-ui/core/AccordionDetails';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
-import { Grid, Typography, Paper } from '@material-ui/core';
+import { Grid, Typography, Paper, IconButton, Box, FormControlLabel } from '@material-ui/core';
 import { withStyles } from '@material-ui/styles';
 import { withRouter } from "react-router";
+import { Power, PowerOff, Refresh } from '@material-ui/icons/';
+import DeviceService from '../../common/DeviceService'
 
 const styles = theme => ({
+    acc_summary: {
+        backgroundColor: blueGrey[50],
+    },
+    acc_details: {
+        backgroundColor: blueGrey[100],
+    },
     grid_typo: {
         fontSize: theme.typography.pxToRem(20),
         fontWeight: theme.typography.fontWeightRegular,
@@ -32,6 +40,9 @@ const styles = theme => ({
         fontSize: theme.typography.pxToRem(15),
         fontWeight: theme.typography.fontWeightRegular,
         color: theme.palette.text.secondary,
+    },
+    icon_box: {
+        marginRight: '15px',
     }
 });
 
@@ -46,9 +57,9 @@ class DeviceComponent extends Component {
 
     getColor(status) {
         if (status == "Online") {
-            return { color: blue[800] };
+            return { color: green[600] };
         } else if (status == "Offline") {
-            return { color: yellow[800] };
+            return { color: orange[900] };
         } else /* if (device.status == "unknown") */ {
             return { color: red[800] };
         }
@@ -59,12 +70,71 @@ class DeviceComponent extends Component {
         this.setState({ expanded: id });
     }
 
+    renderSensorButtons(device, sensor) {
+        var service = new DeviceService();
+        return this.renderButtons(
+            () => service.onlinesensor(device.id, sensor.id),
+            () => service.offlinesensor(device.id, sensor.id),
+            () => service.getsensor(device.id, sensor.id)
+        );
+    }
+
+    renderDeviceButtons(device) {
+        var service = new DeviceService();
+        return this.renderButtons(
+            () => service.onlinedevice(device.id),
+            () => service.offlinedevice(device.id),
+            () => service.getdevice(device.id)
+        );
+    }
+
+    renderButtons(onPower, onPowerOff, onRefresh) {
+        const renderOnOff = () => {
+            return (
+                <React.Fragment>
+                    <IconButton color="primary" onClick={onPower}>
+                        <Power />
+                    </IconButton>
+                    <IconButton color="primary" onClick={onPowerOff}>
+                        <PowerOff />
+                    </IconButton>
+                </React.Fragment>
+            );
+        }
+
+        const { classes } = this.props;
+        return (
+        <Box className={classes.icon_box}>
+                {this.props.isAdmin ? renderOnOff() : null}
+                <IconButton color="primary" onClick={onRefresh}>
+                    <Refresh />
+                </IconButton>
+            </Box>
+        );
+    }
+
     render() {
         const { classes } = this.props;
         const Sensors = this.props.device.sensors.map((sensor, index) => (
             <Grid item className={classes.grid_item} key={sensor.id}>
-                <Typography className={classes.grid_item_typo}>Sensor {index}</Typography>
-                <Typography className={classes.grid_item_typo_2}>{sensor.id}</Typography>
+                <Grid container
+                    spacing={3}
+                    direction="row"
+                    justify="space-between"
+                    alignItems="center">
+                    <Grid item>
+                        <Typography className={classes.grid_item_typo}>Sensor {index}</Typography>
+                    </Grid>
+                    <Grid item>
+                        <Typography className={classes.grid_item_typo_2}>{sensor.id}</Typography>
+                    </Grid>
+                    <Grid item>
+                        <Typography style={this.getColor(sensor.status)}>Status: <b>{sensor.status}</b></Typography>
+                    </Grid>
+                    <Grid item>
+                        {this.renderSensorButtons(this.props.device, sensor)}
+                    </Grid>
+                </Grid>
             </Grid>
         ));
 
@@ -74,22 +144,41 @@ class DeviceComponent extends Component {
 
         return (
             <Accordion expanded={this.state.expanded === this.props.device.id} onChange={handleChange(this.props.device.id)}>
-                <AccordionSummary
+                <AccordionSummary className={classes.acc_summary}
                     expandIcon={<ExpandMoreIcon />}
                     aria-controls={"device-panel-/" + this.props.device.id}
                     id={"device-panel-/" + this.props.device.id}>
-                    <Typography className={classes.grid_typo}>Device {this.props.index}</Typography>
-                    <Typography className={classes.grid_typo_2}>{this.props.device.id}</Typography>
+                    <Grid container
+                        spacing={3}
+                        direction="row"
+                        justify="space-between"
+                        alignItems="center">
+                        <Grid item>
+                            <Typography className={classes.grid_typo}>Device {this.props.index}</Typography>
+                        </Grid>
+                        <Grid item>
+                            <Typography className={classes.grid_typo_2}>{this.props.device.id}</Typography>
+                        </Grid>
+                        <Grid item>
+                            <Typography style={this.getColor(this.props.device.status)}>Status: <b>{this.props.device.status}</b></Typography>
+                        </Grid>
+                        <Grid item>
+                            <FormControlLabel
+                                onClick={(event) => event.stopPropagation()}
+                                onFocus={(event) => event.stopPropagation()}
+                                control={this.renderDeviceButtons(this.props.device)}/>
+                        </Grid>
+                    </Grid>
                 </AccordionSummary>
-                    <AccordionDetails>
+                <AccordionDetails className={classes.acc_details}>
                     <Grid className={classes.grid_item}
                         container
                         spacing={3}
                         direction="column"
                         justify="center"
                         alignItems="flex-start">
-                            {Sensors}
-                        </Grid>
+                        {Sensors}
+                    </Grid>
                 </AccordionDetails>
             </Accordion>
         );

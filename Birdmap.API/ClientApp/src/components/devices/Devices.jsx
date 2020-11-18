@@ -24,7 +24,7 @@ class Devices extends React.Component {
     render() {
         const { classes } = this.props;
         const Devices = this.context.devices.map((device, index) => (
-            <DeviceComponent device={device} index={index} key={device.id}/>
+            <DeviceComponent isAdmin={this.props.isAdmin} device={device} index={index} key={device.id}/>
         ));
 
         return (

@@ -52,7 +52,7 @@ function App() {
     };
 
     const DevicesComponent = () => {
-        return <Devices/>;
+        return <Devices isAdmin={isAdmin}/>;
 
     };
     const HeatmapComponent = () => {
@@ -69,9 +69,9 @@ function App() {
                 <Switch>
                     <PublicRoute path="/login" component={AuthComponent} />
                     <DevicesContextProvider>
-                        <PrivateRoute path="/" exact authenticated={authenticated} isAdmin={isAdmin} component={DashboardComponent} />
-                        <PrivateRoute path="/devices/:id?" exact authenticated={authenticated} isAdmin={isAdmin} component={DevicesComponent} />
-                        <PrivateRoute path="/heatmap" exact authenticated={authenticated} isAdmin={isAdmin} component={HeatmapComponent} />
+                        <PrivateRoute path="/" exact authenticated={authenticated} component={DashboardComponent} />
+                        <PrivateRoute path="/devices/:id?" exact authenticated={authenticated} component={DevicesComponent} />
+                        <PrivateRoute path="/heatmap" exact authenticated={authenticated} component={HeatmapComponent} />
                     </DevicesContextProvider>
                 </Switch>
             </BrowserRouter>
@@ -89,17 +89,17 @@ const PublicRoute = ({ component: Component, ...rest }: { [x: string]: any, comp
     );
 }
 
-const PrivateRoute = ({ component: Component, authenticated: Authenticated, isAdmin: IsAdmin, ...rest }: { [x: string]: any, component: any, authenticated: any, isAdmin: any }) => {
+const PrivateRoute = ({ component: Component, authenticated: Authenticated, ...rest }: { [x: string]: any, component: any, authenticated: any }) => {
     return (
         <Route {...rest} render={matchProps => (
             Authenticated
-                ? <DefaultLayout component={Component} authenticated={Authenticated} isAdmin={IsAdmin} {...matchProps} />
+                ? <DefaultLayout component={Component} authenticated={Authenticated} {...matchProps} />
                 : <Redirect to='/login' />
         )} />
     );
 };
 
-const DefaultLayout = ({ component: Component, authenticated: Authenticated, isAdmin: IsAdmin, ...rest }: { [x: string]: any, component: any, authenticated: any, isAdmin: any }) => {
+const DefaultLayout = ({ component: Component, authenticated: Authenticated, ...rest }: { [x: string]: any, component: any, authenticated: any }) => {
     const classes = useDefaultLayoutStyles();
     const [open, setOpen] = React.useState(false);
     const anchorRef = React.useRef<HTMLButtonElement>(null);
@@ -186,7 +186,7 @@ const DefaultLayout = ({ component: Component, authenticated: Authenticated, isA
                 </Toolbar>
             </AppBar>
             <Box zIndex="modal" className={classes.box_root}>
-                <Component isAdmin={IsAdmin} {...rest} />
+                <Component {...rest} />
             </Box>
         </React.Fragment>
     );
