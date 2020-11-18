@@ -24,7 +24,7 @@ export default {
 
         return service.authenticate(request)
             .then(response => {
-                console.log(response);
+                //console.log(response);
                 sessionStorage.setItem('user', `${response.tokenType} ${response.accessToken}`);
                 sessionStorage.setItem('role', response.userRole);
                 return Promise.resolve();

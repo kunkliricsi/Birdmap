@@ -10,7 +10,7 @@ namespace Birdmap.BLL.Services
 {
     public class DummyDeviceAndInputService : DeviceAndInputServiceBase
     {
-        private const int numberOfDevices = 10;
+        private const int numberOfDevices = 15;
 
         private const double centerLong = 21.469640;
         private const double centerLat = 48.275939;

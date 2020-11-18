@@ -1,7 +1,7 @@
 ﻿/*global google*/
 import GoogleMapReact from 'google-map-react';
 import React, { Component } from 'react';
-import DevicesService, { DeviceService } from '../devices/DeviceService'
+import DeviceService from '../devices/DeviceService'
 import DeviceMarker from './DeviceMarker'
 import { HubConnectionBuilder } from '@microsoft/signalr';
 
@@ -22,7 +22,6 @@ export default class MapContainer extends Component {
             center: {
                 lat: 48.275939, lng: 21.469640
             },
-            points: [],
             heatmapPoints: [],
             connection: null,
         }
@@ -30,7 +29,7 @@ export default class MapContainer extends Component {
 
     handleAllDevicesUpdated(service = null) {
         if (service === null) {
-            service = new DevicesService();
+            service = new DeviceService();
         }
         service.getall().then(result => {
             this.setState({ devices: result });
@@ -55,8 +54,7 @@ export default class MapContainer extends Component {
                 console.log('Hub Connected!');
 
                 newConnection.on(probability_method_name, (id, date, prob) => {
-                    this.state.points.push({ id, date, prob });
-                    //console.log(method_name + " recieved: [id: " + id + ", date: " + date + ", prob: " + prob + "]");
+                    //console.log(probability_method_name + " recieved: [id: " + id + ", date: " + date + ", prob: " + prob + "]");
                     if (prob > 0.5) {
                         var device = this.state.devices.filter(function (x) { return x.id === id })[0]
                         var newPoint = { lat: device.coordinates.latitude, lng: device.coordinates.longitude };

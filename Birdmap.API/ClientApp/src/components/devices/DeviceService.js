@@ -21,7 +21,7 @@ var __extends = (this && this.__extends) || (function () {
     };
 })();
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.ApiException = exports.SensorStatus = exports.Coordinates = exports.DeviceStatus = exports.Sensor = exports.Device = exports.DeviceService = void 0;
+exports.ApiException = exports.SensorStatus = exports.Coordinates = exports.DeviceStatus = exports.Sensor = exports.Device = void 0;
 var DeviceService = /** @class */ (function () {
     function DeviceService(baseUrl, http) {
         this.jsonParseReviver = undefined;
@@ -462,7 +462,7 @@ var DeviceService = /** @class */ (function () {
     };
     return DeviceService;
 }());
-exports.DeviceService = DeviceService;
+exports.default = DeviceService;
 var Device = /** @class */ (function () {
     function Device(data) {
         if (data) {
