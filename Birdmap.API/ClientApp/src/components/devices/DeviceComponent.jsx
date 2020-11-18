@@ -9,6 +9,7 @@ import { withStyles } from '@material-ui/styles';
 import { withRouter } from "react-router";
 import { Power, PowerOff, Refresh } from '@material-ui/icons/';
 import DeviceService from '../../common/DeviceService'
+import DevicesContext from '../../contexts/DevicesContext';
 
 const styles = theme => ({
     acc_summary: {
@@ -55,6 +56,8 @@ class DeviceComponent extends Component {
         }
     }
 
+    static contextType = DevicesContext;
+
     getColor(status) {
         if (status == "Online") {
             return { color: green[600] };
@@ -75,7 +78,7 @@ class DeviceComponent extends Component {
         return this.renderButtons(
             () => service.onlinesensor(device.id, sensor.id),
             () => service.offlinesensor(device.id, sensor.id),
-            () => service.getsensor(device.id, sensor.id)
+            () => this.context.updateDevice(device.id)
         );
     }
 
@@ -84,7 +87,7 @@ class DeviceComponent extends Component {
         return this.renderButtons(
             () => service.onlinedevice(device.id),
             () => service.offlinedevice(device.id),
-            () => service.getdevice(device.id)
+            () => this.context.updateDevice(device.id)
         );
     }
 

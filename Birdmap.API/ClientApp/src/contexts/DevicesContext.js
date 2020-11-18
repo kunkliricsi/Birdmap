@@ -6,4 +6,7 @@ export default React.createContext({
 
     addHandler: (_, __) => { },
     removeHandler: (_, __) => { },
+
+    updateDevice: () => { },
+    updateAllDevices: () => { },
 });

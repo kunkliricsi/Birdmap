@@ -40,13 +40,21 @@ export default class DevicesContextProvider extends Component {
         this.setState({ handlers: updatedHandlers });
     }
 
+    updateDevice = (id) => {
+        this.updateDeviceInternal(id);
+    }
+
+    updateAllDevices = () => {
+        this.updateAllDevicesInternal();
+    }
+
     invokeHandlers(methodName, context) {
         this.state.handlers[methodName].forEach(function (handler) {
             handler(context);
         });
     }
 
-    handleAllDevicesUpdated(service = null) {
+    updateAllDevicesInternal(service = null) {
         if (service === null) {
             service = new DeviceService();
         }
@@ -57,9 +65,27 @@ export default class DevicesContextProvider extends Component {
         });
     }
 
+    updateDeviceInternal(id, service = null) {
+        if (service === null) {
+            service = new DeviceService();
+        }
+        service.getdevice(id).then(result => {
+            const updatedDevices = [...this.state.devices];
+            var index = updatedDevices.findIndex((d => d.id == id));
+            if (index > -1) {
+                updatedDevices[index] = result;
+            }
+            else {
+                updatedDevices.push(result);
+            }
+            this.setState({ devices: updatedDevices });
+            this.invokeHandlers(C.update_method_name, result);
+        }).catch(ex => console.log("Device update failed.", ex));
+    }
+
     componentDidMount() {
         const service = new DeviceService();
-        this.handleAllDevicesUpdated(service);
+        this.updateAllDevicesInternal(service);
 
         const newConnection = new HubConnectionBuilder()
             .withUrl(hub_url)
@@ -84,24 +110,11 @@ export default class DevicesContextProvider extends Component {
                 });
 
                 newConnection.on(C.update_all_method_name, () => {
-                    this.handleAllDevicesUpdated(service);
+                    this.updateAllDevicesInternal(service);
                     this.invokeHandlers(C.update_all_method_name, null);
                 });
 
-                newConnection.on(C.update_method_name, (id) => {
-                    service.getdevice(id).then(result => {
-                        const updatedDevices = [...this.state.devices];
-                        var index = updatedDevices.findIndex((d => d.id == id));
-                        if (index > -1) {
-                            updatedDevices[index] = result;
-                        }
-                        else {
-                            updatedDevices.push(result);
-                        }
-                        this.setState({ devices: updatedDevices });
-                        this.invokeHandlers(C.update_method_name, result);
-                    }).catch(ex => console.log("Device update failed.", ex));
-                })
+                newConnection.on(C.update_method_name, (id) => this.updateDeviceInternal(id, service));
             }).catch(e => console.log('Hub Connection failed: ', e));
     }
 
@@ -123,6 +136,9 @@ export default class DevicesContextProvider extends Component {
 
                     addHandler: this.addHandler,
                     removeHandler: this.removeHandler,
+
+                    updateDevice: this.updateDevice,
+                    updateAllDevices: this.updateAllDevices,
                 }}
             >
                 {this.props.children}
