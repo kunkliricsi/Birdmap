@@ -8,20 +8,21 @@ import Typography from '@material-ui/core/Typography';
 import { ThemeProvider } from '@material-ui/styles';
 import React, { useState, } from 'react';
 import { BrowserRouter, NavLink, Redirect, Route, Switch, Link } from 'react-router-dom';
-import BirdmapTitle from './common/components/BirdmapTitle';
+import BirdmapTitle from './components/appBar/BirdmapTitle';
 import Auth from './components/auth/Auth';
 import AuthService from './components/auth/AuthService';
 import { ClickAwayListener } from '@material-ui/core';
 import MapContainer from './components/heatmap/Heatmap';
 import Devices from './components/devices/Devices';
 import { blueGrey, blue, orange, grey } from '@material-ui/core/colors';
+import DevicesContextProvider from './contexts/DevicesContextProvider'
 
 
 const theme = createMuiTheme({
     palette: {
         primary: {
-            main: blue[900],
-            dark: blueGrey[50],
+            main: blueGrey[900],
+            dark: grey[200],
         },
         secondary: {
             main: orange[200],
@@ -64,14 +65,16 @@ function App() {
 
     return (
         <ThemeProvider theme={theme}>
-                <BrowserRouter>
-                    <Switch>
-                        <PublicRoute path="/login" component={AuthComponent} />
+            <BrowserRouter>
+                <Switch>
+                    <PublicRoute path="/login" component={AuthComponent} />
+                    <DevicesContextProvider>
                         <PrivateRoute path="/" exact authenticated={authenticated} isAdmin={isAdmin} component={DashboardComponent} />
                         <PrivateRoute path="/devices/:id?" exact authenticated={authenticated} isAdmin={isAdmin} component={DevicesComponent} />
                         <PrivateRoute path="/heatmap" exact authenticated={authenticated} isAdmin={isAdmin} component={HeatmapComponent} />
-                    </Switch>
-                </BrowserRouter>
+                    </DevicesContextProvider>
+                </Switch>
+            </BrowserRouter>
         </ThemeProvider>
     );
 }

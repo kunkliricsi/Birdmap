@@ -1,7 +1,7 @@
 ﻿/*global google*/
 import GoogleMapReact from 'google-map-react';
 import React, { Component } from 'react';
-import DeviceService from '../devices/DeviceService'
+import DeviceService from '../../common/DeviceService'
 import DeviceMarker from './DeviceMarker'
 import { HubConnectionBuilder } from '@microsoft/signalr';
 
@@ -75,7 +75,7 @@ export default class MapContainer extends Component {
 
                 newConnection.on(update_method_name, (id) => {
                     service.getdevice(id).then(result => {
-                        var index = this.state.devices.findIndex((d => d.id == id));
+                        var index = this.state.devices.findIndex((d => d.id === id));
                         const newDevices = [...this.state.devices];
                         newDevices[index] = result;
                         this.setState({ devices: newDevices });

@@ -49,8 +49,6 @@
 
   <ItemGroup>
     <None Remove="ClientApp\src\common\components\BirdmapTitle.tsx" />
-    <None Remove="ClientApp\src\common\ErrorDispatcher.ts" />
-    <None Remove="ClientApp\src\common\ServiceBase.ts" />
     <None Remove="ClientApp\src\components\auth\Auth.tsx" />
     <None Remove="ClientApp\src\components\auth\AuthClient.ts" />
     <None Remove="ClientApp\src\components\auth\AuthService.ts" />
@@ -59,10 +57,10 @@
 
   <ItemGroup>
     <TypeScriptCompile Include="ClientApp\src\components\auth\Auth.tsx" />
-	<TypeScriptCompile Include="ClientApp\src\common\components\BirdmapTitle.tsx" />
   </ItemGroup>
 
   <ItemGroup>
+    <Folder Include="ClientApp\src\common\components\" />
     <Folder Include="ClientApp\src\components\dashboard\" />
   </ItemGroup>
 

@@ -1,41 +1,40 @@
 ﻿import Context from './DevicesContext'
 import { HubConnectionBuilder } from '@microsoft/signalr';
-import { DeviceService } from '../components/devices/DeviceService';
-import Constants from '../common/Constants'
+import DeviceService from '../common/DeviceService';
+import C from '../common/Constants'
 import React, { Component } from 'react'
-
 
 const hub_url = '/hubs/devices';
 
 export default class DevicesContextProvider extends Component {
-    state = {
-        hubConnection: null,
-        devices: [],
-        heatmapPoints: [],
-        handlers: {},
-    };
+    constructor(props) {
+        super(props);
 
-    addPoint = point => {
-        const updatedPoints = [...this.state.heatmapPoints];
-        updatedPoints.push(point);
-        this.setState({ heatmapPoints: updatedPoints });
-    };
+        const handlers = {};
+        for (var property in C) {
+            handlers[property] = [];
+        };
 
-    addDevice = device => {
-        const updatedDevices = [...this.state.devices];
-        updatedDevices.push(device);
-        this.setState({ devices: updatedDevices });
-    };
+        this.state = {
+            hubConnection: null,
+            devices: [],
+            heatmapPoints: [],
+            handlers: handlers,
+        };
+    }
 
     addHandler = (methodName, handler) => {
         const updatedHandlers = [...this.state.handlers];
-        var methodHandlers = updatedHandlers[methodName];
-        if (methodHandlers == null) {
-            methodHandlers = [];
-        };
-        const updatedMethodHandlers = [...methodHandlers];
-        updatedMethodHandlers.push(handler);
-        updatedHandlers[methodName] = updatedMethodHandlers;
+        updatedHandlers[methodName].push(handler);
+        this.setState({ handlers: updatedHandlers });
+    }
+
+    removeHandler = (methodName, handler) => {
+        const updatedHandlers = [...this.state.handlers];
+        var index = updatedHandlers[methodName].findIndex((h => h === handler));
+        if (index > 0) {
+            delete updatedHandlers[index];
+        }
         this.setState({ handlers: updatedHandlers });
     }
 
@@ -71,31 +70,34 @@ export default class DevicesContextProvider extends Component {
             .then(_ => {
                 console.log('Hub Connected!');
 
-                newConnection.on(Constants.probability_method_name, (id, date, prob) => {
+                newConnection.on(C.probability_method_name, (id, date, prob) => {
                     //console.log(method_name + " recieved: [id: " + id + ", date: " + date + ", prob: " + prob + "]");
-                    if (prob > 0.5) {
-                        var device = this.state.devices.filter(function (x) { return x.id === id })[0]
-                        var newPoint = { lat: device.coordinates.latitude, lng: device.coordinates.longitude };
-                        this.setState({
-                            heatmapPoints: [...this.state.heatmapPoints, newPoint]
-                        });
-                    }
+                    var device = this.state.devices.filter(function (x) { return x.id === id })[0]
+                    var newPoint = { lat: device.coordinates.latitude, lng: device.coordinates.longitude, prob: prob, date: date };
+                    this.setState({
+                        heatmapPoints: [...this.state.heatmapPoints, newPoint]
+                    });
 
-                    this.invokeHandlers(Constants.probability_method_name, { point: newPoint, probability: prob });
+                    this.invokeHandlers(C.probability_method_name, newPoint);
                 });
 
-                newConnection.on(Constants.update_all_method_name, () => {
+                newConnection.on(C.update_all_method_name, () => {
                     this.handleAllDevicesUpdated(service);
-                    this.invokeHandlers(Constants.update_all_method_name, null);
+                    this.invokeHandlers(C.update_all_method_name, null);
                 });
 
-                newConnection.on(Constants.update_method_name, (id) => {
+                newConnection.on(C.update_method_name, (id) => {
                     service.getdevice(id).then(result => {
-                        var index = this.state.devices.findIndex((d => d.id == id));
-                        const newDevices = [...this.state.devices];
-                        newDevices[index] = result;
-                        this.setState({ devices: newDevices });
-                        this.invokeHandlers(Constants.update_method_name, result);
+                        const updatedDevices = [...this.state.devices];
+                        var index = updatedDevices.findIndex((d => d.id == id));
+                        if (index > 0) {
+                            updatedDevices[index] = result;
+                        }
+                        else {
+                            updatedDevices.push(result);
+                        }
+                        this.setState({ devices: updatedDevices });
+                        this.invokeHandlers(C.update_method_name, result);
                     }).catch(ex => console.log("Device update failed.", ex));
                 })
             }).catch(e => console.log('Hub Connection failed: ', e));
@@ -103,9 +105,9 @@ export default class DevicesContextProvider extends Component {
 
     componentWillUnmount() {
         if (this.state.hubConnection != null) {
-            this.state.hubConnection.off(Constants.probability_method_name);
-            this.state.hubConnection.off(Constants.update_all_method_name);
-            this.state.hubConnection.off(Constants.update_method_name);
+            this.state.hubConnection.off(C.probability_method_name);
+            this.state.hubConnection.off(C.update_all_method_name);
+            this.state.hubConnection.off(C.update_method_name);
             console.log('Hub Disconnected!');
         }
     }
@@ -116,8 +118,6 @@ export default class DevicesContextProvider extends Component {
                 value={{
                     devices: this.state.devices,
                     heatmapPoints: this.state.heatmapPoints,
-                    addDevice: this.addDevice,
-                    addPoint: this.addPoint,
 
                     addHandler: this.addHandler
                 }}
