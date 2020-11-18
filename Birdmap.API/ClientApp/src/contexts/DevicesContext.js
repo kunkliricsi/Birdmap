@@ -5,4 +5,5 @@ export default React.createContext({
     heatmapPoints: [],
 
     addHandler: (_, __) => { },
+    removeHandler: (_, __) => { },
 });

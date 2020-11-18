@@ -22,7 +22,7 @@ const theme = createMuiTheme({
     palette: {
         primary: {
             main: blueGrey[900],
-            dark: grey[200],
+            dark: grey[400],
         },
         secondary: {
             main: orange[200],
@@ -177,7 +177,7 @@ const DefaultLayout = ({ component: Component, authenticated: Authenticated, isA
 
     return (
         <React.Fragment>
-            <AppBar position="static">
+            <AppBar position="static" className={classes.bar_root}>
                 <Toolbar>
                     <BirdmapTitle />
                     <Typography component={'span'} className={classes.typo}>
@@ -194,8 +194,12 @@ const DefaultLayout = ({ component: Component, authenticated: Authenticated, isA
 
 const useDefaultLayoutStyles = makeStyles((theme: Theme) =>
     createStyles({
+        bar_root: {
+            height: '7%',
+        },
         box_root: {
-            color: theme.palette.secondary.dark,
+            backgroundColor: theme.palette.primary.dark,
+            height: '93%',
         },
         typo: {
             marginLeft: 'auto',

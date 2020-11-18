@@ -1,96 +1,52 @@
 ﻿/*global google*/
 import GoogleMapReact from 'google-map-react';
 import React, { Component } from 'react';
-import DeviceService from '../../common/DeviceService'
 import DeviceMarker from './DeviceMarker'
-import { HubConnectionBuilder } from '@microsoft/signalr';
+import C from '../../common/Constants'
+import DevicesContext from '../../contexts/DevicesContext';
 
-const hub_url = '/hubs/devices';
-const probability_method_name = 'NotifyDeviceAsync';
-const update_method_name = 'NotifyDeviceUpdatedAsync';
-const update_all_method_name = 'NotifyAllUpdatedAsync';
 const lat_offset = 0.000038;
 const lng_offset = -0.000058;
-const heatmapPoints_session_name = 'heatmapPoints';
 
 export default class MapContainer extends Component {
     constructor(props) {
         super(props);
 
         this.state = {
-            devices: [],
             center: {
                 lat: 48.275939, lng: 21.469640
             },
             heatmapPoints: [],
-            connection: null,
-        }
+        };
+
+        this.probabilityHandler = this.probabilityHandler.bind(this);
     }
 
-    handleAllDevicesUpdated(service = null) {
-        if (service === null) {
-            service = new DeviceService();
+    static contextType = DevicesContext;
+
+    probabilityHandler(point) {
+        if (point.prob > 0.5) {
+
+            this.setState({
+                heatmapPoints: [...this.state.heatmapPoints, point]
+            });
+
+            if (this._googleMap !== undefined) {
+                const newPoint = { location: new google.maps.LatLng(point.lat, point.lng), weight: point.prob };
+                if (this._googleMap.heatmap !== null) {
+                    this._googleMap.heatmap.data.push(newPoint)
+                }
+            }
         }
-        service.getall().then(result => {
-            this.setState({ devices: result });
-        }).catch(ex => {
-            console.log(ex);
-        });
     }
 
     componentDidMount() {
-        const service = new DeviceService();
-        this.handleAllDevicesUpdated(service);
-
-        const newConnection = new HubConnectionBuilder()
-            .withUrl(hub_url)
-            .withAutomaticReconnect()
-            .build();
-
-        this.setState({ connection: newConnection });
-
-        newConnection.start()
-            .then(result => {
-                console.log('Hub Connected!');
-
-                newConnection.on(probability_method_name, (id, date, prob) => {
-                    //console.log(probability_method_name + " recieved: [id: " + id + ", date: " + date + ", prob: " + prob + "]");
-                    if (prob > 0.5) {
-                        var device = this.state.devices.filter(function (x) { return x.id === id })[0]
-                        var newPoint = { lat: device.coordinates.latitude, lng: device.coordinates.longitude };
-                        this.setState({
-                            heatmapPoints: [...this.state.heatmapPoints, newPoint]
-                        });
-
-                        if (this._googleMap !== undefined) {
-                            const point = { location: new google.maps.LatLng(newPoint.lat, newPoint.lng), weight: prob };
-                            this._googleMap.heatmap.data.push(point)
-                        }
-                    }
-                });
-
-                newConnection.on(update_all_method_name, () => {
-                    this.handleAllDevicesUpdated(service);
-                });
-
-                newConnection.on(update_method_name, (id) => {
-                    service.getdevice(id).then(result => {
-                        var index = this.state.devices.findIndex((d => d.id === id));
-                        const newDevices = [...this.state.devices];
-                        newDevices[index] = result;
-                        this.setState({ devices: newDevices });
-                    }).catch(ex => console.log("Device update failed.", ex));
-                })
-            }).catch(e => console.log('Hub Connection failed: ', e));
+        this.context.addHandler(C.probability_method_name, this.probabilityHandler);
+        this.setState({ heatmapPoints: [...this.context.heatmapPoints] });
     }
 
     componentWillUnmount() {
-        if (this.state.connection) {
-            this.state.connection.off(probability_method_name);
-            this.state.connection.off(update_all_method_name);
-            this.state.connection.off(update_method_name);
-            console.log('Hub Disconnected!');
-        }
+        this.context.removeHandler(C.probability_method_name, this.probabilityHandler);
     }
 
     render() {
@@ -112,7 +68,7 @@ export default class MapContainer extends Component {
             mapTypeId: 'satellite'
         }
 
-        const Markers = this.state.devices.map((device, index) => (
+        const Markers = this.context.devices.map((device, index) => (
             <DeviceMarker
                 key={device.id}
                 lat={device.coordinates.latitude + lat_offset}
@@ -122,7 +78,7 @@ export default class MapContainer extends Component {
         ));
 
         return (
-            <div style={{ height: '93.5vh', width: '100%' }}>
+            <div style={{ height: '93vh', width: '100%' }}>
                 <GoogleMapReact
                     bootstrapURLKeys={{
                         key: ["AIzaSyCZ51VFfxqZ2GkCmVrcNZdUKsM0fuBQUCY"],

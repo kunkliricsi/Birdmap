@@ -12,7 +12,7 @@ export default class DevicesContextProvider extends Component {
 
         const handlers = {};
         for (var property in C) {
-            handlers[property] = [];
+            handlers[C[property]] = [];
         };
 
         this.state = {
@@ -24,16 +24,18 @@ export default class DevicesContextProvider extends Component {
     }
 
     addHandler = (methodName, handler) => {
-        const updatedHandlers = [...this.state.handlers];
+        const updatedHandlers = this.state.handlers;
         updatedHandlers[methodName].push(handler);
+        //console.log("Added '" + methodName + "' handler.");
         this.setState({ handlers: updatedHandlers });
     }
 
     removeHandler = (methodName, handler) => {
-        const updatedHandlers = [...this.state.handlers];
+        const updatedHandlers = this.state.handlers;
         var index = updatedHandlers[methodName].findIndex((h => h === handler));
-        if (index > 0) {
-            delete updatedHandlers[index];
+        if (index > -1) {
+            updatedHandlers[methodName].splice(index, 1);
+            //console.log("Removed '" + methodName + "' handler.");
         }
         this.setState({ handlers: updatedHandlers });
     }
@@ -90,7 +92,7 @@ export default class DevicesContextProvider extends Component {
                     service.getdevice(id).then(result => {
                         const updatedDevices = [...this.state.devices];
                         var index = updatedDevices.findIndex((d => d.id == id));
-                        if (index > 0) {
+                        if (index > -1) {
                             updatedDevices[index] = result;
                         }
                         else {
@@ -119,7 +121,8 @@ export default class DevicesContextProvider extends Component {
                     devices: this.state.devices,
                     heatmapPoints: this.state.heatmapPoints,
 
-                    addHandler: this.addHandler
+                    addHandler: this.addHandler,
+                    removeHandler: this.removeHandler,
                 }}
             >
                 {this.props.children}
