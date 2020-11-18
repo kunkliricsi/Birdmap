@@ -42,7 +42,14 @@ export default class MapContainer extends Component {
 
     componentDidMount() {
         this.context.addHandler(C.probability_method_name, this.probabilityHandler);
-        this.setState({ heatmapPoints: [...this.context.heatmapPoints] });
+        const newPoints = [];
+        for (var p of this.context.heatmapPoints) {
+            if (p.prob > 0.5) {
+                newPoints.push(p)
+            }
+        }
+
+        this.setState({ heatmapPoints: newPoints });
     }
 
     componentWillUnmount() {
