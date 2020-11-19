@@ -1,9 +1,9 @@
 ﻿/*global google*/
 import GoogleMapReact from 'google-map-react';
 import React, { Component } from 'react';
-import DeviceMarker from './DeviceMarker'
-import C from '../../common/Constants'
+import C from '../../common/Constants';
 import DevicesContext from '../../contexts/DevicesContext';
+import DeviceMarker from './DeviceMarker';
 
 const lat_offset = 0.000038;
 const lng_offset = -0.000058;

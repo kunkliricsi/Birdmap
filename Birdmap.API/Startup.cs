@@ -139,6 +139,7 @@ namespace Birdmap.API
                 endpoints.MapHealthChecks("/health");
                 endpoints.MapControllers();
                 endpoints.MapHub<DevicesHub>("/hubs/devices");
+                endpoints.MapHub<ServicesHub>("/hubs/services");
             });
 
             app.UseSpa(spa =>

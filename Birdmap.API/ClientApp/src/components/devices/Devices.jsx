@@ -1,11 +1,11 @@
-﻿import { Box, Paper, Typography, IconButton, Grid } from '@material-ui/core';
-import { blue, blueGrey, green, orange, red, yellow } from '@material-ui/core/colors';
+﻿import { Box, Grid, IconButton, Paper, Typography } from '@material-ui/core';
+import { blueGrey } from '@material-ui/core/colors';
+import { Power, PowerOff, Refresh } from '@material-ui/icons/';
 import { withStyles } from '@material-ui/styles';
 import React from 'react';
 import DeviceService from '../../common/DeviceService';
 import DevicesContext from '../../contexts/DevicesContext';
 import DeviceComponent from './DeviceComponent';
-import { Power, PowerOff, Refresh } from '@material-ui/icons/';
 
 const styles = theme => ({
     root: {
@@ -15,7 +15,6 @@ const styles = theme => ({
     paper: {
         backgroundColor: blueGrey[50],
         height: '60px',
-        margin: 'auto',
     },
     typo: {
         fontSize: theme.typography.pxToRem(20),
@@ -69,15 +68,15 @@ class Devices extends React.Component {
             <Box className={classes.root}>
                 <Paper className={classes.paper} square>
                     <Grid container
-                        spacing={3}
+                        spacing={0}
                         direction="row"
                         justify="center"
                         alignItems="center">
                         <Grid item>
                             <Typography className={classes.typo}>All Devices</Typography>
                         </Grid>
-                            {this.renderButtons()}
                         <Grid item>
+                            {this.renderButtons()}
                         </Grid>
                     </Grid>
                 </Paper>

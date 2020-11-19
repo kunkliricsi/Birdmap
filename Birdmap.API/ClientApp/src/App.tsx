@@ -16,6 +16,7 @@ import MapContainer from './components/heatmap/Heatmap';
 import Devices from './components/devices/Devices';
 import { blueGrey, blue, orange, grey } from '@material-ui/core/colors';
 import DevicesContextProvider from './contexts/DevicesContextProvider'
+import Dashboard from './components/dashboard/Dashboard';
 
 
 const theme = createMuiTheme({
@@ -48,7 +49,7 @@ function App() {
     }
 
     const DashboardComponent = () => {
-        return <Link to="/devices/5">This is a link</Link>;
+        return <Dashboard isAdmin={isAdmin}/>;
     };
 
     const DevicesComponent = () => {

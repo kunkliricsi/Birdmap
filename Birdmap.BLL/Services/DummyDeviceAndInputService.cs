@@ -16,12 +16,12 @@ namespace Birdmap.BLL.Services
         private const double centerLat = 48.275939;
         private const double radius = 0.001;
 
-        private static readonly Random Rand = new Random();
+        private static readonly Random Rand = new();
 
-        private static readonly Lazy<ICollection<Device>> Devices = new Lazy<ICollection<Device>>(GenerateDevices);
+        private static readonly Lazy<ICollection<Device>> Devices = new(GenerateDevices);
 
-        private static readonly Dictionary<Guid, InputSingeResponse> TagToInput = new Dictionary<Guid, InputSingeResponse>();
-        private static readonly object InputLock = new object();
+        private static readonly Dictionary<Guid, InputSingeResponse> TagToInput = new();
+        private static readonly object InputLock = new();
 
         private static ListOfDevices GenerateDevices()
         {
@@ -43,20 +43,20 @@ namespace Birdmap.BLL.Services
                 var sensors = new ArrayofSensors();
                 for (int s = 0; s < Rand.Next(1, 6); s++)
                 {
-                    sensors.Add(new Sensor
+                    sensors.Add(new()
                     {
                         Id = Guid.NewGuid(),
                         Status = GetRandomEnum<SensorStatus>(),
                     });
                 }
 
-                devices.Add(new Device
+                devices.Add(new()
                 {
                     Id = Guid.NewGuid(),
                     Sensors = sensors,
                     Status = GetRandomEnum<DeviceStatus>(),
                     Url = "dummyservice.device.url",
-                    Coordinates = new Coordinates
+                    Coordinates = new()
                     {
                         Latitude = GetPlusMinus(centerLat, radius),
                         Longitude = GetPlusMinus(centerLong, radius),
@@ -150,10 +150,10 @@ namespace Birdmap.BLL.Services
             {
                 if (!TagToInput.TryGetValue(tagID, out var value))
                 {
-                    value = new InputSingeResponse
+                    value = new()
                     {
                         Status = "Dummy_OK",
-                        Message = new InputObject
+                        Message = new()
                         {
                             Tag = tagID,
                             Date = DateTime.Now,

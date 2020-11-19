@@ -96,7 +96,7 @@ export default class DevicesContextProvider extends Component {
 
         newConnection.start()
             .then(_ => {
-                console.log('Hub Connected!');
+                console.log('Devices hub Connected!');
 
                 newConnection.on(C.probability_method_name, (id, date, prob) => {
                     //console.log(method_name + " recieved: [id: " + id + ", date: " + date + ", prob: " + prob + "]");
@@ -115,7 +115,7 @@ export default class DevicesContextProvider extends Component {
                 });
 
                 newConnection.on(C.update_method_name, (id) => this.updateDeviceInternal(id, service));
-            }).catch(e => console.log('Hub Connection failed: ', e));
+            }).catch(e => console.log('Devices hub Connection failed: ', e));
     }
 
     componentWillUnmount() {
@@ -123,7 +123,7 @@ export default class DevicesContextProvider extends Component {
             this.state.hubConnection.off(C.probability_method_name);
             this.state.hubConnection.off(C.update_all_method_name);
             this.state.hubConnection.off(C.update_method_name);
-            console.log('Hub Disconnected!');
+            console.log('Devices hub Disconnected!');
         }
     }
 

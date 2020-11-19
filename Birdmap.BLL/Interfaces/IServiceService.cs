@@ -6,6 +6,7 @@ namespace Birdmap.BLL.Interfaces
 {
     public interface IServiceService
     {
+        Task<int> GetServiceCountAsync();
         Task<List<Service>> GetAllServicesAsync();
         Task<Service> GetServiceAsync(int id);
         Task<Service> CreateServiceAsync(Service service);

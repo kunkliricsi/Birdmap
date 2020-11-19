@@ -9,7 +9,6 @@ using MQTTnet.Client.Disconnecting;
 using MQTTnet.Client.Options;
 using Newtonsoft.Json;
 using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
@@ -23,6 +22,8 @@ namespace Birdmap.API.Services.Mqtt
         private readonly ILogger<MqttClientService> _logger;
         private readonly IInputService _inputService;
         private readonly IHubContext<DevicesHub, IDevicesHubClient> _hubContext;
+
+        public bool IsConnected => _mqttClient.IsConnected;
 
         public MqttClientService(IMqttClientOptions options, ILogger<MqttClientService> logger, IInputService inputService, IHubContext<DevicesHub, IDevicesHubClient> hubContext)
         {

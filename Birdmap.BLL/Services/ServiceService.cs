@@ -17,6 +17,11 @@ namespace Birdmap.BLL.Services
             _context = context;
         }
 
+        public Task<int> GetServiceCountAsync()
+        {
+            return _context.Services.CountAsync();
+        }
+
         public async Task<Service> CreateServiceAsync(Service service)
         {
             _context.Services.Add(service);

@@ -10,6 +10,6 @@ namespace Birdmap.API.Services
                                           IMqttClientDisconnectedHandler,
                                           IMqttApplicationMessageReceivedHandler
     {
-
+        public bool IsConnected { get; }
     }
 }

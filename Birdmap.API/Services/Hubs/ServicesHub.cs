@@ -5,25 +5,25 @@ using System.Threading.Tasks;
 
 namespace Birdmap.API.Services.Hubs
 {
-    public class DevicesHub : Hub<IDevicesHubClient>
+    public class ServicesHub : Hub<IServicesHubClient>
     {
-        private readonly ILogger<DevicesHub> _logger;
+        private readonly ILogger<ServicesHub> _logger;
 
-        public DevicesHub(ILogger<DevicesHub> logger)
+        public ServicesHub(ILogger<ServicesHub> logger)
         {
             _logger = logger;
         }
 
         public override Task OnConnectedAsync()
         {
-            _logger.LogInformation("Devices Hub Client connected.");
+            _logger.LogInformation("Services Hub Client connected.");
 
             return base.OnConnectedAsync();
         }
 
         public override Task OnDisconnectedAsync(Exception exception)
         {
-            _logger.LogInformation("Devices Hub Client disconnected.");
+            _logger.LogInformation("Services Hub Client disconnected.");
 
             return base.OnDisconnectedAsync(exception);
         }

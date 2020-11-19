@@ -1,14 +1,14 @@
-﻿import React, { Component } from 'react';
+﻿import { Box, FormControlLabel, Grid, IconButton, Typography } from '@material-ui/core';
 import Accordion from '@material-ui/core/Accordion';
-import { blue, blueGrey, green, orange, red, yellow } from '@material-ui/core/colors';
-import AccordionSummary from '@material-ui/core/AccordionSummary';
 import AccordionDetails from '@material-ui/core/AccordionDetails';
-import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
-import { Grid, Typography, Paper, IconButton, Box, FormControlLabel } from '@material-ui/core';
-import { withStyles } from '@material-ui/styles';
-import { withRouter } from "react-router";
+import AccordionSummary from '@material-ui/core/AccordionSummary';
+import { blueGrey, green, orange, red } from '@material-ui/core/colors';
 import { Power, PowerOff, Refresh } from '@material-ui/icons/';
-import DeviceService from '../../common/DeviceService'
+import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
+import { withStyles } from '@material-ui/styles';
+import React, { Component } from 'react';
+import { withRouter } from "react-router";
+import DeviceService from '../../common/DeviceService';
 import DevicesContext from '../../contexts/DevicesContext';
 
 const styles = theme => ({
@@ -31,6 +31,7 @@ const styles = theme => ({
     grid_item: {
         width: '100%',
         marginLeft: '5px',
+        marginRight: '30px',
     },
     grid_item_typo: {
         fontSize: theme.typography.pxToRem(15),

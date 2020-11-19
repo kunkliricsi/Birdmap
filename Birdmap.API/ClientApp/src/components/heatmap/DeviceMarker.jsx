@@ -1,11 +1,9 @@
-﻿import RadioButtonCheckedIcon from '@material-ui/icons/RadioButtonChecked';
-import PlayCircleFilledIcon from '@material-ui/icons/PlayCircleFilled';
-import { shadows } from '@material-ui/system';
-import { Box, Popover, Typography, Tooltip, Grid } from '@material-ui/core';
+﻿import { Box, Tooltip } from '@material-ui/core';
 import { blue, red, yellow } from '@material-ui/core/colors';
-import React, { Component } from 'react';
-import { useHistory, withRouter  } from 'react-router-dom';
+import RadioButtonCheckedIcon from '@material-ui/icons/RadioButtonChecked';
 import { makeStyles } from '@material-ui/styles';
+import React, { Component } from 'react';
+import { withRouter } from 'react-router-dom';
 
 class DeviceMarker extends Component {
     constructor(props) {
