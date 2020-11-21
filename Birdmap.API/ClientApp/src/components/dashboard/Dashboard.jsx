@@ -46,6 +46,20 @@ class Dashboard extends Component {
 
     static contextType = DevicesContext;
 
+    componentDidMount() {
+        this.context.addHandler(C.update_all_method_name, this.updateSeries);
+        this.context.addHandler(C.update_method_name, this.updateSeries);
+        this.updateSeries();
+        window.setInterval(() => {
+            this.updateDynamic();
+        }, 2000);
+    }
+
+    componentWillUnmount() {
+        this.context.removeHandler(C.update_all_method_name, this.updateSeries);
+        this.context.removeHandler(C.update_method_name, this.updateSeries);
+    }
+
     getItemsWithStatus(iterate, status) {
         const items = [];
 
@@ -91,65 +105,73 @@ class Dashboard extends Component {
     updateSeries() {
         this.setState({
             deviceSeries: this.getDeviceSeries(),
-            sensorSeries: this.getSensorSeries(),
-            heatmapSecondsSeries: this.getHeatmapSecondsSeries(),
-            heatmapMinutesSeries: this.getHeatmapMinutesSeries(),
-            barSeries: this.getBarSeries(),
-            barCategories: this.getBarCategories(),
-            lineSeries: this.getLineSeries(),
+            sensorSeries: this.getSensorSeries()
         });
+
+        this.updateDynamic();
     }
 
     updateDynamic() {
-        this.setState({
-            heatmapSecondsSeries: this.getHeatmapSecondsSeries(),
-            heatmapMinutesSeries: this.getHeatmapMinutesSeries(),
-            barSeries: this.getBarSeries(),
-            barCategories: this.getBarCategories(),
-            lineSeries: this.getLineSeries(),
-        });
-    }
-
-    componentDidMount() {
-        this.context.addHandler(C.update_all_method_name, this.updateSeries);
-        this.context.addHandler(C.update_method_name, this.updateSeries);
-        this.updateSeries();
-        window.setInterval(() => {
-            this.updateDynamic();
-        }, 1000);
-    }
-
-    componentWillUnmount() {
-        this.context.removeHandler(C.update_all_method_name, this.updateSeries);
-        this.context.removeHandler(C.update_method_name, this.updateSeries);
-    }
-
-    getHeatmapSecondsSeries() {
+        const secondAgo = new Date( Date.now() - 1000 * 1 );
         const minuteAgo = new Date( Date.now() - 1000 * 60 );
+        const hourAgo = new Date( Date.now() - 1000 * 60 * 60 );
 
-        const devicePoints = {};
+        const minuteDevicePoints = {};
+        const hourDevicePoints = {};
+        const barDevicePoints = {};
+        const linePoints = {};
 
         for (var d of this.context.devices) {
-            devicePoints[d.id] = Array(60).fill(0);
+            minuteDevicePoints[d.id] = Array(60).fill(0);
+            hourDevicePoints[d.id] = Array(60).fill(0);
+            barDevicePoints[d.id] = Array(3).fill(0);
         }
 
         for (var p of this.context.heatmapPoints) {
             if (p.date > minuteAgo) {
                 var seconds = Math.floor((p.date.getTime() - minuteAgo.getTime()) / 1000);
-                var oldProb = devicePoints[p.deviceId][seconds];
+                var oldProb = minuteDevicePoints[p.deviceId][seconds];
                 if (oldProb < p.prob) {
-                    devicePoints[p.deviceId][seconds] = p.prob;
+                    minuteDevicePoints[p.deviceId][seconds] = p.prob;
+                }
+            }
+
+            if (p.date > hourAgo) {
+                var minutes = Math.floor((p.date.getTime() - hourAgo.getTime()) / (1000 * 60));
+                var oldProb = hourDevicePoints[p.deviceId][minutes];
+                if (oldProb < p.prob) {
+                    hourDevicePoints[p.deviceId][minutes] = p.prob;
+                }
+            }
+            
+            if (p.prob > 0.5 && p.prob <= 0.7) {
+                barDevicePoints[p.deviceId][0] += 1;
+            }
+            if (p.prob > 0.7 && p.prob <= 0.9) {
+                barDevicePoints[p.deviceId][1] += 1;
+            }
+            if (p.prob > 0.9) {
+                barDevicePoints[p.deviceId][2] += 1;
+            }
+
+            if (p.date < secondAgo) {
+                var shortDate = p.date.toUTCString();
+                var point = linePoints[shortDate];
+                if (point === undefined) {
+                    linePoints[shortDate] = 1;
+                } else {
+                    linePoints[shortDate] += 1;
                 }
             }
         }
 
-        const series = [];
+        const minuteHeatmapSeries = [];
 
         var i = 0;
-        for (var p in devicePoints) {
-            series.push({
+        for (var p in minuteDevicePoints) {
+            minuteHeatmapSeries.push({
                 name: "Device " + i,
-                data: devicePoints[p].map((value, index) => ({
+                data: minuteDevicePoints[p].map((value, index) => ({
                     x: new Date( Date.now() - (60 - index) * 1000 ).toLocaleTimeString('hu-HU'),
                     y: value
                 })),
@@ -157,122 +179,70 @@ class Dashboard extends Component {
             i++;
         };
 
-        return series;
-    }
-
-    getHeatmapMinutesSeries() {
-        const hourAgo = new Date( Date.now() - 1000 * 60 * 60 );
-
-        const devicePoints = {};
-
-        for (var d of this.context.devices) {
-            devicePoints[d.id] = Array(60).fill(0);
-        }
-
-        for (var p of this.context.heatmapPoints) {
-            if (p.date > hourAgo) {
-                var minutes = Math.floor((p.date.getTime() - hourAgo.getTime()) / (1000 * 60));
-                var oldProb = devicePoints[p.deviceId][minutes];
-                if (oldProb < p.prob) {
-                    devicePoints[p.deviceId][minutes] = p.prob;
-                }
-            }
-        }
-
-        const series = [];
+        const hourHeatmapSeries = [];
 
         var i = 0;
-        for (var p in devicePoints) {
-            series.push({
+        for (var p in hourDevicePoints) {
+            hourHeatmapSeries.push({
                 name: "Device " + i,
-                data: devicePoints[p].map((value, index) => ({
+                data: hourDevicePoints[p].map((value, index) => ({
                     x: new Date( Date.now() - (60 - index) * 1000 * 60 ).toLocaleTimeString('hu-HU').substring(0, 5),
                     y: value
                 })),
             });
             i++;
         };
-
-        return series;
-    }
-
-    getBarSeries() {
-        const devicePoints = {};
-        for (var d of this.context.devices) {
-            devicePoints[d.id] = Array(3).fill(0);
-        }
         
-        for (var p of this.context.heatmapPoints) {
-            if (p.prob > 0.5 && p.prob <= 0.7) {
-                devicePoints[p.deviceId][0] += 1;
-            }
-            if (p.prob > 0.7 && p.prob <= 0.9) {
-                devicePoints[p.deviceId][1] += 1;
-            }
-            if (p.prob > 0.9) {
-                devicePoints[p.deviceId][2] += 1;
-            }
-        }
-        
-        const series = [];
+        const barSeries = [];
+
         const getCount = column => {
             var counts = [];
 
-            for (var p in devicePoints) {
-                counts.unshift(devicePoints[p][column]);
+            for (var p in barDevicePoints) {
+                counts.unshift(barDevicePoints[p][column]);
             }
 
             return counts;
         };
 
-        series.push({
+        barSeries.push({
             name: "Prob > 0.5",
             data: getCount(0),
         });
-        series.push({
+        barSeries.push({
             name: "Prob > 0.7",
             data: getCount(1),
         });
-        series.push({
+        barSeries.push({
             name: "Prob > 0.9",
             data: getCount(2),
         });
 
-        return series;
-    }
-
-    getBarCategories() {
-        const categories = [];
-
-        for (var i = this.context.devices.length - 1; i >= 0; i--) {
-            categories.push("Device " + i)
-        }
-
-        return categories;
-    }
-
-    getLineSeries() {
-        const messages = {};
-
-        for (var p of this.context.heatmapPoints) {
-            var shortDate = p.date.toUTCString();
-            var message = messages[shortDate];
-            if (message === undefined) {
-                messages[shortDate] = 1;
-            } else {
-                messages[shortDate] += 1;
-            }
-        }
-
-        const series = [{name: "message/sec", data: []}];
-        for (var m in messages) {
-            series[0].data.push({
+        const lineSeries = [{name: "message/sec", data: []}];
+        for (var m in linePoints) {
+            lineSeries[0].data.push({
                 x: new Date(m).getTime(),
-                y: messages[m],
+                y: linePoints[m],
             })
         }
 
-        return series;
+        const getBarCategories = () => {
+            const categories = [];
+    
+            for (var i = this.context.devices.length - 1; i >= 0; i--) {
+                categories.push("Device " + i)
+            }
+    
+            return categories;
+        }
+
+        this.setState({
+            heatmapSecondsSeries: minuteHeatmapSeries,
+            heatmapMinutesSeries: hourHeatmapSeries,
+            barSeries: barSeries,
+            barCategories: getBarCategories(),
+            lineSeries: lineSeries,
+        });
     }
 
     render() {
