@@ -52,7 +52,7 @@
     <None Remove="ClientApp\src\components\auth\Auth.tsx" />
     <None Remove="ClientApp\src\components\auth\AuthClient.ts" />
     <None Remove="ClientApp\src\components\auth\AuthService.ts" />
-    <None Remove="ClientApp\src\components\dashboard\DashboardService.ts" />
+    <None Remove="ClientApp\src\components\dashboard\ServiceInfoService.ts" />
     <None Remove="ClientApp\src\components\devices\DeviceService.ts" />
   </ItemGroup>
 

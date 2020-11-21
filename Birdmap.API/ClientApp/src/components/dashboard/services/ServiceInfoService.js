@@ -22,13 +22,13 @@ var __extends = (this && this.__extends) || (function () {
 })();
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.ApiException = exports.HttpStatusCode = exports.ServiceRequest = exports.ServiceInfo = void 0;
-var DashboardService = /** @class */ (function () {
-    function DashboardService(baseUrl, http) {
+var ServiceInfoService = /** @class */ (function () {
+    function ServiceInfoService(baseUrl, http) {
         this.jsonParseReviver = undefined;
         this.http = http ? http : window;
         this.baseUrl = baseUrl !== undefined && baseUrl !== null ? baseUrl : "";
     }
-    DashboardService.prototype.getCount = function () {
+    ServiceInfoService.prototype.getCount = function () {
         var _this = this;
         var url_ = this.baseUrl + "/api/Services/count";
         url_ = url_.replace(/[?&]$/, "");
@@ -43,7 +43,7 @@ var DashboardService = /** @class */ (function () {
             return _this.processGetCount(_response);
         });
     };
-    DashboardService.prototype.processGetCount = function (response) {
+    ServiceInfoService.prototype.processGetCount = function (response) {
         var _this = this;
         var status = response.status;
         var _headers = {};
@@ -66,7 +66,7 @@ var DashboardService = /** @class */ (function () {
         }
         return Promise.resolve(null);
     };
-    DashboardService.prototype.get = function () {
+    ServiceInfoService.prototype.get = function () {
         var _this = this;
         var url_ = this.baseUrl + "/api/Services";
         url_ = url_.replace(/[?&]$/, "");
@@ -81,7 +81,7 @@ var DashboardService = /** @class */ (function () {
             return _this.processGet(_response);
         });
     };
-    DashboardService.prototype.processGet = function (response) {
+    ServiceInfoService.prototype.processGet = function (response) {
         var _this = this;
         var status = response.status;
         var _headers = {};
@@ -110,7 +110,7 @@ var DashboardService = /** @class */ (function () {
         }
         return Promise.resolve(null);
     };
-    DashboardService.prototype.post = function (request) {
+    ServiceInfoService.prototype.post = function (request) {
         var _this = this;
         var url_ = this.baseUrl + "/api/Services";
         url_ = url_.replace(/[?&]$/, "");
@@ -128,7 +128,7 @@ var DashboardService = /** @class */ (function () {
             return _this.processPost(_response);
         });
     };
-    DashboardService.prototype.processPost = function (response) {
+    ServiceInfoService.prototype.processPost = function (response) {
         var _this = this;
         var status = response.status;
         var _headers = {};
@@ -151,7 +151,7 @@ var DashboardService = /** @class */ (function () {
         }
         return Promise.resolve(null);
     };
-    DashboardService.prototype.put = function (request) {
+    ServiceInfoService.prototype.put = function (request) {
         var _this = this;
         var url_ = this.baseUrl + "/api/Services";
         url_ = url_.replace(/[?&]$/, "");
@@ -168,7 +168,7 @@ var DashboardService = /** @class */ (function () {
             return _this.processPut(_response);
         });
     };
-    DashboardService.prototype.processPut = function (response) {
+    ServiceInfoService.prototype.processPut = function (response) {
         var status = response.status;
         var _headers = {};
         if (response.headers && response.headers.forEach) {
@@ -187,7 +187,7 @@ var DashboardService = /** @class */ (function () {
         }
         return Promise.resolve(null);
     };
-    DashboardService.prototype.delete = function (id) {
+    ServiceInfoService.prototype.delete = function (id) {
         var _this = this;
         var url_ = this.baseUrl + "/api/Services/{id}";
         if (id === undefined || id === null)
@@ -204,7 +204,7 @@ var DashboardService = /** @class */ (function () {
             return _this.processDelete(_response);
         });
     };
-    DashboardService.prototype.processDelete = function (response) {
+    ServiceInfoService.prototype.processDelete = function (response) {
         var status = response.status;
         var _headers = {};
         if (response.headers && response.headers.forEach) {
@@ -223,9 +223,9 @@ var DashboardService = /** @class */ (function () {
         }
         return Promise.resolve(null);
     };
-    return DashboardService;
+    return ServiceInfoService;
 }());
-exports.default = DashboardService;
+exports.default = ServiceInfoService;
 var ServiceInfo = /** @class */ (function () {
     function ServiceInfo(data) {
         if (data) {
@@ -383,4 +383,4 @@ function throwException(message, status, response, headers, result) {
     else
         throw new ApiException(message, status, response, headers, null);
 }
-//# sourceMappingURL=DashboardService.js.map
+//# sourceMappingURL=SystemInfoService.js.map
