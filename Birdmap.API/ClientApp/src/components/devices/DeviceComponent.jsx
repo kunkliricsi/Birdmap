@@ -63,8 +63,8 @@ class DeviceComponent extends Component {
         if (status == "Online") {
             return { color: green[600] };
         } else if (status == "Offline") {
-            return { color: orange[900] };
-        } else /* if (device.status == "unknown") */ {
+            return { color: blueGrey[500] };
+        } else /* if (device.status == "Unknown" || device.status == "Error") */ {
             return { color: red[800] };
         }
     }

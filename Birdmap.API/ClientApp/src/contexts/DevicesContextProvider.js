@@ -60,6 +60,7 @@ export default class DevicesContextProvider extends Component {
         }
         service.getall().then(result => {
             this.setState({ devices: result });
+            this.invokeHandlers(C.update_all_method_name, null);
         }).catch(ex => {
             console.log(ex);
         });
@@ -101,7 +102,7 @@ export default class DevicesContextProvider extends Component {
                 newConnection.on(C.probability_method_name, (id, date, prob) => {
                     //console.log(method_name + " recieved: [id: " + id + ", date: " + date + ", prob: " + prob + "]");
                     var device = this.state.devices.filter(function (x) { return x.id === id })[0]
-                    var newPoint = { lat: device.coordinates.latitude, lng: device.coordinates.longitude, prob: prob, date: date };
+                    var newPoint = { deviceId: device.id, lat: device.coordinates.latitude, lng: device.coordinates.longitude, prob: prob, date: new Date(date) };
                     this.setState({
                         heatmapPoints: [...this.state.heatmapPoints, newPoint]
                     });
@@ -111,7 +112,6 @@ export default class DevicesContextProvider extends Component {
 
                 newConnection.on(C.update_all_method_name, () => {
                     this.updateAllDevicesInternal(service);
-                    this.invokeHandlers(C.update_all_method_name, null);
                 });
 
                 newConnection.on(C.update_method_name, (id) => this.updateDeviceInternal(id, service));

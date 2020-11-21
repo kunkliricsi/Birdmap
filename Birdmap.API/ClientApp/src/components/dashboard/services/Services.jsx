@@ -108,7 +108,7 @@ class Services extends Component {
 
         const Skeletons = this.state.serviceCount.map((i, index) => (
             <ServiceInfoSkeleton key={index} />
-            ));
+        ));
 
         return (
             <React.Fragment>
@@ -134,7 +134,7 @@ class Services extends Component {
                                 <Refresh fontSize="large" />
                             </IconButton>
                         </Grid>
-                    <AddNewDialog open={this.state.isDialogOpen} handleClose={() => this.setState({ isDialogOpen: false })} handleAdd={this.addDevice}/>
+                        <AddNewDialog open={this.state.isDialogOpen} handleClose={() => this.setState({ isDialogOpen: false })} handleAdd={this.addDevice} />
                     </Grid>
                 </Paper>
                 {this.state.isLoading ? Skeletons : ServiceComponents}
