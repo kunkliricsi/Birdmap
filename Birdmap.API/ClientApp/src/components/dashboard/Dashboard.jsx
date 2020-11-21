@@ -252,11 +252,8 @@ class Dashboard extends Component {
     }
 
     getLineSeries() {
-        const xSecondsAgo = new Date( Date.now() - 1000 * 2 );
-        const aSecondAgo = new Date( Date.now() - 1000 * 1);
         const messages = {};
 
-        var counter = 0;
         for (var p of this.context.heatmapPoints) {
             var shortDate = p.date.toUTCString();
             var message = messages[shortDate];
@@ -267,13 +264,14 @@ class Dashboard extends Component {
             }
         }
 
-        const series = [{data: []}];
+        const series = [{name: "message/sec", data: []}];
         for (var m in messages) {
             series[0].data.push({
                 x: new Date(m).getTime(),
                 y: messages[m],
             })
         }
+
         return series;
     }
 

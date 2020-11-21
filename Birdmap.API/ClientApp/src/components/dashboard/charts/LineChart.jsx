@@ -10,15 +10,15 @@ export class LineChart extends Component {
             options: {
                 chart: {
                     animations: {
-                        enabled: false,
+                        enabled: true,
                         easing: 'linear',
                         speed: 1000,
                         animateGradually: {
                             enabled: false,
                         },
                         dynamicAnimation: {
-                            enabled: true,
-                            speed: 500
+                            enabled: false,
+                            speed: 1000
                         }
                     },
                     zoom: {

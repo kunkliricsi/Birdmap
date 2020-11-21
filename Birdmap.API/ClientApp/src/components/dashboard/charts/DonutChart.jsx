@@ -9,20 +9,6 @@ export class DonutChart extends Component {
 
         this.state = {
             options: {
-                chart: {
-                    animations: {
-                        enabled: false,
-                        easing: 'linear',
-                        speed: 1000,
-                        animateGradually: {
-                            enabled: false,
-                        },
-                        dynamicAnimation: {
-                            enabled: true,
-                            speed: 500
-                        }
-                    }
-                },
                 legend: {
                     fontSize: '18px',
                 },
