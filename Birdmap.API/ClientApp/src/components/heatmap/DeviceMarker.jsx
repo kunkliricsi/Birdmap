@@ -16,9 +16,9 @@ class DeviceMarker extends Component {
 
     getColor() {
         const { device } = this.props;
-        if (device.status == "Online") {
+        if (device.status === "Online") {
             return { color: blue[800] };
-        } else if (device.status == "Offline") {
+        } else if (device.status === "Offline") {
             return { color: yellow[800] };
         } else /* if (device.status == "unknown") */ {
             return { color: red[800] };

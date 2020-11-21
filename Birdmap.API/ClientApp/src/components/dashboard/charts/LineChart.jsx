@@ -12,13 +12,13 @@ export class LineChart extends Component {
                     animations: {
                         enabled: true,
                         easing: 'linear',
-                        speed: 1000,
+                        speed: 250,
                         animateGradually: {
                             enabled: false,
                         },
                         dynamicAnimation: {
-                            enabled: false,
-                            speed: 1000
+                            enabled: true,
+                            speed: 250
                         }
                     },
                     zoom: {

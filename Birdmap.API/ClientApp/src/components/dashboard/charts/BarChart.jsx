@@ -16,6 +16,18 @@ export class BarChart extends Component {
             this.setState({options: {
                 chart: {
                   stacked: true,
+                  animations: {
+                      enabled: true,
+                      easing: 'linear',
+                      speed: 250,
+                      animateGradually: {
+                          enabled: false,
+                      },
+                      dynamicAnimation: {
+                          enabled: true,
+                          speed: 250
+                      }
+                  },
                 },
                 plotOptions: {
                   bar: {
