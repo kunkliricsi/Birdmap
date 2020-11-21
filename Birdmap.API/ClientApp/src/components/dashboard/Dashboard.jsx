@@ -51,9 +51,7 @@ class Dashboard extends Component {
         this.context.addHandler(C.update_all_method_name, this.updateSeries);
         this.context.addHandler(C.update_method_name, this.updateSeries);
         this.updateSeries();
-        window.setInterval(() => {
-            this.updateDynamic();
-        }, 2000);
+        this.updateDynamic();
     }
 
     componentWillUnmount() {
@@ -108,11 +106,9 @@ class Dashboard extends Component {
             deviceSeries: this.getDeviceSeries(),
             sensorSeries: this.getSensorSeries()
         });
-
-        this.updateDynamic();
     }
 
-    updateDynamic() {
+    updateDynamic = () => {
         const secondAgo = new Date();
         secondAgo.setMilliseconds(0);
         const minuteAgo = new Date( Date.now() - 1000 * 60 );
@@ -247,12 +243,14 @@ class Dashboard extends Component {
                 barCategories: getBarCategories(),
                 lineSeries: lineSeries,
             });
+
+            setTimeout(this.updateDynamic, 1000);
         }
 
         const processHeatmapItem = processMethod.bind(this);
         const onFinished = finishMethod.bind(this)
 
-        this.performTask(this.context.heatmapPoints, 10, 150,
+        this.performTask(this.context.heatmapPoints, Math.ceil(this.context.heatmapPoints.length / 100), 10,
             processHeatmapItem, onFinished);
     }
     
