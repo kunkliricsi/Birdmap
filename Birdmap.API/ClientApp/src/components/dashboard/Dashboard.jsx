@@ -250,7 +250,7 @@ class Dashboard extends Component {
         const processHeatmapItem = processMethod.bind(this);
         const onFinished = finishMethod.bind(this)
 
-        this.performTask(this.context.heatmapPoints, Math.ceil(this.context.heatmapPoints.length / 100), 10,
+        this.performTask(this.context.heatmapPoints, Math.ceil(this.context.heatmapPoints.length / 50), 20,
             processHeatmapItem, onFinished);
     }
     
