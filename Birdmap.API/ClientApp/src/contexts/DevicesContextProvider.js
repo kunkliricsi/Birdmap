@@ -99,15 +99,19 @@ export default class DevicesContextProvider extends Component {
             .then(_ => {
                 console.log('Devices hub Connected!');
 
-                newConnection.on(C.probability_method_name, (id, date, prob) => {
+                newConnection.on(C.probability_method_name, (messages) => {
                     //console.log(method_name + " recieved: [id: " + id + ", date: " + date + ", prob: " + prob + "]");
-                    var device = this.state.devices.filter(function (x) { return x.id === id })[0]
-                    var newPoint = { deviceId: device.id, lat: device.coordinates.latitude, lng: device.coordinates.longitude, prob: prob, date: new Date(date) };
+                    const newPoints = [];
+                    for (var message of messages) {
+                        var device = this.state.devices.filter(function (x) { return x.id === message.deviceId })[0]
+                        var newPoint = { deviceId: device.id, lat: device.coordinates.latitude, lng: device.coordinates.longitude, prob: message.probability, date: new Date(message.date) };
+                        newPoints.push(newPoint);
+                    }
                     this.setState({
-                        heatmapPoints: [...this.state.heatmapPoints, newPoint]
+                        heatmapPoints: this.state.heatmapPoints.concat(newPoints)
                     });
 
-                    this.invokeHandlers(C.probability_method_name, newPoint);
+                    this.invokeHandlers(C.probability_method_name, newPoints);
                 });
 
                 newConnection.on(C.update_all_method_name, () => {

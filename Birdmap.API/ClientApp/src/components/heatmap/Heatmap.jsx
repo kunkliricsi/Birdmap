@@ -20,11 +20,18 @@ export default class MapContainer extends Component {
         };
 
         this.probabilityHandler = this.probabilityHandler.bind(this);
+        this.handlePoint = this.handlePoint.bind(this);
     }
 
     static contextType = DevicesContext;
 
-    probabilityHandler(point) {
+    probabilityHandler(points) {
+        for (var point of points) {
+            this.handlePoint(point);
+        }
+    }
+
+    handlePoint(point) {
         if (point.prob > 0.5) {
 
             this.setState({

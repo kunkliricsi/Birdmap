@@ -9,9 +9,11 @@ using MQTTnet.Client.Disconnecting;
 using MQTTnet.Client.Options;
 using Newtonsoft.Json;
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using Timer = System.Timers.Timer;
 
 namespace Birdmap.API.Services.Mqtt
 {
@@ -22,6 +24,9 @@ namespace Birdmap.API.Services.Mqtt
         private readonly ILogger<MqttClientService> _logger;
         private readonly IInputService _inputService;
         private readonly IHubContext<DevicesHub, IDevicesHubClient> _hubContext;
+        private readonly Timer _hubTimer;
+        private readonly List<Message> _messages = new();
+        private readonly object _messageLock = new();
 
         public bool IsConnected => _mqttClient.IsConnected;
 
@@ -31,8 +36,28 @@ namespace Birdmap.API.Services.Mqtt
             _logger = logger;
             _inputService = inputService;
             _hubContext = hubContext;
+            _hubTimer = new Timer()
+            {
+                AutoReset = true,
+                Interval = 1000,
+            };
+            _hubTimer.Elapsed += SendMqttMessagesWithSignalR;
+
             _mqttClient = new MqttFactory().CreateMqttClient();
             ConfigureMqttClient();
+        }
+
+        private void SendMqttMessagesWithSignalR(object sender, System.Timers.ElapsedEventArgs e)
+        {
+            lock (_messageLock)
+            {
+                if (_messages.Any())
+                {
+                    _logger.LogInformation($"Sending ({_messages.Count}) messages: {string.Join(" | ", _messages)}");
+                    _hubContext.Clients.All.NotifyMessagesAsync(_messages);
+                    _messages.Clear();
+                }
+            }
         }
 
         private void ConfigureMqttClient()
@@ -55,7 +80,7 @@ namespace Birdmap.API.Services.Mqtt
         {
             var message = eventArgs.ApplicationMessage.ConvertPayloadToString();
 
-            _logger.LogInformation($"Recieved [{eventArgs.ClientId}] " +
+            _logger.LogDebug($"Recieved [{eventArgs.ClientId}] " +
                 $"Topic: {eventArgs.ApplicationMessage.Topic} | Payload: {message} | QoS: {eventArgs.ApplicationMessage.QualityOfServiceLevel} | Retain: {eventArgs.ApplicationMessage.Retain}");
 
             try
@@ -63,7 +88,10 @@ namespace Birdmap.API.Services.Mqtt
                 var payload = JsonConvert.DeserializeObject<Payload>(message);
                 var inputResponse = await _inputService.GetInputAsync(payload.TagID);
 
-                await _hubContext.Clients.All.NotifyDeviceAsync(inputResponse.Message.Device_id, inputResponse.Message.Date.UtcDateTime, payload.Probability);
+                lock (_messageLock)
+                {
+                    _messages.Add(new Message(inputResponse.Message.Device_id, inputResponse.Message.Date.UtcDateTime, payload.Probability));
+                }
             }
             catch (Exception ex)
             {
@@ -79,6 +107,7 @@ namespace Birdmap.API.Services.Mqtt
                 _logger.LogInformation($"Connected. Auth result: {eventArgs.AuthenticateResult}. Subscribing to topic: {topic}");
 
                 await _mqttClient.SubscribeAsync(topic);
+                _hubTimer.Start();
             }
             catch (Exception ex)
             {
@@ -94,6 +123,7 @@ namespace Birdmap.API.Services.Mqtt
 
             try
             {
+                _hubTimer.Stop();
                 await _mqttClient.ConnectAsync(_options, CancellationToken.None);
             }
             catch (Exception ex)
