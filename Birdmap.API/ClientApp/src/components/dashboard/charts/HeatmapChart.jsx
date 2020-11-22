@@ -8,19 +8,34 @@ export class HeatmapChart extends Component {
     
         this.state = {
             options: {
-                dataLabels: {
-                  enabled: false
-                },
-                colors: [blueGrey[900]],
-                title: {
-                  text: props.label,
-                  style: {
-                    fontSize: '22px',
-                    fontWeight: 600,
-                    fontFamily: 'Helvetica, Arial, sans-serif',
+              chart: {
+                animations: {
+                  enabled: true,
+                  easing: 'linear',
+                  speed: 250,
+                  animateGradually: {
+                      enabled: false,
+                      speed: 250,
                   },
+                  dynamicAnimation: {
+                      enabled: true,
+                      speed: 250
+                  }
+                }
+              },
+              dataLabels: {
+                enabled: false
+              },
+              colors: [blueGrey[900]],
+              title: {
+                text: props.label,
+                style: {
+                  fontSize: '22px',
+                  fontWeight: 600,
+                  fontFamily: 'Helvetica, Arial, sans-serif',
                 },
               },
+            },
         }
     }
     

@@ -57,6 +57,9 @@ class Dashboard extends Component {
     componentWillUnmount() {
         this.context.removeHandler(C.update_all_method_name, this.updateSeries);
         this.context.removeHandler(C.update_method_name, this.updateSeries);
+        if (this.updateTimer) {
+            clearTimeout(this.updateTimer);
+        }
     }
 
     getItemsWithStatus(iterate, status) {
@@ -111,8 +114,8 @@ class Dashboard extends Component {
     updateDynamic = () => {
         const secondAgo = new Date();
         secondAgo.setMilliseconds(0);
-        const minuteAgo = new Date( Date.now() - 1000 * 60 );
-        const hourAgo = new Date( Date.now() - 1000 * 60 * 60 );
+        const minuteAgo = new Date(Date.now() - 1000 * 60);
+        const hourAgo = new Date(Date.now() - 1000 * 60 * 60);
 
         const minuteDevicePoints = {};
         const hourDevicePoints = {};
@@ -125,7 +128,7 @@ class Dashboard extends Component {
             barDevicePoints[d.id] = Array(3).fill(0);
         }
 
-        const processMethod = (items, index) => {
+        const processHeatmapItem = (items, index) => {
             const p = items[index];
             if (p.date > minuteAgo) {
                 var seconds = Math.floor((p.date.getTime() - minuteAgo.getTime()) / 1000);
@@ -142,7 +145,7 @@ class Dashboard extends Component {
                     hourDevicePoints[p.deviceId][minutes] = p.prob;
                 }
             }
-            
+
             if (p.prob > 0.5 && p.prob <= 0.7) {
                 barDevicePoints[p.deviceId][0] += 1;
             }
@@ -164,7 +167,7 @@ class Dashboard extends Component {
             }
         }
 
-        const finishMethod = () => {
+        const onFinished = () => {
             const minuteHeatmapSeries = [];
 
             var i = 0;
@@ -172,39 +175,39 @@ class Dashboard extends Component {
                 minuteHeatmapSeries.push({
                     name: "Device " + i,
                     data: minuteDevicePoints[p].map((value, index) => ({
-                        x: new Date( Date.now() - (60 - index) * 1000 ).toLocaleTimeString('hu-HU'),
+                        x: new Date(Date.now() - (60 - index) * 1000).toLocaleTimeString('hu-HU'),
                         y: value
                     })),
                 });
                 i++;
             };
-    
+
             const hourHeatmapSeries = [];
-    
+
             var i = 0;
             for (var p in hourDevicePoints) {
                 hourHeatmapSeries.push({
                     name: "Device " + i,
                     data: hourDevicePoints[p].map((value, index) => ({
-                        x: new Date( Date.now() - (60 - index) * 1000 * 60 ).toLocaleTimeString('hu-HU').substring(0, 5),
+                        x: new Date(Date.now() - (60 - index) * 1000 * 60).toLocaleTimeString('hu-HU').substring(0, 5),
                         y: value
                     })),
                 });
                 i++;
             };
-            
+
             const barSeries = [];
-    
+
             const getCount = column => {
                 var counts = [];
-    
+
                 for (var p in barDevicePoints) {
                     counts.unshift(barDevicePoints[p][column]);
                 }
-    
+
                 return counts;
             };
-    
+
             barSeries.push({
                 name: "Prob > 0.5",
                 data: getCount(0),
@@ -217,43 +220,46 @@ class Dashboard extends Component {
                 name: "Prob > 0.9",
                 data: getCount(2),
             });
-    
-            const lineSeries = [{name: "message/sec", data: []}];
+
+            const lineSeries = [{ name: "message/sec", data: [] }];
             for (var m in linePoints) {
                 lineSeries[0].data.push({
                     x: new Date(m).getTime(),
                     y: linePoints[m],
                 })
             }
-    
+
             const getBarCategories = () => {
                 const categories = [];
-        
+
                 for (var i = this.context.devices.length - 1; i >= 0; i--) {
                     categories.push("Device " + i)
                 }
-        
+
                 return categories;
             }
-    
-            this.setState({
-                heatmapSecondsSeries: minuteHeatmapSeries,
-                heatmapMinutesSeries: hourHeatmapSeries,
-                barSeries: barSeries,
-                barCategories: getBarCategories(),
-                lineSeries: lineSeries,
+
+            const toUpdate = [
+                { heatmapSecondsSeries: minuteHeatmapSeries },
+                { heatmapMinutesSeries: hourHeatmapSeries },
+                { barSeries: barSeries },
+                { barCategories: getBarCategories() },
+                { lineSeries: lineSeries }
+            ];
+
+            //Set states must be done separately otherwise ApexChart's UI update freezes the page.
+            this.performTask(toUpdate, 2, 300, (list, index) => {
+                this.setState(list[index]);
+            },
+            () => {
+                this.updateTimer = setTimeout(this.updateDynamic, 1000);
             });
-
-            setTimeout(this.updateDynamic, 1000);
         }
-
-        const processHeatmapItem = processMethod.bind(this);
-        const onFinished = finishMethod.bind(this)
 
         this.performTask(this.context.heatmapPoints, Math.ceil(this.context.heatmapPoints.length / 50), 20,
             processHeatmapItem, onFinished);
     }
-    
+
     performTask(items, numToProcess, wait, processItem, onFinished) {
         var pos = 0;
         // This is run once for every numToProcess items.
@@ -281,36 +287,36 @@ class Dashboard extends Component {
             <Box className={classes.root}>
                 <Grid container spacing={3}>
                     <Grid item xs={12}>
-                        <Services isAdmin={this.props.isAdmin}/>
+                        <Services isAdmin={this.props.isAdmin} />
                     </Grid>
                     <Grid item xs={6}>
                         <Paper className={classes.paper}>
-                            <DonutChart totalLabel="Devices" series={this.state.deviceSeries}/>
+                            <DonutChart totalLabel="Devices" series={this.state.deviceSeries} />
                         </Paper>
                     </Grid>
                     <Grid item xs={6}>
                         <Paper className={classes.paper}>
-                            <DonutChart totalLabel="Sensors" series={this.state.sensorSeries}/>
+                            <DonutChart totalLabel="Sensors" series={this.state.sensorSeries} />
                         </Paper>
                     </Grid>
                     <Grid item xs={12}>
                         <Paper className={classes.paper}>
-                            <HeatmapChart label="Highest probability per second by devices" series={this.state.heatmapSecondsSeries}/>
+                            <HeatmapChart label="Highest probability per second by devices" series={this.state.heatmapSecondsSeries} />
                         </Paper>
                     </Grid>
                     <Grid item xs={12}>
                         <Paper className={classes.paper}>
-                            <HeatmapChart label="Highest probability per minute by devices" series={this.state.heatmapMinutesSeries}/>
+                            <HeatmapChart label="Highest probability per minute by devices" series={this.state.heatmapMinutesSeries} />
                         </Paper>
                     </Grid>
                     <Grid item xs={6}>
                         <Paper className={classes.paper}>
-                            <BarChart label="# of messages by devices" series={this.state.barSeries} categories={this.state.barCategories}/>
+                            <BarChart label="# of messages by devices" series={this.state.barSeries} categories={this.state.barCategories} />
                         </Paper>
                     </Grid>
                     <Grid item xs={6}>
                         <Paper className={classes.paper}>
-                            <LineChart label="# of messages per second" series={this.state.lineSeries}/>
+                            <LineChart label="# of messages per second" series={this.state.lineSeries} />
                         </Paper>
                     </Grid>
                 </Grid>
