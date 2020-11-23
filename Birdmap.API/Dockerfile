@@ -1,15 +1,13 @@
-FROM mcr.microsoft.com/dotnet/aspnet:5.0 AS base
+FROM mcr.microsoft.com/dotnet/aspnet:5.0-buster-slim AS base
 WORKDIR /app
-EXPOSE 80
-EXPOSE 443
+RUN apt-get update && apt-get install -y curl
 RUN curl -sL https://deb.nodesource.com/setup_lts.x | bash -
-RUN apt-get update
-RUN apt-get install -y nodejs
+RUN apt-get update && apt-get install -y nodejs
 
-FROM mcr.microsoft.com/dotnet/sdk:5.0 AS build
+FROM mcr.microsoft.com/dotnet/sdk:5.0-buster-slim AS build
+RUN apt-get update && apt-get install -y curl
 RUN curl -sL https://deb.nodesource.com/setup_lts.x | bash -
-RUN apt-get update
-RUN apt-get install -y nodejs
+RUN apt-get update && apt-get install -y nodejs
 WORKDIR /src
 COPY ["Birdmap.API/Birdmap.API.csproj", "Birdmap.API/"]
 COPY ["Birdmap.BLL/Birdmap.BLL.csproj", "Birdmap.BLL/"]
