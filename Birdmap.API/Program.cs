@@ -20,6 +20,12 @@ namespace Birdmap.API
                 logger.Debug("Building host...");
                 var host = CreateHostBuilder(args).Build();
 
+                using (var scope = host.Services.CreateScope())
+                {
+                    var db = scope.ServiceProvider.GetRequiredService<BirdmapContext>();
+                    db.Database.EnsureCreated();
+                }
+
                 logger.Debug("Seeding database...");
                 SeedDatabase(host);
 

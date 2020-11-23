@@ -117,7 +117,7 @@ namespace Birdmap.API.Services.Mqtt
 
         public async Task HandleDisconnectedAsync(MqttClientDisconnectedEventArgs eventArgs)
         {
-            _logger.LogWarning(eventArgs.Exception, $"Disconnected. Reason {eventArgs.ReasonCode}. Auth result: {eventArgs.AuthenticateResult}. Reconnecting...");
+            _logger.LogDebug(eventArgs.Exception, $"Disconnected. Reason {eventArgs.ReasonCode}. Auth result: {eventArgs.AuthenticateResult}. Reconnecting...");
 
             await Task.Delay(TimeSpan.FromSeconds(5));
 
@@ -128,7 +128,7 @@ namespace Birdmap.API.Services.Mqtt
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, $"Reconnect failed...");
+                _logger.LogDebug(ex, $"Reconnect failed...");
             }
         }
 
