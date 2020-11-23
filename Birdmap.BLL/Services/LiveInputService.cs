@@ -23,8 +23,9 @@ namespace Birdmap.BLL.Services
         private System.Net.Http.HttpClient _httpClient;
         private System.Lazy<Newtonsoft.Json.JsonSerializerSettings> _settings;
 
-        public LiveInputService(System.Net.Http.HttpClient httpClient)
+        public LiveInputService(string baseUrl, System.Net.Http.HttpClient httpClient)
         {
+            _baseUrl = baseUrl;
             _httpClient = httpClient;
             _settings = new System.Lazy<Newtonsoft.Json.JsonSerializerSettings>(CreateSerializerSettings);
         }

@@ -2,20 +2,36 @@ version: '3.4'
 
 services:
     db:
-        image: "mcr.microsoft.com/mssql/server:2017-latest"
+        image: "mcr.microsoft.com/mssql/server:2019-latest"
         environment:
           - ACCEPT_EULA=Y
-          - SA_PASSWORD=asdfjkl-123
+          - SA_PASSWORD=RPSsql12345
 
     birdmap.api:
         image: ${DOCKER_REGISTRY-}birdmapapi
         ports:
-            - "8000:80"
-            - "5001:443"
+            - "5000:5000"
+            - "5001:5001"
         build:
           context: .
           dockerfile: Birdmap.API/Dockerfile
         depends_on:
             - db
         environment:
-            - ASPNETCORE_URLS=https://+:443;http://+:80
+            - ASPNETCORE_URLS=https://localhost:5001;http://localhost:5000
+            - Birdmap_LocalDbConnectionString=Data Source=db;Initial Catalog=birdmap;User=sa;Password=RPSsql12345
+            - Birdmap_Defaults__Users__0__Name=admin
+            - Birdmap_Defaults__Users__0__Password=pass
+            - Birdmap_Defaults__Users__0__Role=Admin
+            - Birdmap_Defaults__Users__1__Name=user
+            - Birdmap_Defaults__Users__1__Password=pass
+            - Birdmap_Defaults__Users__1__Role=User
+            - Birdmap_Defaults__Services__Local-Database=https://localhost/health
+            - Birdmap_UseDummyServices=true
+            - Birdmap_ServicesBaseUrl=https://birb.k8s.kmlabz.com/
+            - Birdmap_Mqtt__BrokerHostSettings__Host=localhost
+            - Birdmap_Mqtt__BrokerHostSettings__Port=1883
+            - Birdmap_Mqtt__ClientSettings__Id=ASP.NET Core client
+            - Birdmap_Mqtt__ClientSettings__Username=username
+            - Birdmap_Mqtt__ClientSettings__Password=password
+            - Birdmap_Mqtt__ClientSettings__Topic=devices/output

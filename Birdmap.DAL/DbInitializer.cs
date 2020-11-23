@@ -22,8 +22,15 @@ namespace Birdmap.DAL
 
         public void Initialize()
         {
+            EnsureCreated();
             AddDefaultUsers();
             AddDefaultServices();
+        }
+
+        private void EnsureCreated()
+        {
+            _logger.LogInformation("Ensuring database is created...");
+            _context.Database.EnsureCreated();
         }
 
         private void AddDefaultServices()

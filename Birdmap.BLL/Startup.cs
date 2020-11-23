@@ -2,6 +2,7 @@
 using Birdmap.BLL.Services;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using System.Net.Http;
 
 namespace Birdmap.BLL
 {
@@ -20,8 +21,20 @@ namespace Birdmap.BLL
             }
             else
             {
-                services.AddTransient<IInputService, LiveInputService>();
-                services.AddTransient<IDeviceService, LiveDummyService>();
+                var baseUrl = configuration.GetValue<string>("ServicesBaseUrl");
+
+                services.AddTransient<IInputService, LiveInputService>(serviceProvider =>
+                {
+                    var httpClient = serviceProvider.GetService<HttpClient>();
+                    var service = new LiveInputService(baseUrl, httpClient);
+                    return service;
+                });
+                services.AddTransient<IDeviceService, LiveDummyService>(serviceProvider =>
+                {
+                    var httpClient = serviceProvider.GetService<HttpClient>();
+                    var service = new LiveDummyService(baseUrl, httpClient);
+                    return service;
+                });
             }
 
             return services;

@@ -1,5 +1,6 @@
 using Birdmap.DAL;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
@@ -20,12 +21,6 @@ namespace Birdmap.API
                 logger.Debug("Building host...");
                 var host = CreateHostBuilder(args).Build();
 
-                using (var scope = host.Services.CreateScope())
-                {
-                    var db = scope.ServiceProvider.GetRequiredService<BirdmapContext>();
-                    db.Database.EnsureCreated();
-                }
-
                 logger.Debug("Seeding database...");
                 SeedDatabase(host);
 
@@ -45,6 +40,10 @@ namespace Birdmap.API
 
         public static IHostBuilder CreateHostBuilder(string[] args) =>
             Host.CreateDefaultBuilder(args)
+                .ConfigureAppConfiguration((hostingContext, config) =>
+                {
+                    config.AddEnvironmentVariables(prefix: "Birdmap_");
+                })
                 .ConfigureWebHostDefaults(webBuilder =>
                 {
                     webBuilder.UseStartup<Startup>();
@@ -59,8 +58,8 @@ namespace Birdmap.API
         private static void SeedDatabase(IHost host)
         {
             using var scope = host.Services.CreateScope();
-            var dbInitializer = scope.ServiceProvider.GetRequiredService<DbInitializer>();
 
+            var dbInitializer = scope.ServiceProvider.GetRequiredService<DbInitializer>();
             dbInitializer.Initialize();
         }
     }
