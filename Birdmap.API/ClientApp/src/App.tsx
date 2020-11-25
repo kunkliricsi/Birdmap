@@ -17,6 +17,7 @@ import Devices from './components/devices/Devices';
 import { blueGrey, blue, orange, grey } from '@material-ui/core/colors';
 import DevicesContextProvider from './contexts/DevicesContextProvider'
 import Dashboard from './components/dashboard/Dashboard';
+import Logs from './components/logs/Logs';
 
 
 const theme = createMuiTheme({
@@ -48,6 +49,10 @@ function App() {
         );
     }
 
+    const LogsComponent = () => {
+        return <Logs/>
+    }
+
     const DashboardComponent = () => {
         return <Dashboard isAdmin={isAdmin}/>;
     };
@@ -68,7 +73,8 @@ function App() {
         <ThemeProvider theme={theme}>
             <BrowserRouter>
                 <Switch>
-                    <PublicRoute path="/login" component={AuthComponent} />
+                    <PublicRoute path="/login" exact component={AuthComponent} />
+                    <AdminRoute path="/logs" exact authenticated={authenticated} isAdmin={isAdmin} component={LogsComponent} />
                     <DevicesContextProvider>
                         <PrivateRoute path="/" exact authenticated={authenticated} component={DashboardComponent} />
                         <PrivateRoute path="/devices/:id?" exact authenticated={authenticated} component={DevicesComponent} />
@@ -89,6 +95,16 @@ const PublicRoute = ({ component: Component, ...rest }: { [x: string]: any, comp
         )} />
     );
 }
+
+const AdminRoute = ({ component: Component, authenticated: Authenticated, isAdmin: IsAdmin, ...rest }: { [x: string]: any, component: any, authenticated: any, isAdmin: any }) => {
+    return (
+        <Route {...rest} render={matchProps => (
+            Authenticated && IsAdmin
+                ? <DefaultLayout component={Component} authenticated={Authenticated} {...matchProps} />
+                : <Redirect to='/login' />
+        )} />
+    );
+};
 
 const PrivateRoute = ({ component: Component, authenticated: Authenticated, ...rest }: { [x: string]: any, component: any, authenticated: any }) => {
     return (
@@ -147,6 +163,7 @@ const DefaultLayout = ({ component: Component, authenticated: Authenticated, ...
         return Authenticated
             ? <Container className={classes.nav_menu}>
                 <NavLink exact to="/" className={classes.nav_menu_item} activeClassName={classes.nav_menu_item_active}>Dashboard</NavLink>
+                {}
                 <NavLink to="/devices" className={classes.nav_menu_item} activeClassName={classes.nav_menu_item_active}>Devices</NavLink>
                 <NavLink exact to="/heatmap" className={classes.nav_menu_item} activeClassName={classes.nav_menu_item_active}>Heatmap</NavLink>
                 <IconButton className={classes.nav_menu_icon}
