@@ -21,11 +21,11 @@ services:
         depends_on:
             - db
         environment:
-            - ASPNETCORE_ENVIRONMENT=Development
+            - ASPNETCORE_ENVIRONMENT=Docker
             - ASPNETCORE_URLS=https://+;http://+
             - ASPNETCORE_HTTPS_PORT=8001
-            - ASPNETCORE_Kestrel__Certificates__Default__Password=certpass123
-            - ASPNETCORE_Kestrel__Certificates__Default__Path=/root/.aspnet/https/aspnetapp.pfx
+            - Birdmap_Kestrel__Certificates__Default__Password=certpass123
+            - Birdmap_Kestrel__Certificates__Default__Path=/root/.aspnet/https/aspnetapp.pfx
             - Birdmap_LocalDbConnectionString=Data Source=db;Initial Catalog=birdmap;User=sa;Password=RPSsql12345
             - Birdmap_Defaults__Users__0__Name=admin
             - Birdmap_Defaults__Users__0__Password=pass
