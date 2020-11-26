@@ -1,0 +1,61 @@
+Forma
+
+- Kivonat
+- Abstract
+- Bevezetés
+    - Az alaphelyzet
+    - A probléma
+    - A megoldás
+    - Diplomaterv felépítésének bemutatása
+- Az alaphelyzet részletes bemutatása
+    - mikroszolgáltatás alapú rendszerek alapelvei
+    - a tanszéken fejlesztett elosztott madárhang azonosító megoldás 
+        teljeskörű bemutatása
+- A megoldás tervezete
+    - mikroszolgáltatások működését vizualizáló alternatívák
+    - használati tervek
+    - design terverk
+- A használt technológiák
+    - fejlesztési folyamat
+        - fejlesztő környezet(ek)
+        - agilis módszertan
+            - trello
+        - verziókezelés git
+    - Backend
+        - ASP.NET Core 5
+        - SignalR
+        - EFCore 5
+    - Frontend
+        - React.js
+        - Apexcharts
+        - google-map-react
+    - Tesztkörnyezet
+        - WinForms .NET 5 (githubról)
+    - Kubenetes
+- Backend
+    - Felépítés architektúra
+        - ábra
+        - konfigurálás
+        - startup mindenhol
+        - ...
+    - DAL
+        - EFCore
+        - Entitások
+        - Seed
+        - ...
+    - BLL
+        - servicek
+    - API
+        - controllerek
+        - servicek
+        - mqtt
+        - signalR
+- Frontend
+    - felépítés architektúra
+    - App and navigation
+    - Components and services
+- Tesztkörnyezet
+- Kubenetes
+- Összefoglaló
+    - Értékelés, eredmények, tapasztalatok.
+    - Továbbfejlesztési lehetőségek
