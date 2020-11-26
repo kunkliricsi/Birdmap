@@ -15,11 +15,11 @@ export default class LogService {
 
     constructor(baseUrl?: string, http?: { fetch(url: RequestInfo, init?: RequestInit): Promise<Response> }) {
         this.http = http ? http : <any>window;
-        this.baseUrl = baseUrl !== undefined && baseUrl !== null ? baseUrl : "https://localhost:44331";
+        this.baseUrl = baseUrl !== undefined && baseUrl !== null ? baseUrl : "api/logs";
     }
 
     getAll(): Promise<string[]> {
-        let url_ = this.baseUrl + "/api/Logs/all";
+        let url_ = this.baseUrl + "/all";
         url_ = url_.replace(/[?&]$/, "");
 
         let options_ = <RequestInit>{
@@ -58,7 +58,7 @@ export default class LogService {
     }
 
     getFiles(filenames: string[] | null | undefined): Promise<FileResponse | null> {
-        let url_ = this.baseUrl + "/api/Logs?";
+        let url_ = this.baseUrl + "?";
         if (filenames !== undefined && filenames !== null)
             filenames && filenames.forEach(item => { url_ += "filenames=" + encodeURIComponent("" + item) + "&"; });
         url_ = url_.replace(/[?&]$/, "");
