@@ -1,7 +1,34 @@
 %----------------------------------------------------------------------------
 \chapter{\bevezetes}
 %----------------------------------------------------------------------------
+A tanszéken diáktársaim készítettek egy felhő alapú konténerizált rendszert, a Birdnetes-t
+mely a természetben elkelyezett eszközökkel kommunikál, azokat vezérli.
+Az eszközök bizonyos időközönként hangfelvételt készítenek a környezetükről,
+majd valamilyen formában elküldik ezeket a felvételeket a központi rendszernek,
+amely egy erre a célra kifejlesztett mesterséges intelligenciát használva eldönti
+a felvételről, hogy azon található-e madár, konkrétan seregély hang vagy sem.
+Ha igen akkor jelez a felvételt küldő eszköznek, hogy szólaltassa meg a riasztó
+rendszerét, hogy elijessze a seregélyt.
 
-A bevezető tartalmazza a diplomaterv-kiírás elemzését, történelmi előzményeit, a feladat indokoltságát (a motiváció leírását), az eddigi megoldásokat, és ennek tükrében a hallgató megoldásának összefoglalását.
+%----------------------------------------------------------------------------
+\section{A probléma}
+%----------------------------------------------------------------------------
+A jelen rendszer használata során nincs vizuális visszacsatolás az esetleges riasztásokról azok gyakoriságáról
+és a rendszer állapotáról sem. Különböző diagnosztikai eszközök ugyan implementálva lettek mint például
+a logolás vagy a hiba bejelentés, de ezek használata nehézkes, nem kézenfekvő. 
+Szükség van valamire amivel egy helyen és egyszerűen lehet kezelni és használni a rendszer egyes elemeit.
 
-A bevezető szokás szerint a diplomaterv felépítésével záródik, azaz annak rövid leírásával, hogy melyik fejezet mivel foglalkozik.
+%----------------------------------------------------------------------------
+\section{A megoldás}
+%----------------------------------------------------------------------------
+A jelen szakdolgozat egy olyan webes rendszer elkészítését dokumentálja, melyel a felhasználók képesek
+a természetben elhelyezett eszközök állapotát vizsgálni, azokat akár ki és bekapcsolni igény szerint.
+Az egyes rendszer eseményeket vizsgálva a szoftver statisztikákat készít, melyeket különböző diagrammokon ábrázolok.
+Ilyen statisztikák például, hogy időben melyik eszköz mikor észlelt madár hangot, vagy hogy hány hang üzenet érkezik
+az eszközöktől másodpercenként.
+
+
+%----------------------------------------------------------------------------
+\section{A szakdolgozat felépítése}
+%----------------------------------------------------------------------------
+A szakdolgozatom első részében bemutatom a Birdnetes 
