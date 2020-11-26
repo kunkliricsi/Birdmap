@@ -17,7 +17,7 @@ namespace Birdmap.API.Controllers
     public class LogsController : ControllerBase
     {
         private readonly ILogger<LogsController> _logger;
-        private readonly string _logFolderPath = Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location), "Log");
+        private readonly string _logFolderPath = Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location), "Logs");
 
         public LogsController(ILogger<LogsController> logger)
         {
@@ -27,7 +27,7 @@ namespace Birdmap.API.Controllers
         [HttpGet("all")]
         public ActionResult<List<string>> GetAll()
         {
-            _logger.LogInformation($"Getting all log filenames...");
+            _logger.LogInformation($"Getting all log filenames from folder: '{_logFolderPath}'...");
 
             return Directory.EnumerateFiles(_logFolderPath, "*.log")
                 .Select(f => Path.GetFileName(f))

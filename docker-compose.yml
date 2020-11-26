@@ -26,6 +26,7 @@ services:
             - ASPNETCORE_HTTPS_PORT=8001
             - Birdmap_Kestrel__Certificates__Default__Password=certpass123
             - Birdmap_Kestrel__Certificates__Default__Path=/root/.aspnet/https/aspnetapp.pfx
+            - Birdmap_Secret=7gz;]=bQe}n#3~RwC+Y<SrjoE:sHwO
             - Birdmap_LocalDbConnectionString=Data Source=db;Initial Catalog=birdmap;User=sa;Password=RPSsql12345
             - Birdmap_Defaults__Users__0__Name=admin
             - Birdmap_Defaults__Users__0__Password=pass
@@ -33,7 +34,8 @@ services:
             - Birdmap_Defaults__Users__1__Name=user
             - Birdmap_Defaults__Users__1__Password=pass
             - Birdmap_Defaults__Users__1__Role=User
-            - Birdmap_Defaults__Services__Local-Database=https://localhost/health
+            - Birdmap_Defaults__Services__Local-Database=https://localhost:8001/health
+            - Birdmap_Defaults__Services__KMLabz-Service=https://birb.k8s.kmlabz.com/devices
             - Birdmap_UseDummyServices=true
             - Birdmap_ServicesBaseUrl=https://birb.k8s.kmlabz.com/
             - Birdmap_Mqtt__BrokerHostSettings__Host=localhost
