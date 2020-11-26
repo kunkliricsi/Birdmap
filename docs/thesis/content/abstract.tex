@@ -8,8 +8,23 @@
 %----------------------------------------------------------------------------
 \chapter*{Kivonat}\addcontentsline{toc}{chapter}{Kivonat}
 
-Jelen dokumentum egy diplomaterv sablon, amely formai keretet ad a BME Villamosmérnöki és Informatikai Karán végző hallgatók által elkészítendő szakdolgozatnak és diplomatervnek. A sablon használata opcionális. Ez a sablon \LaTeX~alapú, a \emph{TeXLive} \TeX-implementációval és a PDF-\LaTeX~fordítóval működőképes.
+Napjainkban a mezőgazdaságban egyre elterjedtebbek a dolgok internetére (Internet of Things
+– IoT) épülő megoldások, ezek viszont nagy mennyiségű adatot generálnak, amelyek
+feldolgozása tradicionális rendszerekkel nehézkes. Erre a problémára próbál megoldást
+nyújtani egy, a tanszéken kifejlesztett felhő-natív adatfeldolgozó és elemző rendszer.
 
+A rendszer használata közben a különböző komponensek változó méretű és jellegű
+terhelésnek vannak kitéve, ami nehézkessé teszi a rendszer működésének áttekintését, a
+folyamat vizualizálását. 
+
+Jelen szakdolgozat célja egy olyan vizualizációs megoldás bemutatása, amelynek segítségével a rendszer könnyedén áttekinthető
+és kezelhető. A tanszéki rendszer által kezelt eszközök a felületen is vezérelhetők 
+és azok működéséről különböző statisztikákat felhasználva egyszerűen értelmezhető diagrammok generálódnak.
+
+A backend megvalósítására az ASP.NET Core-t választottam, mely platformfüggetlen megoldást nyújt a web kérések kiszolgálására.
+A frontend-et a React.js használatával készítettem, mely segítségével egyszerűen és gyorsan lehet reszponzív felhasználó felületeket készíteni.
+Dolgozatomban bemutatot a tanszéken fejlesztett rendszert, a mikroszolgáltatások vizualizálásának alternatíváit,
+ismertetem az általam választott technológiákat és a készített alkalmazás felépítését.
 
 \vfill
 \selectenglish
@@ -20,8 +35,21 @@ Jelen dokumentum egy diplomaterv sablon, amely formai keretet ad a BME Villamosm
 %----------------------------------------------------------------------------
 \chapter*{Abstract}\addcontentsline{toc}{chapter}{Abstract}
 
-This document is a \LaTeX-based skeleton for BSc/MSc~theses of students at the Electrical Engineering and Informatics Faculty, Budapest University of Technology and Economics. The usage of this skeleton is optional. It has been tested with the \emph{TeXLive} \TeX~implementation, and it requires the PDF-\LaTeX~compiler.
+Nowadays, the internet of things is becoming more and more prevalent for IT systems in the agriculture.
+These generate large amounts of data the processing of which is rather cumbersome with traditional systems. 
+A department developed system is trying to solve this problem to providing a cloud-native data processing and analysis solution.
 
+While using the system, the various components are subjected to loads varying in size and nature
+which makes it difficult to review the operation of the system and visualize the process.
+
+The purpose of this thesis is to present a visualization solution that allows the users to easily review
+and manage the system. The devices maintained by the department developed system can be controlled on the interface
+and easy-to-understand diagrams are generated using statistics about their operation.
+
+I chose the ASP.NET Core to implement the backend, which provides a platform-independent solution for serving web requests.
+The frontend was created using React.js, which allows for an easy and quick way to create responsive user interfaces.
+In my thesis I present the system developed at the department, the alternatives of visualization of microservices,
+I describe the technologies I have chosen and the structure of the application I have created.
 
 \vfill
 \selectthesislanguage

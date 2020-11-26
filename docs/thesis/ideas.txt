@@ -26,6 +26,7 @@ Forma
         - SignalR
         - EFCore 5
     - Frontend
+        - material-ui
         - React.js
         - Apexcharts
         - google-map-react
