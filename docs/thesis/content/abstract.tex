@@ -8,22 +8,23 @@
 %----------------------------------------------------------------------------
 \chapter*{Kivonat}\addcontentsline{toc}{chapter}{Kivonat}
 
-Napjainkban a mezőgazdaságban egyre elterjedtebbek a dolgok internetére (Internet of Things
-– IoT) épülő megoldások, ezek viszont nagy mennyiségű adatot generálnak, amelyek
-feldolgozása tradicionális rendszerekkel nehézkes. Erre a problémára próbál megoldást
-nyújtani egy, a tanszéken kifejlesztett felhő-natív adatfeldolgozó és elemző rendszer.
+Adott egy tanszéken fejlesztett felhő alapú elosztott rendszer, melynek eszközei madárhangok azonosítására képesek.
+Ha a rendszer úgy észleli, hogy az egyik álatala vezérelt eszköz mikrofonja felvételén madárhang található,
+akkor riasztást kezdeményez az eszközön ezzel elijesztve a madarat ezáltal megóvva a növényzetet.
 
-A rendszer használata közben a különböző komponensek változó méretű és jellegű
-terhelésnek vannak kitéve, ami nehézkessé teszi a rendszer működésének áttekintését, a
-folyamat vizualizálását. 
+A rendszernek több kisebb komponense van, amelyek rengeteg adatot dolgoznak fel és nincs jelenleg egy olyan egységes grafikus felület ahol a rendszer teljes állapotát
+át lehetne tekinteni, illetve ahol a feldolgozott adatokat vizualizálni lehetne.
+
+A piacon létezik már több olyan szoftver csomag, amely hasonló problémákra próbál megoldást nyújtani, de ezek sem mindig
+tudják kielégíteni azokat a speciális igényeket, amelyek egy ilyen rendszernél felmerülnek.
 
 Jelen szakdolgozat célja egy olyan vizualizációs megoldás bemutatása, amelynek segítségével a rendszer könnyedén áttekinthető
 és kezelhető. A tanszéki rendszer által kezelt eszközök a felületen is vezérelhetők 
 és azok működéséről különböző statisztikákat felhasználva egyszerűen értelmezhető diagrammok generálódnak.
 
 A backend megvalósítására az ASP.NET Core-t választottam, mely platformfüggetlen megoldást nyújt a web kérések kiszolgálására.
-A frontend-et a React.js használatával készítettem, mely segítségével egyszerűen és gyorsan lehet reszponzív felhasználó felületeket készíteni.
-Dolgozatomban bemutatot a tanszéken fejlesztett rendszert, a mikroszolgáltatások vizualizálásának alternatíváit,
+A frontend-et a React.js használatával készítettem, mely segítségével egyszerűen és gyorsan lehet reszponzív felhasználói felületeket készíteni.
+Dolgozatomban bemutatom a tanszéken fejlesztett rendszert, a mikroszolgáltatások vizualizálásának alternatíváit,
 ismertetem az általam választott technológiákat és a készített alkalmazás felépítését.
 
 \vfill
@@ -35,18 +36,18 @@ ismertetem az általam választott technológiákat és a készített alkalmazá
 %----------------------------------------------------------------------------
 \chapter*{Abstract}\addcontentsline{toc}{chapter}{Abstract}
 
-Nowadays, the internet of things is becoming more and more prevalent for IT systems in the agriculture.
-These generate large amounts of data the processing of which is rather cumbersome with traditional systems. 
-A department developed system is trying to solve this problem to providing a cloud-native data processing and analysis solution.
+There is a department developed cloud-based distributed system whose devices are capable of identifying bird sounds.
+If the system detects a bird's voice on the recording of a microphone on one of the devices, it will trigger
+an alarm on the device scaring the bird away thereby protecting the vegetation.
 
-While using the system, the various components are subjected to loads varying in size and nature
-which makes it difficult to review the operation of the system and visualize the process.
+The system has several smaller components that process a lot of data and currently there is no unified graphical user interface where the overall state of the system 
+could be reviewed or where the processed data could be visualized.
 
 The purpose of this thesis is to present a visualization solution that allows the users to easily review
 and manage the system. The devices maintained by the department developed system can be controlled on the interface
 and easy-to-understand diagrams are generated using statistics about their operation.
 
-I chose the ASP.NET Core to implement the backend, which provides a platform-independent solution for serving web requests.
+I chose ASP.NET Core as the framework for the backend, which provides a platform-independent solution for serving web requests.
 The frontend was created using React.js, which allows for an easy and quick way to create responsive user interfaces.
 In my thesis I present the system developed at the department, the alternatives of visualization of microservices,
 I describe the technologies I have chosen and the structure of the application I have created.
