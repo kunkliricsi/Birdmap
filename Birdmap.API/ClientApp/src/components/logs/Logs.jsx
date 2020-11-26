@@ -1,8 +1,19 @@
-import { Button, Checkbox, List, ListItem, ListItemIcon, ListItemText, Paper } from '@material-ui/core';
+import { Box, Button, Checkbox, List, ListItem, ListItemIcon, ListItemText, Paper, withStyles } from '@material-ui/core';
+import { blueGrey } from '@material-ui/core/colors';
 import React, { Component } from 'react';
 import LogService from './LogService';
 
-export class Logs extends Component {
+const styles = theme => ({
+    root: {
+        padding: '64px',
+        backgroundColor: theme.palette.primary.dark,
+    },
+    paper: {
+        backgroundColor: blueGrey[50],
+    },
+});
+
+class Logs extends Component {
     constructor(props) {
         super(props)
     
@@ -10,6 +21,7 @@ export class Logs extends Component {
             service: null,
             files: [],
             checked: [],
+            selectAllChecked: false,
         }
     }
     
@@ -35,7 +47,18 @@ export class Logs extends Component {
         this.setState({checked: newChecked});
     }
 
-    downloadChecked = () => {
+    handleSelectAllToggle = () => {
+        this.setState({selectAllChecked: !this.state.selectAllChecked});
+        if (this.state.selectAllChecked) {
+            this.setState({checked: []});
+        } else {
+            const newChecked = [...this.state.files];
+            this.setState({checked: newChecked});
+        }
+
+    }
+
+    onDownload = () => {
         this.state.service.getFiles(this.state.checked)
         .then(result => {
             const filename = `Logs-${new Date().toISOString()}.zip`;
@@ -47,11 +70,15 @@ export class Logs extends Component {
             document.body.appendChild(element);
             element.click();
             document.body.removeChild(element);
+            this.setState({checked: []});
+            this.setState({selectAllChecked: false});
         })
         .catch(ex => console.log(ex));
     }
 
     render() {
+        const { classes } = this.props;
+
         const Files = this.state.files.map((value) => {
             const labelId = `checkbox-list-label-${value}`;
     
@@ -72,16 +99,30 @@ export class Logs extends Component {
         })
 
         return (
-            <Paper>
-                <List >
-                    {Files}
-                </List>
-                <Button onClick={this.downloadChecked}>
-                    Download
-                </Button>
-            </Paper>
+            <Box className={classes.root}>
+                <Paper className={classes.paper}>
+                    <List className={classes.paper}>
+                        <ListItem key="Select-all" role={undefined} dense button onClick={this.handleSelectAllToggle}>
+                            <ListItemIcon>
+                            <Checkbox
+                                edge="start"
+                                checked={this.state.selectAllChecked}
+                                tabIndex={-1}
+                                disableRipple
+                                inputProps={{ 'aria-labelledby': "Select-all" }}
+                            />
+                            </ListItemIcon>
+                            <ListItemText id="checkbox-list-label-Select-all" primary={(this.state.selectAllChecked ? "Uns" : "S") + "elect all"} />
+                        </ListItem>
+                        {Files}
+                    </List>
+                    <Button onClick={this.onDownload}>
+                        Download
+                    </Button>
+                </Paper>
+            </Box>
         )
     }
 }
 
-export default Logs
+export default withStyles(styles)(Logs);

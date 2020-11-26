@@ -1,4 +1,5 @@
 ﻿/*global google*/
+import { Box, withStyles } from '@material-ui/core';
 import GoogleMapReact from 'google-map-react';
 import React, { Component } from 'react';
 import C from '../../common/Constants';
@@ -8,7 +9,14 @@ import DeviceMarker from './DeviceMarker';
 const lat_offset = 0.000038;
 const lng_offset = -0.000058;
 
-export default class MapContainer extends Component {
+const styles = theme => ({
+    root: { 
+        height: '93vh', 
+        width: '100%', 
+    }
+});
+
+class MapContainer extends Component {
     constructor(props) {
         super(props);
 
@@ -64,6 +72,8 @@ export default class MapContainer extends Component {
     }
 
     render() {
+        const {classes} = this.props;
+
         const heatMapData = {
             positions: this.state.heatmapPoints,
             options: {
@@ -92,7 +102,7 @@ export default class MapContainer extends Component {
         ));
 
         return (
-            <div style={{ height: '93vh', width: '100%' }}>
+            <Box className={classes.root}>
                 <GoogleMapReact
                     bootstrapURLKeys={{
                         key: ["AIzaSyCZ51VFfxqZ2GkCmVrcNZdUKsM0fuBQUCY"],
@@ -106,7 +116,9 @@ export default class MapContainer extends Component {
                     defaultCenter={this.state.center}>
                     {Markers}
                 </GoogleMapReact>
-            </div>
+            </Box>
         );
     }
 }
+
+export default withStyles(styles)(MapContainer);

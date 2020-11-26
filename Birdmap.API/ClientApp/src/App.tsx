@@ -1,24 +1,17 @@
-import { Box, Container, IconButton, Menu, MenuItem, MenuList, Paper, Grow, Popper } from '@material-ui/core';
-import AccountCircle from '@material-ui/icons/AccountCircle';
-import AppBar from '@material-ui/core/AppBar';
-import { positions } from '@material-ui/system';
+import { Box, Paper } from '@material-ui/core';
+import { blueGrey, grey, orange } from '@material-ui/core/colors';
 import { createMuiTheme, createStyles, makeStyles, Theme } from '@material-ui/core/styles';
-import Toolbar from '@material-ui/core/Toolbar';
-import Typography from '@material-ui/core/Typography';
 import { ThemeProvider } from '@material-ui/styles';
-import React, { useState, } from 'react';
-import { BrowserRouter, NavLink, Redirect, Route, Switch, Link } from 'react-router-dom';
-import BirdmapTitle from './components/appBar/BirdmapTitle';
+import React, { useState } from 'react';
+import { BrowserRouter, Redirect, Route, Switch } from 'react-router-dom';
+import BirdmapBar from './components/appBar/BirdmapBar';
 import Auth from './components/auth/Auth';
 import AuthService from './components/auth/AuthService';
-import { ClickAwayListener } from '@material-ui/core';
-import MapContainer from './components/heatmap/Heatmap';
-import Devices from './components/devices/Devices';
-import { blueGrey, blue, orange, grey } from '@material-ui/core/colors';
-import DevicesContextProvider from './contexts/DevicesContextProvider'
 import Dashboard from './components/dashboard/Dashboard';
+import Devices from './components/devices/Devices';
+import MapContainer from './components/heatmap/Heatmap';
 import Logs from './components/logs/Logs';
-
+import DevicesContextProvider from './contexts/DevicesContextProvider';
 
 const theme = createMuiTheme({
     palette: {
@@ -27,14 +20,13 @@ const theme = createMuiTheme({
             dark: grey[400],
         },
         secondary: {
-            main: orange[200],
+            main: blueGrey[700],
             dark: blueGrey[50],
         }
     },
 });
 
 function App() {
-
     const [authenticated, setAuthenticated] = useState(AuthService.isAuthenticated());
     const [isAdmin, setIsAdmin] = useState(AuthService.isAdmin());
 
@@ -61,6 +53,7 @@ function App() {
         return <Devices isAdmin={isAdmin}/>;
 
     };
+
     const HeatmapComponent = () => {
         return (
             <Paper elevation={0}>
@@ -69,16 +62,46 @@ function App() {
         );
     };
 
+    const HeaderComponent = () => {
+        return (
+            <BirdmapBar onLogout={AuthService.logout} isAdmin={isAdmin} isAuthenticated={authenticated}/>
+        );
+    }
+
+    const PredicateRoute = ({ component: Component, predicate: Predicate, ...rest }: { [x: string]: any, component: any, predicate: any }) => {
+        return (
+            <PredicateRouteInternal {...rest} header={HeaderComponent} body={Component} predicate={Predicate}/>
+        );
+    }
+
+    const PublicRoute = ({ component: Component, ...rest }: { [x: string]: any, component: any }) => {
+        return (
+            <PredicateRoute {...rest} component={Component} predicate={true}/>
+        );
+    }
+
+    const PrivateRoute = ({ component: Component, ...rest }: { [x: string]: any, component: any }) => {
+        return (
+            <PredicateRoute {...rest} component={Component} predicate={authenticated}/>
+        );
+    }
+
+    const AdminRoute = ({ component: Component, ...rest }: { [x: string]: any, component: any }) => {
+        return (
+            <PredicateRoute {...rest} component={Component} predicate={authenticated && isAdmin}/>
+        );
+    }
+
     return (
         <ThemeProvider theme={theme}>
             <BrowserRouter>
                 <Switch>
-                    <PublicRoute path="/login" exact component={AuthComponent} />
-                    <AdminRoute path="/logs" exact authenticated={authenticated} isAdmin={isAdmin} component={LogsComponent} />
+                    <PublicRoute      exact path="/login"           component={AuthComponent} />
+                    <AdminRoute       exact path="/logs"            component={LogsComponent} />
                     <DevicesContextProvider>
-                        <PrivateRoute path="/" exact authenticated={authenticated} component={DashboardComponent} />
-                        <PrivateRoute path="/devices/:id?" exact authenticated={authenticated} component={DevicesComponent} />
-                        <PrivateRoute path="/heatmap" exact authenticated={authenticated} component={HeatmapComponent} />
+                        <PrivateRoute exact path="/"                component={DashboardComponent} />
+                        <PrivateRoute exact path="/devices/:id?"    component={DevicesComponent} />
+                        <PrivateRoute exact path="/heatmap"         component={HeatmapComponent} />
                     </DevicesContextProvider>
                 </Switch>
             </BrowserRouter>
@@ -88,123 +111,26 @@ function App() {
 
 export default App;
 
-const PublicRoute = ({ component: Component, ...rest }: { [x: string]: any, component: any}) => {
+const PredicateRouteInternal = ({ header: HeaderComponent, body: BodyComponent, predicate: Predicate, ...rest }: { [x: string]: any, header: any, body: any, predicate: any }) => {
     return (
         <Route {...rest} render={matchProps => (
-            <DefaultLayout component={Component} authenticated={false} isAdmin={false} {...matchProps} />
-        )} />
-    );
-}
-
-const AdminRoute = ({ component: Component, authenticated: Authenticated, isAdmin: IsAdmin, ...rest }: { [x: string]: any, component: any, authenticated: any, isAdmin: any }) => {
-    return (
-        <Route {...rest} render={matchProps => (
-            Authenticated && IsAdmin
-                ? <DefaultLayout component={Component} authenticated={Authenticated} {...matchProps} />
+            Predicate
+                ? <DefaultLayoutInternal header={HeaderComponent} body={BodyComponent} {...matchProps} />
                 : <Redirect to='/login' />
         )} />
     );
 };
 
-const PrivateRoute = ({ component: Component, authenticated: Authenticated, ...rest }: { [x: string]: any, component: any, authenticated: any }) => {
-    return (
-        <Route {...rest} render={matchProps => (
-            Authenticated
-                ? <DefaultLayout component={Component} authenticated={Authenticated} {...matchProps} />
-                : <Redirect to='/login' />
-        )} />
-    );
-};
-
-const DefaultLayout = ({ component: Component, authenticated: Authenticated, ...rest }: { [x: string]: any, component: any, authenticated: any }) => {
+const DefaultLayoutInternal = ({ header: HeaderComponent, body: BodyComponent, ...rest }: { [x: string]: any, header: any, body: any }) => {
     const classes = useDefaultLayoutStyles();
-    const [open, setOpen] = React.useState(false);
-    const anchorRef = React.useRef<HTMLButtonElement>(null);
-
-    const handleToggle = () => {
-        setOpen((prevOpen) => !prevOpen);
-    };
-
-    const handleClose = (event: React.MouseEvent<EventTarget>) => {
-        if (anchorRef.current && anchorRef.current.contains(event.target as HTMLElement)) {
-            return;
-        }
-
-        setOpen(false);
-    };
-
-    const handleLogout = (event: React.MouseEvent<EventTarget>) => {
-        if (anchorRef.current && anchorRef.current.contains(event.target as HTMLElement)) {
-            return;
-        }
-
-        AuthService.logout();
-        setOpen(false);
-    };
-
-    function handleListKeyDown(event: React.KeyboardEvent) {
-        if (event.key === 'Tab') {
-            event.preventDefault();
-            setOpen(false);
-        }
-    }
-
-    const prevOpen = React.useRef(open);
-    React.useEffect(() => {
-        if (prevOpen.current === true && open === false) {
-            anchorRef.current!.focus();
-        }
-
-        prevOpen.current = open;
-    }, [open]);
-
-
-    const renderNavLinks = () => {
-        return Authenticated
-            ? <Container className={classes.nav_menu}>
-                <NavLink exact to="/" className={classes.nav_menu_item} activeClassName={classes.nav_menu_item_active}>Dashboard</NavLink>
-                {}
-                <NavLink to="/devices" className={classes.nav_menu_item} activeClassName={classes.nav_menu_item_active}>Devices</NavLink>
-                <NavLink exact to="/heatmap" className={classes.nav_menu_item} activeClassName={classes.nav_menu_item_active}>Heatmap</NavLink>
-                <IconButton className={classes.nav_menu_icon}
-                    ref={anchorRef}
-                    aria-haspopup="true"
-                    aria-controls={open ? 'menu-list-grow' : undefined}
-                    aria-label="account of current user"
-                    onClick={handleToggle}>
-                    <AccountCircle/>
-                </IconButton>
-                <Popper open={open} anchorEl={anchorRef.current} role={undefined} transition disablePortal>
-                    {({ TransitionProps, placement }) => (
-                        <Grow
-                            {...TransitionProps}
-                            style={{ transformOrigin: placement === 'bottom' ? 'center top' : 'center bottom' }}>
-                            <Paper>
-                                <ClickAwayListener onClickAway={handleClose}>
-                                    <MenuList autoFocusItem={open} id="menu-list-grow" onKeyDown={handleListKeyDown}>
-                                        <MenuItem onClick={handleLogout} component={Link} {...{ to: '/login' }}>Logout</MenuItem>
-                                    </MenuList>
-                                </ClickAwayListener>
-                            </Paper>
-                        </Grow>
-                    )}
-                </Popper>
-            </Container>
-            : null;
-    };
 
     return (
         <React.Fragment>
-            <AppBar position="static" className={classes.bar_root}>
-                <Toolbar>
-                    <BirdmapTitle />
-                    <Typography component={'span'} className={classes.typo}>
-                        {renderNavLinks()}
-                    </Typography>
-                </Toolbar>
-            </AppBar>
-            <Box zIndex="modal" className={classes.box_root}>
-                <Component {...rest} />
+            <Box className={classes.header}>
+                <HeaderComponent />
+            </Box>
+            <Box className={classes.body}>
+                <BodyComponent {...rest} />
             </Box>
         </React.Fragment>
     );
@@ -212,46 +138,12 @@ const DefaultLayout = ({ component: Component, authenticated: Authenticated, ...
 
 const useDefaultLayoutStyles = makeStyles((theme: Theme) =>
     createStyles({
-        bar_root: {
+        header: {
             height: '7%',
         },
-        box_root: {
+        body: {
             backgroundColor: theme.palette.primary.dark,
             height: '93%',
-        },
-        typo: {
-            marginLeft: 'auto',
-            color: 'white',
-        },
-        nav_menu: {
-            display: 'flex',
-            flexDirection: 'row',
-            alignItems: 'center',
-        },
-        nav_menu_icon: {
-            color: 'inherit',
-            marginLeft: '24px',
-            '&:hover': {
-                color: 'inherit',
-            }
-        },
-        nav_menu_item: {
-            textDecoration: 'none',
-            fontWeight: 'normal',
-            color: 'inherit',
-            marginLeft: '24px',
-            '&:hover': {
-                color: 'inherit',
-            }
-        },
-        nav_menu_item_active: {
-            textDecoration: 'underline',
-            fontWeight: 'bold',
-            color: 'inherit',
-            marginLeft: '24px',
-            '&:hover': {
-                color: 'inherit',
-            }
-        },
+        }
     }),
 );
