@@ -2,9 +2,8 @@
 \chapter{A Birdnetes részletes bemutatása}
 \label{chapt:birdnetes-introduction}
 %----------------------------------------------------------------------------
-Ebben a fejezetben ismertetem a Birdnetes mikroszolgáltatás rendszerének architektúráját.
+Ebben a fejezetben ismertetem a Birdnetes mikroszolgáltatás rendszerének architektúráját és az általa használt technológiákat.
 Részletesen kifejtem az alkalmazásom szempontjából fontos komponensek feladatát és működését.
-Majd egy példával ábrázolom a rendszer hangfelismerő folyamatát.
 
 %----------------------------------------------------------------------------
 \section{Gyors elméleti összefoglaló}
@@ -76,12 +75,13 @@ A Birdnetes fejlesztése során kifejezetten fontos szerepe volt a mikroszolgál
 A rendszer egy Kubernetes klaszterben van telepítve és több kisebb komponensből áll, melyek egymás között a HTTP és az MQTT protokollok segítségével kommunikálnak.
 A rendszer összes szolgáltatásának van egy Open API leírója, melyet használva hamar volt egy olyan kódbázisom, amely képes volt a rendszerrel való kommunikációra.
 
+
 %----------------------------------------------------------------------------
 \subsection{Főbb komponensek}
 %----------------------------------------------------------------------------
-A \ref{fig:birdnetes-components}-es ábrán láthatóak a rendszer komponensei, melyek mind egy-egy mikroszolgáltatás.
+A \ref{fig:birdnetes-components}-es ábrán láthatóak a rendszer komponensei, melyek mindegyike egy-egy mikroszolgáltatás.
 Az egymás mellett lévő kék levélborítékok az MQTT kommunikációt jelölik,
-amellyel például a természetben elhelyezett eszközök felé irányuló kommunikációja is történik.
+amellyel például a természetben elhelyezett eszközök felé irányuló kommunikáció is történik.
 A következő alszakaszokban bemutatom az alkalmazásom szempontjából fontosabb komponenseket.
 
 \begin{figure}[!ht]
@@ -90,6 +90,14 @@ A következő alszakaszokban bemutatom az alkalmazásom szempontjából fontosab
 \caption{A Birdnetes rendszer architektúrája}
 \label{fig:birdnetes-components}
 \end{figure}
+
+%----------------------------------------------------------------------------
+\subsubsection{IoT eszközök}
+%----------------------------------------------------------------------------
+Szőlőültetvényekben telepített eszközök, melyek adott időközönként publikálják állapotaikat egyéb metaadatokkal egy üzenetsoron.
+Emellett folyamatosan hangfelvételt készítenek a beépített mikrofonjaikkal, mely hangfelvételekről egy másik belső szenzor eldönti,
+hogy érdemes-e felküldeni a rendszerbe, ha igen, akkor egy másik üzenetsoron publikálják ezeket a hangfelvételeket.
+Tartalmaznak még egy hangszórót is, mely a madarak elijesztését szolgálja.
 
 %----------------------------------------------------------------------------
 \subsubsection{Input Service}
@@ -117,6 +125,6 @@ Ha igen, akkor az üzenetsoron küld egy riasztás parancsot a hanganyagot küld
 %----------------------------------------------------------------------------
 \subsubsection{Command and Control Service}
 %----------------------------------------------------------------------------
-A Command and Control Service az előzőekkel ellentétben nem vesz részt a minták fogadásában, feldolgozásában vagy kezelésében.
+A Command and Control Service az előzőekkel ellentétben egyáltalán nem vesz részt a minták fogadásában, feldolgozásában vagy kezelésében.
 Felelősége az eszközök és azok szenzorai állapotának menedzselése és követése.
 Ezen keresztül lehet az egyes eszközöket ki- és bekapcsolni.
