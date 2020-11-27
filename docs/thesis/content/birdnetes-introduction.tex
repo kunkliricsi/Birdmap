@@ -1,0 +1,122 @@
+%----------------------------------------------------------------------------
+\chapter{A Birdnetes részletes bemutatása}
+\label{chapt:birdnetes-introduction}
+%----------------------------------------------------------------------------
+Ebben a fejezetben ismertetem a Birdnetes mikroszolgáltatás rendszerének architektúráját.
+Részletesen kifejtem az alkalmazásom szempontjából fontos komponensek feladatát és működését.
+Majd egy példával ábrázolom a rendszer hangfelismerő folyamatát.
+
+%----------------------------------------------------------------------------
+\section{Gyors elméleti összefoglaló}
+%----------------------------------------------------------------------------
+Ez a szakasz nem azt a célt szolgálja, hogy minnél részletesebb képet mutasson az itt leírt technológiákról.
+Ez csupán egy rövid összefoglaló a Birdnetes működésének megértése szempontjából elengedhetetlen technológiákról és elvekről,
+hogy valamilyen szinten tisztában legyünk a fejezetben elhangzó kifejezésekkel.
+
+%----------------------------------------------------------------------------
+\subsection{Cloud, felhő}
+%----------------------------------------------------------------------------
+A cloud lényegében annyit jelent, hogy a szervert, amin az alkalmazás fut, nem a fejlesztőnek kell üzemeltetnie,
+hanem valamilyen másik szervezet\footnotemark által vannak karban tartva. 
+Ez több okból is hasznos:
+\begin{itemize}
+    \item Olcsóbb. Nem kell berendezéseket vásárolni, nincs üzemeltetési díj. Az egyetlen költség a bérlés, ami általában töredéke annak, amit akkor fizetnénk ha magunk csinálnánk az egészet.
+    \item Gyorsabb fejlesztés. Az alkalmazás futtatására használt szervereket általában a fejlesztő nem látja, ezekkel nem kell foglalkoznia. Ha az alkalmazásnak hirtelen nagyobb erőforrás igénye lesz, a rendszer automatikusan skálázódik.
+    \item Nagyobb megbízhatóság. Az ilyen szolgáltatást nyújtó szervezeteknek ez az egyik legnagyobb feladata. Az alkalmazás bárhol és bármikor elérhető.
+\end{itemize}
+
+\footnotetext{Ilyenek például a Microsoft Azure, az Amazon Web Services vagy a Google Cloud.}
+%----------------------------------------------------------------------------
+\subsubsection{Mikroszolgáltatások}
+%----------------------------------------------------------------------------
+A mikroszolgáltatások nem sok mindenben különböznek egy általános szolgáltatástól. 
+Ugyan úgy valamilyen kéréseket kiszolgáló egységek, legyen az web kérések kiszolgálása HTTP-n keresztül
+vagy akár parancssori utasítások feldolgozása. Az egyetlen fő különbség az a szolgáltatások felelősségköre.
+A mikroszolgáltatások fejlesztésénél a fejlesztők elsősorban arra törekednek, hogy egy komponensnek minnél kevesebb feladata és függősége legyen, 
+ezzel megnő a tesztelhetőség és könyebb a skálázhatóság.
+
+%----------------------------------------------------------------------------
+\subsubsection{Konténerek}
+%----------------------------------------------------------------------------
+A konténer technikailag semmivel sem több mint egy Linux-on futó processz amelyre különböző korlátozásokat szabtak.
+Ilyen korlátozások lehetnek például, hogy a konténer nem látja a teljes fájlrendszert, annak csak egy kijelölt részét,
+megadható a konténer által használható processzor és memória igény vagy akár korlátozható az is, hogy a konténer hogyan használhatja a hálózatot.
+Léteznek eszközök, például a Docker\footnote{https://www.docker.com/}, mely lehetővé teszi a fejlesztők számára az ilyen konténerek könnyed létrehozását és futtatását.
+
+%----------------------------------------------------------------------------
+\subsubsection{Kubernetes}
+%----------------------------------------------------------------------------
+A Kubernetes\footnote{https://kubernetes.io/} az ilyen komplex konténerizált mikroszolgáltatás rendszerek menedzselésének könnyítését szolgálja.
+Kihasználja és ötvözi az imént említett technológiák előnyeit, hogy egy robosztus rendszert alkosson. 
+Használatával felgyorsulhat és automatizált lehet az egyes konténerek telepítése, futtatása, de talán a legfőbb előnye,
+hogy segítségével könnyedén megoldható a rendszert ért terhelési igények szerinti dinamikus skálázódás. 
+Azok a mikroszolgáltatások, amikre a rendszernek épp nincs szüksége, nem futnak, nem igényelnek erőforrást a szerveren,
+így nem kell utánnuk fizetni sem. Ezzel ellentétben, ha valamely szolgáltatás után hirtelen megnő az igény,
+akkor az könnyedén duplikálható.
+
+%----------------------------------------------------------------------------
+\subsection{MQTT}
+%----------------------------------------------------------------------------
+Az MQTT (Message Queue Telemetry Transport) az egy kliens-szerver publish/subscribe üzenetküldő protokoll. Könnyű implementálni és alacsony a sávszélesség igénye,
+mellyel tökéletes jelöltje a Machine to Machine (M2M), illetve az Internet of Things (IoT) kommunikáció megvalósítására.
+Működéséhez szükség van egy szerverre, amelynek feladata a beérkező üzenetek továbbküldése témák alapján. Egyes kliensek fel tudnak iratkozni bizonyos témákra, míg más kliensek publikálnak
+és a szerver levezényli a két fél között a kommunikációt.
+
+%----------------------------------------------------------------------------
+\subsection{Open API}
+%----------------------------------------------------------------------------
+Az Open API egy nyilvános alkalmazás-programozási leíró, amely a fejlesztők számára hozzáférést biztosít egy másik alkalmazáshoz.
+Az API-k lírják és meghatározzák, hogy egy alkalmazás hogyan kommunikálhat egy másikkal, 
+melyet használva a fejlesztők könnyedén képesek a kommunikációra képes kódot írni vagy generálni.
+
+%----------------------------------------------------------------------------
+\section{Rendszerszintű architektúra}
+%----------------------------------------------------------------------------
+A Birdnetes fejlesztése során kifejezetten fontos szerepe volt a mikroszolgáltatás alapú rendszerek elvei követésének.
+A rendszer egy Kubernetes klaszterben van telepítve és több kisebb komponensből áll, melyek egymás között a HTTP és az MQTT protokollok segítségével kommunikálnak.
+A rendszer összes szolgáltatásának van egy Open API leírója, melyet használva hamar volt egy olyan kódbázisom, amely képes volt a rendszerrel való kommunikációra.
+
+%----------------------------------------------------------------------------
+\subsection{Főbb komponensek}
+%----------------------------------------------------------------------------
+A \ref{fig:birdnetes-components}-es ábrán láthatóak a rendszer komponensei, melyek mind egy-egy mikroszolgáltatás.
+Az egymás mellett lévő kék levélborítékok az MQTT kommunikációt jelölik,
+amellyel például a természetben elhelyezett eszközök felé irányuló kommunikációja is történik.
+A következő alszakaszokban bemutatom az alkalmazásom szempontjából fontosabb komponenseket.
+
+\begin{figure}[!ht]
+\centering
+\includegraphics[width=150mm, keepaspectratio]{figures/architecture-redesigned.png}
+\caption{A Birdnetes rendszer architektúrája}
+\label{fig:birdnetes-components}
+\end{figure}
+
+%----------------------------------------------------------------------------
+\subsubsection{Input Service}
+%----------------------------------------------------------------------------
+A kihelyezett IoT eszközök által felvett hangfájlok ezen a komponensen keresztül érkeznek be a rendszerbe.
+Itt történik a hanganyaghoz tartozó metaadatok lementése az Input Service saját adatbázisába. 
+Ilyenek például a beküldő eszköz azonosítója, a beérkezés dátuma vagy a hangüzenet rendszerszintű egyedi azonosítója.
+Amint a szolgáltatás a berékezett üzenettel kapcsolatban elvégezte az összes feladatát, 
+publikál egy üzenetet az MQTT üzenetsorra a többi kliensnek feldolgozásra.
+
+%----------------------------------------------------------------------------
+\subsubsection{AI Service}
+%----------------------------------------------------------------------------
+Az AI Service példányai fogadják az Input Service-től érkező üzeneteket és elkezdik klasszifikálni az abban található hanganyagot.
+Meghatározzák, hogy a hanganyag mekkora valószínűséggel volt seregély hang vagy sem.
+Ennek eredményét a hangminta egyedi azonosítójával együtt publikálják egy másik üzenetsoron.
+
+%----------------------------------------------------------------------------
+\subsubsection{Guard Service}
+%----------------------------------------------------------------------------
+A Guard Service feliratkozik az AI Service által publikált üzenetek témájára 
+és valamilyen valószínűségi kritérium alapján eldönti, hogy a hangminta tartalmaz-e seregély hangot.
+Ha igen, akkor az üzenetsoron küld egy riasztás parancsot a hanganyagot küldő eszköznek.
+
+%----------------------------------------------------------------------------
+\subsubsection{Command and Control Service}
+%----------------------------------------------------------------------------
+A Command and Control Service az előzőekkel ellentétben nem vesz részt a minták fogadásában, feldolgozásában vagy kezelésében.
+Felelősége az eszközök és azok szenzorai állapotának menedzselése és követése.
+Ezen keresztül lehet az egyes eszközöket ki- és bekapcsolni.
