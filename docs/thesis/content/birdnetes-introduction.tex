@@ -1,5 +1,5 @@
 %----------------------------------------------------------------------------
-\chapter{A Birdnetes részletes bemutatása}
+\chapter{A Birdnetes bemutatása}
 \label{chapt:birdnetes-introduction}
 %----------------------------------------------------------------------------
 Ebben a fejezetben ismertetem a Birdnetes mikroszolgáltatás rendszerének architektúráját és az általa használt technológiákat.
@@ -9,8 +9,9 @@ Részletesen kifejtem az alkalmazásom szempontjából fontos komponensek felada
 \section{Gyors elméleti összefoglaló}
 %----------------------------------------------------------------------------
 Ez a szakasz nem azt a célt szolgálja, hogy minnél részletesebb képet mutasson az itt leírt technológiákról.
+Arra sokkal jobb eszköz Pünkösdi Marcellnek és Torma Kristófnak, a Birdnetes alkótóinak TDK dolgozata\cite{birdnetes-tdk}.
 Ez csupán egy rövid összefoglaló a Birdnetes működésének megértése szempontjából elengedhetetlen technológiákról és elvekről,
-hogy valamilyen szinten tisztában legyünk a fejezetben elhangzó kifejezésekkel.
+hogy valamennyire érthetőbbek legyenek a fejezetben elhangzó kifejezések.
 
 %----------------------------------------------------------------------------
 \subsection{Cloud, felhő}
@@ -40,12 +41,12 @@ ezzel megnő a tesztelhetőség és könyebb a skálázhatóság.
 A konténer technikailag semmivel sem több mint egy Linux-on futó processz amelyre különböző korlátozásokat szabtak.
 Ilyen korlátozások lehetnek például, hogy a konténer nem látja a teljes fájlrendszert, annak csak egy kijelölt részét,
 megadható a konténer által használható processzor és memória igény vagy akár korlátozható az is, hogy a konténer hogyan használhatja a hálózatot.
-Léteznek eszközök, például a Docker\footnote{https://www.docker.com/}, mely lehetővé teszi a fejlesztők számára az ilyen konténerek könnyed létrehozását és futtatását.
+Léteznek eszközök, például a Docker\cite{docker}, mely lehetővé teszi a fejlesztők számára az ilyen konténerek könnyed létrehozását és futtatását.
 
 %----------------------------------------------------------------------------
 \subsubsection{Kubernetes}
 %----------------------------------------------------------------------------
-A Kubernetes\footnote{https://kubernetes.io/} az ilyen komplex konténerizált mikroszolgáltatás rendszerek menedzselésének könnyítését szolgálja.
+A Kubernetes\cite{kubernetes} az ilyen komplex konténerizált mikroszolgáltatás rendszerek menedzselésének könnyítését szolgálja.
 Kihasználja és ötvözi az imént említett technológiák előnyeit, hogy egy robosztus rendszert alkosson. 
 Használatával felgyorsulhat és automatizált lehet az egyes konténerek telepítése, futtatása, de talán a legfőbb előnye,
 hogy segítségével könnyedén megoldható a rendszert ért terhelési igények szerinti dinamikus skálázódás. 

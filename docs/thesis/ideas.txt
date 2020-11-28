@@ -49,7 +49,7 @@ Forma
     - API
         - controllerek
         - servicek
-        - mqtt
+        - mqtt.net
         - signalR
 - Frontend
     - felépítés architektúra
