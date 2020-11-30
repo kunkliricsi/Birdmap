@@ -2,54 +2,109 @@
 \chapter{Használt technológiák}
 \label{chapt:birdmap-technologies}
 %----------------------------------------------------------------------------
+Ezzel a fejezettel az a célom, hogy ismertessem a fejlesztés során, illetve az alkalmazásom által használt technológiákat,
+hogy a következő fejezetekben alapozni tudjak ezeknek az ismeretére.
 
 %----------------------------------------------------------------------------
 \section{A fejlesztési folyamat technológiái}
 %----------------------------------------------------------------------------
+Ebben a szakaszban azokat az eszközöket, alkalmazásokat mutatom be, melyeket a fejlesztés során használtam. 
+
 %----------------------------------------------------------------------------
 \subsection{Git}
 %----------------------------------------------------------------------------
+A Git\cite{git} egy verziókezelő rendszer. Használatával a felhasználó le tudja menteni egy adott fájlrendszerben található fájlok állapotát.
+Megkönnyíti az egy projekten dolgozó programozók közötti kooperációt. Manapság lassan elképzelhetetlen a fejlesztés valamilyen verziókezelő használata nélkül.
+
 %----------------------------------------------------------------------------
 \subsection{Trello}
 %----------------------------------------------------------------------------
+A Trello\cite{trello} egy webes lista készítő és kezelő alkalmazás. 
+Azért használtam a fejlesztés során, mert szerettem volna egy helyet, ami tükrözi a fejlesztés állapotát, ahova le tudom írni az alkalmazással kapcsolatos ötleteimet.
+Különböző listákban tároltam a fejlesztésre váró és a kész feladatokat szerver, kliens és egyéb szerint.
+
+\begin{figure}[!ht]
+    \centering
+    \includegraphics[width=150mm, keepaspectratio]{figures/trello-cropped.png}
+    \caption{Egy példa állapot a Trello felületére a fejlesztés során}
+    \label{fig:trello}
+\end{figure}
+
 %----------------------------------------------------------------------------
 \subsection{Visual Studio}
 %----------------------------------------------------------------------------
+A Visual Studio\cite{vs} a Microsoft fejlesztőkörnyezete. Jól alkalmazható a .NET keretrendszer technológiáival, ezért ezt használtam a szerveroldal fejlesztése során.
+
 %----------------------------------------------------------------------------
 \subsection{Visual Studio Code}
 %----------------------------------------------------------------------------
+Egy másik Microsoft termék, viszont a fentivel ellentétben a Visual Studio Code\cite{vs-code} inkább szövegszerkeztő, mint fejlesztőkörnyezet.
+Ennek köszönhetően jelentősen gyorsabb és egyszerűbb a használata. Különféle bővítmények használatával nagyon jó program nyelv támogatottságot lehet elérni.
+Többek között ezen okok miatt preferáltam a kliensoldal fejlesztésére. 
 
 %----------------------------------------------------------------------------
 \section{Backend technológiák}
 %----------------------------------------------------------------------------
+Ebben a szakaszban a szerveroldal megvalósítására használt .NET technológiákat mutatom be. A választásom több ok miatt esett a .NET keretrendszer használatára.
+
+Egyrészt úgy gondoltam, hogy az alkalmazásom fajsúlyosabb részét inkább a kliensoldal fogja képezni ezért, hogy arra több energiát tudjak fordítani, valami olyat választottam,
+amivel már foglalkoztam korábban, amivel gyorsabban és rutinosabban megy a fejlesztés.
+
+Másrészt nemrég jelent meg a .NET új 5-ös verziója, melynek használatával jelentős teljesítmény javulást ígértek több területen is, és úgy gondoltam, hogy ez a projekt tökéletes lenne
+ennek próbatételére.
+
+Mindemellett a .NET teljesen platformüggetlen, mely az egyik legfontosabb követelmény volt az alkalmazással szemben.
+
 %----------------------------------------------------------------------------
 \subsection{ASP.NET Core}
 %----------------------------------------------------------------------------
+Az ASP.NET Core a .NET család ingyenes, nyílt forráskódú webes keretrendszere. Gyors és moduláris fejlesztést tesz lehetővé, mely főként a NuGet csomagoknak köszönhető.
+Használatána egyik előnye, hogy ugyan az a C\# kód tud futni a szerver éa a kliens oldalon, de támogat más kliens oldali keretrendszereket is, mint például az Angular-t, a Vue.js-t
+vagy a React.js-t.
+
 %----------------------------------------------------------------------------
 \subsection{Entity Framework Core}
 %----------------------------------------------------------------------------
+Az Entity Framework Core (röviden EF Core) egy objektum-relációs leképező keretrendszer a .NET-hez. Az adatbázissal való kommunikációt könnyítését szolgálja. 
+Használatával C\#-ban lehet adatbázis lekérdezéseket írni a LINQ (Language-Integrated Query) segítségével.
+
 %----------------------------------------------------------------------------
 \subsection{SignalR}
 %----------------------------------------------------------------------------
+A SignalR egy .NET szoftvercsomag, mely lehetővé teszi a szerveroldal számára a kliensekkel való aszinkron kommunikációt.
+A szerver valós időben tud értesítéseket küldeni a kliensek számára, amelyek feliratkoztak az ilyen eseményekre.
+
 %----------------------------------------------------------------------------
 \subsection{MQTT.NET}
 %----------------------------------------------------------------------------
-%----------------------------------------------------------------------------
-\subsection{NLog}
-%----------------------------------------------------------------------------
+Az MQTT.NET is egy .NET szoftvercsomag, mely a Birdnetes által is használt, a \ref{subsect:mqtt}-es alfejezetben bemutatott MQTT kommunikáció C\# nyelvű megvalósítását szolgálja.
 
 %----------------------------------------------------------------------------
 \section{Frontend technológiák}
 %----------------------------------------------------------------------------
+Ebben a szakaszban a kliensoldalhoz használt technológiákat mutatom be. 
+Választásomnál fő motiváció az volt, hogy szerettem volna valami újat kipróbálni, aminek nincs köze a .NET technológiákhoz.
+
 %----------------------------------------------------------------------------
 \subsection{React.js}
 %----------------------------------------------------------------------------
+A React.js\cite{react} egy JavaScript szoftvercsomag, melyet webes felületek fejlesztésére használnak.
+Fő építő elemei a komponensek, melyek elszeparált újrafelhasználható felület egységek.
+Használatának egyik előnye, hogy automatizált az állapot kezelés, tehát ha változik egy komponens állapota, akkor a React újra-rendereli azt.
+
 %----------------------------------------------------------------------------
 \subsection{Material UI}
 %----------------------------------------------------------------------------
+A Material\cite{material} elsősorban egy kezelőfelület tervezési útmutató a Google által, melyet követve szép és minőségi felületeket lehet készíteni.
+
+A Material UI\cite{material-ui} egy szoftvercsomag, mely ezeket az útmutatásokat követő egyszerű React komponenseket tartalmaz.
+Alkalmazásával könnyő esztétikus felhasználói felületeket készíteni, minimalizált a CSS használattal. 
+
 %----------------------------------------------------------------------------
 \subsection{Apexcharts}
 %----------------------------------------------------------------------------
+
+
 %----------------------------------------------------------------------------
 \subsection{Google Maps Api}
 %----------------------------------------------------------------------------
