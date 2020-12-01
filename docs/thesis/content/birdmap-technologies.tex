@@ -8,7 +8,7 @@ hogy a következő fejezetekben alapozni tudjak ezeknek az ismeretére.
 %----------------------------------------------------------------------------
 \section{A fejlesztési folyamat technológiái}
 %----------------------------------------------------------------------------
-Ebben a szakaszban azokat az eszközöket, alkalmazásokat mutatom be, melyeket a fejlesztés során használtam. 
+Ebben a szakaszban azokat az eszközöket, alkalmazásokat és fejlesztőkörnyezeteket mutatom be, melyeket a fejlesztés során, a fejlesztéshez használtam. 
 
 %----------------------------------------------------------------------------
 \subsection{Git}
@@ -82,8 +82,8 @@ Az MQTT.NET is egy .NET szoftvercsomag, mely a Birdnetes által is használt, a 
 %----------------------------------------------------------------------------
 \section{Frontend technológiák}
 %----------------------------------------------------------------------------
-Ebben a szakaszban a kliensoldalhoz használt technológiákat mutatom be. 
-Választásomnál fő motiváció az volt, hogy szerettem volna valami újat kipróbálni, aminek nincs köze a .NET technológiákhoz.
+Ebben a szakaszban a kliensoldalon használt technológiákat mutatom be. 
+Választásomnál fő motiváció az volt, hogy szerettem volna valami újat kipróbálni, aminek nincs köze a .NET keretrendszerhez.
 
 %----------------------------------------------------------------------------
 \subsection{React.js}
@@ -103,8 +103,15 @@ Alkalmazásával könnyő esztétikus felhasználói felületeket készíteni, m
 %----------------------------------------------------------------------------
 \subsection{Apexcharts}
 %----------------------------------------------------------------------------
-
+Az Apexcharts\cite{apexcharts} egy nyílt forráskódú JavaScript szoftvercsomag, amellyel könnyen konfigurálható, modern kinézetű diagrammokat lehet készíteni.
+Sokféle kliensoldali (és szerveroldali) technológiát támogat, köztük a React-et is. A kezelőfelületen található vizualizációk szinte összes elemét ennek használatával csináltam.
 
 %----------------------------------------------------------------------------
 \subsection{Google Maps Api}
 %----------------------------------------------------------------------------
+A Google szinte összes termékének van API-ja, ami lehetővé teszi a programozók számára, hogy integrálják ezeket saját alkalmazásaikban.
+A Google Maps sincs másképp és mivel ennek interfésze külön támogatja a hőtérképes réteg használatát is, nem gondoltam, hogy ettől jobb eszközt tudnék találni a feladat megvalósítására.
+
+A Google Maps API-t, ami alapvetően csak egy JavaScript csomag, rengetegen újracsomagolják, hogy különböző részét, különböző keretrendszerekben is lehessen használni.
+Ezek közül én a Google Map React\cite{google-map-react}-et választottam, egyrészt mert támogatja a hőtérképes réteg használatát, 
+másrészt mert lehetővé teszi a térképen való React komponensek renderelését az alapértelmezett markerek helyett.
