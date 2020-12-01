@@ -2,4 +2,88 @@
 \chapter{Backend}
 \label{chapt:birdmap-backend}
 %----------------------------------------------------------------------------
-Ebben a fejezetben bemutatom, hogy hogyan épül fel a szerveroldal.
+Ebben a fejezetben bemutatom a szerveroldal architektúráját, felépítését. Ismertetem a különböző szoftver komponensek feladatát.
+
+%----------------------------------------------------------------------------
+\section{Architektúra}
+%----------------------------------------------------------------------------
+A szerveroldal fejlesztésénél a háromrétegú architektúrát alkalmaztam, melynek lényege, hogy az alkalmazást logikailag három elkülönülő részre bontjuk:
+\begin{itemize}
+    \item \textbf{Adat elérési réteg}. Ez a rész felel a tárolt entitások modell definícióiért, illetve azoknak a kiolvasásáért, tárolásáért egy adatbázisból vagy fájlrendszerből.
+    \item \textbf{Megjelenítési réteg}. Ezen réteg feladata a kliensoldal közvetlek kiszolgálása. Bármilyen irányú kommunikáció a kliensek felé ezen a rétegen keresztül történik.
+    \item \textbf{Üzleti logikai réteg}. Minden ami nem a közvetlen kommunikációért, megjelenítésért vagy adat elérésért, tárolásért felel, az ide kerül.
+    A fenti két réteg között helyezkedik el és feladata a különböző folyamatok értékelése és futtatása, valamint az adatok feldolgozása.
+\end{itemize}
+
+\lstset{language=C,keywordstyle={\bfseries \color{blue}}}
+Az ASP.NET Core beépítetten támogatja a dependency injection-t, mely a \verb+Startup+ osztály \verb+ConfigureServices+ metódusával konfigurálható.
+Én minden rétegbe tettem egy ilyen \verb+Startup+ osztályt, hogy azok feleljenek a saját szolgáltatásaik konfigurálásáért és regisztrálásáért.
+
+%----------------------------------------------------------------------------
+\section{Adat elérési réteg}
+%----------------------------------------------------------------------------
+Az adatelérést az Entity Framework Core segítségével oldottam meg. Telepítettem egy MSSQL adatbázis szervert a számítógépemre, melynek csatlakozási paramétereivel
+a \verb+Startup+ osztályban felkonfigurálom az EF Core által nyújtott \verb+DbContext+ saját leszármazott változatát. 
+Így csak az entitások elkészítése és azok alapértelmezett értékeinek az adatbázisba való feltöltése marad hátra.
+
+%----------------------------------------------------------------------------
+\subsection{Entitások}
+%----------------------------------------------------------------------------
+Mivel az adatok nagy részét külső szolgáltatások fogják nyújtani, így lokálisan összesen két entitás létrehozására volt szükség. 
+Az egyik a \verb+User+, mely az alkalmazás felhasználóinak adatait tárolja. 
+A másik a \verb+Service+, mely a külső szolgáltatások adatainak tárolását szolgálja, amelyeket azért tárolok az adatbázisban és nem mondjuk a konfigurációs fájlban,
+mert szerettem volna, hogyha a kezelőfelületen lehetne őket szerkeszteni, törölni.
+
+\lstset{style=sharpc, morekeywords={record, get, set}}
+\begin{lstlisting}[caption=A User és a Service modell]
+    public record User
+    {
+        public int Id { get; set; }
+        public string Name { get; set; }
+        public byte[] PasswordHash { get; set; }
+        public byte[] PasswordSalt { get; set; }
+
+        public Roles Role { get; set; }
+
+        public bool IsFromConfig { get; set; }
+    }
+
+    public record Service
+    {
+        public int Id { get; set; }
+        public string Name { get; set; }
+        public Uri Uri { get; set; }
+
+        public bool IsFromConfig { get; set; }
+    }
+\end{lstlisting}
+
+Az alkalmazás használata szempontjából a felhasználók két csoportba oszlanak.
+Vannak adminisztrátor és sima felhasználók, utóbbi csak az adatok olvasására, míg előbb azok módosítására is jogosult.
+Ennek a megkülönböztetésnek a jelzője a \verb+Role+ osztály tulajdonság.
+
+%----------------------------------------------------------------------------
+\subsection{Seedelés}
+%----------------------------------------------------------------------------
+Az alkalmazás konfigurációs fájljából meg lehet adni alapértelmezett felhasználókat és szolgáltatásokat.
+Ezeknek megkülönböztetésére szolgál az entitások \verb+IsFromConfig+ mezője.
+A szerver indítása legelején, megvizsgálja, hogy létezik-e az adatbázis és ha igen kitöröl minden olyan entitást ahol az \verb+IsFromConfig+ mező igaz.
+Majd hozzáadja az újonnan beolvasott értékeket.
+
+%----------------------------------------------------------------------------
+\section{Üzleti logikai réteg}
+%----------------------------------------------------------------------------
+Ebben a rétegben található meg a szerver legtöbb szolgáltatása. It vannak implementálva a Birdnetes Command and Control és Input komponenseivel kommunikáló szolgáltatások is, 
+melyeket azok OpenAPI leírói alapján az NSwag\cite{nswag} alkalmazással generáltam.
+
+Ugyan itt található meg a \verb+User+ és \verb+Service+ entitások létrehozásáért, olvasásáért, szerkesztéséért és törléséért felelős szolgáltatások is.
+Valamint itt található még az autentikációért felelős szolgáltatás is. A felhasználók jelszavainak tárolására a HMAC (Hash-based Message Authentication Code) algorithmust, 
+pontosabban annak a \verb+HMACSHA512+ C\# implementációját használtam.
+
+Minden jelszóhoz generálok egy egyedi kulcsot és azzal egy hash-t és ezeket tárolom a \verb+User+ modell \verb+PasswordSalt+ és \verb+PasswordHash+ mezőiben.
+Amikor egy felhasználó be akar jelentkezni először megvizsgálom, hogy egyáltalán létezik-e az adatbázisban a megadott nevű felhasználó 
+és ha igen a megadott jelszóból az imént említett folyamattal generált kulcsot és hash-t összehasonlítom az adatbázisban tárolttal.
+
+%----------------------------------------------------------------------------
+\section{Megjelenítési réteg}
+%----------------------------------------------------------------------------
