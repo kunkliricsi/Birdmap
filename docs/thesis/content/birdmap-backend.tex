@@ -1,5 +1,5 @@
 %----------------------------------------------------------------------------
-\chapter{Backend}
+\chapter{Szerver oldal}
 \label{chapt:birdmap-backend}
 %----------------------------------------------------------------------------
 Ebben a fejezetben bemutatom a szerveroldal architektúráját, felépítését. Ismertetem a különböző szoftver komponensek feladatát.
@@ -60,7 +60,7 @@ mert szerettem volna, hogyha a kezelőfelületen lehetne őket szerkeszteni, tö
 
 Az alkalmazás használata szempontjából a felhasználók két csoportba oszlanak.
 Vannak adminisztrátor és sima felhasználók, utóbbi csak az adatok olvasására, míg előbb azok módosítására is jogosult.
-Ennek a megkülönböztetésnek a jelzője a \verb+Role+ osztály tulajdonság.
+A \verb+Role+ mező ennek a megkülönböztetsnek a jelzője.
 
 %----------------------------------------------------------------------------
 \subsection{Seedelés}
@@ -73,17 +73,35 @@ Majd hozzáadja az újonnan beolvasott értékeket.
 %----------------------------------------------------------------------------
 \section{Üzleti logikai réteg}
 %----------------------------------------------------------------------------
-Ebben a rétegben található meg a szerver legtöbb szolgáltatása. It vannak implementálva a Birdnetes Command and Control és Input komponenseivel kommunikáló szolgáltatások is, 
-melyeket azok OpenAPI leírói alapján az NSwag\cite{nswag} alkalmazással generáltam.
+Ebben a rétegben található meg a szerver legtöbb szolgáltatása. It vannak implementálva a Birdnetes Command and Control és Input komponensekkel kommunikáló szolgáltatások is, 
+melyeket azok OpenAPI leírói alapján az NSwag\cite{nswag} alkalmazással generáltam. Az OpenAPI a klienseken kívül definiálja még az azok által használt modelleket is.
+A Command and Control által használt \verb+Device+ modell tartalmazza annak egyedi azonosítóját, státuszát, koordinátáit és a használt szenzorok listáját, 
+melyeknek szintén van egy modellje \verb+Sensor+ néven. Ennek szintén van azonosítója és státusza. Az Input szolgáltatásnak is van saját modellje, 
+amely a hangüzenetek metaadatait reprezentálja. Többek között tartalmazza a kihelyezett eszköz egyedi azonosítóját és a hangüzenet keltének dátumát. 
 
 Ugyan itt található meg a \verb+User+ és \verb+Service+ entitások létrehozásáért, olvasásáért, szerkesztéséért és törléséért felelős szolgáltatások is.
 Valamint itt található még az autentikációért felelős szolgáltatás is. A felhasználók jelszavainak tárolására a HMAC (Hash-based Message Authentication Code) algorithmust, 
-pontosabban annak a \verb+HMACSHA512+ C\# implementációját használtam.
+pontosabban annak a \verb+HMACSHA512+\cite{hmacsha512} C\# implementációját használtam.
 
-Minden jelszóhoz generálok egy egyedi kulcsot és azzal egy hash-t és ezeket tárolom a \verb+User+ modell \verb+PasswordSalt+ és \verb+PasswordHash+ mezőiben.
-Amikor egy felhasználó be akar jelentkezni először megvizsgálom, hogy egyáltalán létezik-e az adatbázisban a megadott nevű felhasználó 
-és ha igen a megadott jelszóból az imént említett folyamattal generált kulcsot és hash-t összehasonlítom az adatbázisban tárolttal.
+Minden jelszóhoz generálok egy egyedi kulcsot és azzal egy hash-t, majd ezeket tárolom a \verb+User+ modell \verb+PasswordSalt+ és \verb+PasswordHash+ mezőiben.
+Amikor egy felhasználó be akar jelentkezni először megvizsgálom, hogy egyáltalán létezik-e az adatbázisban az adott nevű felhasználó, 
+ha igen, akkor a megadott jelszóból az imént említett folyamattal generált kulcsot és hash-t összehasonlítom az adatbázisban tárolttal.
 
 %----------------------------------------------------------------------------
 \section{Megjelenítési réteg}
 %----------------------------------------------------------------------------
+program.cs startup.cs
+middlewares
+logolás
+seedelés
+%----------------------------------------------------------------------------
+\subsection{Szolgáltatások}
+%----------------------------------------------------------------------------
+mqtt
+signalR
+%----------------------------------------------------------------------------
+\subsection{Kontrollerek}
+%----------------------------------------------------------------------------
+Controllersw
+Dtos
+mapper
