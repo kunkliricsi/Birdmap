@@ -15,7 +15,6 @@ A szerveroldal fejlesztésénél a háromrétegú architektúrát alkalmaztam, m
     A fenti két réteg között helyezkedik el és feladata a különböző folyamatok értékelése és futtatása, valamint az adatok feldolgozása.
 \end{itemize}
 
-\lstset{language=C,keywordstyle={\bfseries \color{blue}}}
 Az ASP.NET Core beépítetten támogatja a dependency injection-t, mely a \verb+Startup+ osztály \verb+ConfigureServices+ metódusával konfigurálható.
 Én minden rétegbe tettem egy ilyen \verb+Startup+ osztályt, hogy azok feleljenek a saját szolgáltatásaik konfigurálásáért és regisztrálásáért.
 
@@ -90,12 +89,36 @@ ha igen, akkor a megadott jelszóból az imént említett folyamattal generált 
 %----------------------------------------------------------------------------
 \section{Megjelenítési réteg}
 %----------------------------------------------------------------------------
+A fejezet elején említett \verb+Startup+ osztály ebben a rétegben található, itt kerülnek az egyes szolgáltatások regisztrálásra.
+
+Többek között a naplózás is itt kerül inicializálásra, mely az NLog saját konfigurációs fájljával történik.
+Meg lehet adni különböző szűrőket és kimeneteket, amellyel szelektálni lehet, hogy az egyes naplózott események hova kerüljenek.
+Például az MQTT szolgáltalás napló bejegyzéseit a \ref{lst:nlog-config} lista alapján szűrtem.
+Minden \verb+Debug+ szintől nagyobb és \verb+Error+ szinttől kisebb bejegyzés, mely tartalmazza az \verb+Mqtt+ kulcsszót az \verb+mqttFile+ azonosítójú fájlba kerül.
+
+\lstset{style=xml, morekeywords={targets, target, xsi:type, name, fileName, layout, rules, logger, name, minlevel, maxlevel, writeTo, final}}
+\begin{lstlisting}[caption=Az NLog.config fájl egy részlete, label=lst:nlog-config]
+<targets>
+    ...
+    <target xsi:type="File" name="mqttFile" fileName="${basedir}Logs/birdmap-mqtt-${shortdate}.log"
+        layout="..." />
+    ...
+</targets>
+
+<rules>
+    ...
+    <logger name="*.*Mqtt*.*" minlevel="Trace" maxlevel="Warning" writeTo="mqttFile" final="true"/>
+    ...
+</rules>
+\end{lstlisting}
+% 
 program.cs startup.cs
 middlewares
 logolás
 seedelés
+swagger
 %----------------------------------------------------------------------------
-\subsection{Szolgáltatások}
+\subsection{Kommunikációs Szolgáltatások}
 %----------------------------------------------------------------------------
 mqtt
 signalR
