@@ -69,6 +69,17 @@ Az Entity Framework Core (röviden EF Core) egy objektum-relációs leképező k
 Használatával C\#-ban lehet adatbázis lekérdezéseket írni a LINQ (Language-Integrated Query) segítségével.
 
 %----------------------------------------------------------------------------
+\subsection{JSON Web Token}
+%----------------------------------------------------------------------------
+Az autorizációt többféleképpen meg lehet oldani egy alkalmazás szempontjából. Az egyik ilyen megoldás a JSON Web Token-ek (röviden JWT) \cite{jwt} használata,
+ami nem más mint egy szabvány, mely módszert ad a felek közötti információ biztonságos továbbítására JSON objektumokkal.
+Ezen objektumok adatokat tárolhatnak a felhasználóról például a neve vagy a szerepe, melyek segítségével a szerver eldöntheti, 
+hogy van-e jogosultsága hívni az adott végpontot.
+
+A Microsoft-nak van egy beépített szoftvercsomagja, mellyel ilyen tokeneket lehet készíteni és validálni.
+A szerveroldal jogosultság kezelését ezzel a csomaggal oldottam meg.
+
+%----------------------------------------------------------------------------
 \subsection{SignalR}
 %----------------------------------------------------------------------------
 A SignalR egy .NET szoftvercsomag, mely lehetővé teszi a szerveroldal számára a kliensekkel való aszinkron kommunikációt.

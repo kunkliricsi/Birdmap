@@ -103,6 +103,7 @@ Tartalmaznak még egy hangszórót is, mely a madarak elijesztését szolgálja.
 
 %----------------------------------------------------------------------------
 \subsubsection{Input Service}
+\label{subsect:birdnetes-input-service}
 %----------------------------------------------------------------------------
 A kihelyezett IoT eszközök által felvett hangfájlok ezen a komponensen keresztül érkeznek be a rendszerbe.
 Itt történik a hanganyaghoz tartozó metaadatok lementése az Input Service saját adatbázisába. 
@@ -112,6 +113,7 @@ publikál egy üzenetet az MQTT üzenetsorra a többi kliensnek feldolgozásra.
 
 %----------------------------------------------------------------------------
 \subsubsection{AI Service}
+\label{subsect:birdnetes-ai-service}
 %----------------------------------------------------------------------------
 Az AI Service példányai fogadják az Input Service-től érkező üzeneteket és elkezdik klasszifikálni az abban található hanganyagot.
 Meghatározzák, hogy a hanganyag mekkora valószínűséggel volt seregély hang vagy sem.

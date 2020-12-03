@@ -55,6 +55,11 @@ Forma
     - felépítés architektúra
     - App and navigation
     - Components and services
+    - kép minden felületről
+        - kép user és admin felhasználók különbségéről
+            - Device service
+            - dashboard systeminfo service
+        - kép a skeletonról -> igazi adat
 - Tesztkörnyezet
 - Kubenetes
 - Összefoglaló

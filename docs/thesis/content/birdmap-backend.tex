@@ -63,6 +63,7 @@ A \verb+Role+ mező ennek a megkülönböztetsnek a jelzője.
 
 %----------------------------------------------------------------------------
 \subsection{Seedelés}
+\label{subsect:seeding}
 %----------------------------------------------------------------------------
 Az alkalmazás konfigurációs fájljából meg lehet adni alapértelmezett felhasználókat és szolgáltatásokat.
 Ezeknek megkülönböztetésére szolgál az entitások \verb+IsFromConfig+ mezője.
@@ -90,6 +91,7 @@ ha igen, akkor a megadott jelszóból az imént említett folyamattal generált 
 \section{Megjelenítési réteg}
 %----------------------------------------------------------------------------
 A fejezet elején említett \verb+Startup+ osztály ebben a rétegben található, itt kerülnek az egyes szolgáltatások regisztrálásra.
+Itt történik a \ref{subsect:seeding} fejezetben leírt adatbázis seedelése is.
 
 Többek között a naplózás is itt kerül inicializálásra, mely az NLog saját konfigurációs fájljával történik.
 Meg lehet adni különböző szűrőket és kimeneteket, amellyel szelektálni lehet, hogy az egyes naplózott események hova kerüljenek.
@@ -111,20 +113,78 @@ Minden \verb+Debug+ szintől nagyobb és \verb+Error+ szinttől kisebb bejegyzé
     ...
 </rules>
 \end{lstlisting}
-% 
-program.cs startup.cs
-middlewares
-logolás
-seedelés
-swagger
+
+A \verb+Startup+ osztály másik metódusa a \verb+Configure+, mellyel a HTTP kérések csővezetéke konfigurálható.
+Azaz, hogy egy kérés-t milyen sorrendben dolgozzák fel a regisztrált szolgáltatások.
+A szerveroldali kivételkezelésre szánt szolgáltatás, az \verb+ExceptionHandlerMiddleware+ is itt van használva, 
+amely elkap minden kivételt, amit a csővezeték további részei dobtak és JSON formátumban visszaadja azokat a kliensnek.
+
+Továbbá az NSwag\cite{nswag} szoftvercsomag segítségével regisztrálok egy szolgáltatást, 
+mely a szerveroldalon található kontrollereket felhasználva generál egy OpenAPI specifikációt és annak egy Swagger UI\cite{swagger-ui} felületet,
+ahol a végpontok kipróbálhatóak, tesztelhetőek kliensoldal nélkül is.
+
+\begin{figure}[!ht]
+    \centering
+    \includegraphics[width=150mm, keepaspectratio]{figures/swagger-ui.png}
+    \caption{Az alkalmazásom Swagger felülete}
+    \label{fig:swagger-ui}
+\end{figure}
+
 %----------------------------------------------------------------------------
 \subsection{Kommunikációs Szolgáltatások}
 %----------------------------------------------------------------------------
-mqtt
-signalR
+A kliensoldal frissítésére több megoldás is létezik. Például bizonyos időközönként lehetne kéréseket indítani a szerver felé a friss adatok megszerzéséért.
+Egy másik megoldás a SignalR használata, amellyel a klienseket eseményvezérelten lehet értesíteni, megvalósítja a kétoldalú kommunikációt.
+Így a kliensek csak akkor indítanak kéréseket amikor az adat tényleg változott. Ezzel a technológiával oldottam meg például, hogy az eszközök állapotainak változására
+frissüljön a felület.
+
+Egy másik szolgáltatás a Birdnetes MQTT kommunikációért felelős szolgáltatás, 
+mely felregisztrál a \ref{subsect:birdnetes-ai-service}-as alfejezetben bemutatott AI Service által publikált üzenetekre.
+Ezekben az üzenetekben található a hanganyagok egyedi azonosítója, illetve azok seregélytől való származásának valószínüsége.
+Ha a szolgáltatás kap egy ilyen üzenetet akkor lekérdezi a \ref{subsect:birdnetes-input-service}-es alfejezetben bemutatott Input Service-től
+a hanganyag azonosítójához tartozó metaadatokat. 
+Ezekből felhasználva a kihelyezett eszköz azonosítóját, a hanganyag beérkezésének dátumát és az említett valószínüséget új üzeneteket készítek, melyeket egy pufferben tárolok.
+Ezt a folyamatot a \ref{fig:birdmap-mqtt-service}-es ábra szemlélteti.
+
+\begin{figure}[!ht]
+    \centering
+    \includegraphics[width=150mm, keepaspectratio]{figures/mqtt-communication-sequence.png}
+    \caption{A Birdmap MQTT szolgáltatásának szekvenciája}
+    \label{fig:birdmap-mqtt-service}
+\end{figure}
+
+A puffer tartalmát másodperces gyakorisággal elküldöm a klienseknek a SignalR segítségével. 
+Azért van szükség a puffer használatára, mert az MQTT-n érkezett üzenetek gyakorisága akár miliszekundum nagyságrendű is lehet. 
+Míg a szerver képes is az üzeneteket feldolgozni, ha ezeket rögtön tovább küldeném a kliensek felé, azok nem biztos, hogy képesek lennének rá.
+
 %----------------------------------------------------------------------------
 \subsection{Kontrollerek}
 %----------------------------------------------------------------------------
+A kontrollerek határozzák meg, hogy a szerveroldalon milyen végpontokat, milyen paraméterekkel lehet meghívni, ahhoz milyen jogosultságok kellenek.
+A jogosultságok kezelését a JSON Web Token-ekkel oldottam meg. A fejlasználó bejelentkezéskor kap egy ilyen token-t, 
+amelyben tárolom a hozzá tartozó szerepet. A \ref{lst:devices-controller}-as listában látszik, hogy hogyan használom ezeket a szerepeket.
+A kontroller végpontjait alapértelmezetten \verb+User+ és \verb+Admin+ jogosultságú felhasználó hívhatja, az online végpontot azonban csak \verb+Admin+ jogosultságú.
+Hasonló képpen oldottam meg ezt a többi kontrollernél is. A \verb+User+ felhasználók csak olyan végpontokat hívhat, mely kizárolag az állapotok olvasásával jár.
+Az \verb+Admin+ felhasználók hívhatnak bármilyen végpontot.
+
+\lstset{style=sharpc, morekeywords={record, async}}
+\begin{lstlisting}[caption=Az eszköz kontroller és annak "online" végpontja, label=lst:devices-controller]
+    [Authorize(Roles = "User, Admin")]
+    [ApiController]
+    [Route("api/[controller]")]
+    public class DevicesController : ControllerBase
+    {
+        [Authorize(Roles = "Admin")]
+        [HttpPost, Route("online")]
+        public async Task<IActionResult> Onlineall()
+        {
+            ...
+        }
+
+        ...
+    }
+\end{lstlisting}
+
 Controllersw
 Dtos
 mapper
