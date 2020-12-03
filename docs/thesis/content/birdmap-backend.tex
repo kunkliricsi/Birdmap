@@ -138,12 +138,12 @@ Egy másik megoldás a SignalR használata, amellyel a klienseket eseményvezér
 Így a kliensek csak akkor indítanak kéréseket amikor az adat tényleg változott. Ezzel a technológiával oldottam meg például, hogy az eszközök állapotainak változására
 frissüljön a felület.
 
-Egy másik szolgáltatás a Birdnetes MQTT kommunikációért felelős szolgáltatás, 
+Egy másik szerveroldalon használt szolgáltatás a Birdnetes MQTT kommunikációért felelős szolgáltatás, 
 mely felregisztrál a \ref{subsect:birdnetes-ai-service}-as alfejezetben bemutatott AI Service által publikált üzenetekre.
 Ezekben az üzenetekben található a hanganyagok egyedi azonosítója, illetve azok seregélytől való származásának valószínüsége.
 Ha a szolgáltatás kap egy ilyen üzenetet akkor lekérdezi a \ref{subsect:birdnetes-input-service}-es alfejezetben bemutatott Input Service-től
 a hanganyag azonosítójához tartozó metaadatokat. 
-Ezekből felhasználva a kihelyezett eszköz azonosítóját, a hanganyag beérkezésének dátumát és az említett valószínüséget új üzeneteket készítek, melyeket egy pufferben tárolok.
+Ezekből felhasználva a kihelyezett eszköz azonosítóját, a hanganyag beérkezésének dátumát és az említett valószínüséget új üzenetek készülnek, melyeket egy pufferben tárolódnak.
 Ezt a folyamatot a \ref{fig:birdmap-mqtt-service}-es ábra szemlélteti.
 
 \begin{figure}[!ht]
@@ -163,7 +163,7 @@ Míg a szerver képes is az üzeneteket feldolgozni, ha ezeket rögtön tovább 
 A kontrollerek határozzák meg, hogy a szerveroldalon milyen végpontokat, milyen paraméterekkel lehet meghívni, ahhoz milyen jogosultságok kellenek.
 A jogosultságok kezelését a JSON Web Token-ekkel oldottam meg. A fejlasználó bejelentkezéskor kap egy ilyen token-t, 
 amelyben tárolom a hozzá tartozó szerepet. A \ref{lst:devices-controller}-as listában látszik, hogy hogyan használom ezeket a szerepeket.
-A kontroller végpontjait alapértelmezetten \verb+User+ és \verb+Admin+ jogosultságú felhasználó hívhatja, az online végpontot azonban csak \verb+Admin+ jogosultságú.
+A \verb+DevicesController+ végpontjait alapértelmezetten \verb+User+ és \verb+Admin+ jogosultságú felhasználó hívhatja, az "online" végpontot azonban csak \verb+Admin+ jogosultságú.
 Hasonló képpen oldottam meg ezt a többi kontrollernél is. A \verb+User+ felhasználók csak olyan végpontokat hívhat, mely kizárolag az állapotok olvasásával jár.
 Az \verb+Admin+ felhasználók hívhatnak bármilyen végpontot.
 

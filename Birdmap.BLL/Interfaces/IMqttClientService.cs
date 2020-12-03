@@ -3,7 +3,7 @@ using MQTTnet.Client.Connecting;
 using MQTTnet.Client.Disconnecting;
 using MQTTnet.Client.Receiving;
 
-namespace Birdmap.API.Services
+namespace Birdmap.BLL.Interfaces
 {
     public interface IMqttClientService : IHostedService,
                                           IMqttClientConnectedHandler,

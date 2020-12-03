@@ -1,6 +1,6 @@
 ﻿using System.Threading.Tasks;
 
-namespace Birdmap.API.Services.Hubs
+namespace Birdmap.BLL.Services.CommunicationServices.Hubs
 {
     public interface IServicesHubClient
     {

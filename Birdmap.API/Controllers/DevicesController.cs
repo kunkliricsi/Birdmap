@@ -1,15 +1,14 @@
 ﻿using Birdmap.BLL.Interfaces;
+using Birdmap.BLL.Services.CommunicationServices.Hubs;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.ModelBinding;
+using Microsoft.AspNetCore.SignalR;
 using Microsoft.Extensions.Logging;
 using System;
-using System.Threading.Tasks;
 using System.Collections.Generic;
-using Microsoft.AspNetCore.Mvc.ModelBinding;
 using System.Linq;
-using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.SignalR;
-using Birdmap.API.Services.Hubs;
-using Birdmap.API.Services;
+using System.Threading.Tasks;
 
 namespace Birdmap.API.Controllers
 {

@@ -1,5 +1,5 @@
-﻿using Birdmap.API.Services.Hubs;
-using Birdmap.BLL.Interfaces;
+﻿using Birdmap.BLL.Interfaces;
+using Birdmap.BLL.Services.CommunicationServices.Hubs;
 using Microsoft.AspNetCore.SignalR;
 using Microsoft.Extensions.Logging;
 using MQTTnet;
@@ -15,7 +15,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using Timer = System.Timers.Timer;
 
-namespace Birdmap.API.Services.Mqtt
+namespace Birdmap.BLL.Services.CommunicationServices.Mqtt
 {
     public class MqttClientService : IMqttClientService
     {

@@ -1,7 +1,7 @@
 ﻿using MQTTnet.Client.Options;
 using System;
 
-namespace Birdmap.API.Options
+namespace Birdmap.BLL.Options
 {
     public class AspCoreMqttClientOptions : MqttClientOptionsBuilder
     {

@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
-namespace Birdmap.API.Services
+namespace Birdmap.BLL.Services.CommunicationServices.Hubs
 {
     public record Message(Guid DeviceId, DateTime Date, double Probability);
 

@@ -1,9 +1,8 @@
 ﻿using AutoMapper;
 using Birdmap.API.DTOs;
-using Birdmap.API.Services;
-using Birdmap.API.Services.Hubs;
-using Birdmap.API.Services.Mqtt;
 using Birdmap.BLL.Interfaces;
+using Birdmap.BLL.Services.CommunicationServices.Hubs;
+using Birdmap.BLL.Services.CommunicationServices.Mqtt;
 using Birdmap.DAL.Entities;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;

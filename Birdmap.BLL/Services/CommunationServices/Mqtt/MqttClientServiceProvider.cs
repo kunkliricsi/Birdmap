@@ -1,4 +1,6 @@
-﻿namespace Birdmap.API.Services.Mqtt
+﻿using Birdmap.BLL.Interfaces;
+
+namespace Birdmap.BLL.Services.CommunicationServices.Mqtt
 {
     public class MqttClientServiceProvider
     {
