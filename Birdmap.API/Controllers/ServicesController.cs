@@ -54,23 +54,29 @@ namespace Birdmap.API.Controllers
             var serviceInfos = (await _service.GetAllServicesAsync())
                 .Select(s => new ServiceInfo { Service = _mapper.Map<ServiceRequest>(s) }).ToList();
 
-            var client = new HttpClient();
+            var tasks = new List<Task>();
             foreach (var si in serviceInfos)
             {
-                try
+                tasks.Add(Task.Run(async () =>
                 {
-                    _logger.LogInformation($"Sending a request to service [{si.Service.Name}] with url [{si.Service.Uri}]...");
-                    var response = await client.GetAsync(si.Service.Uri);
-                    si.StatusCode = response.StatusCode;
-                    si.Response = await response.Content.ReadAsStringAsync();
-                }
-                catch (Exception ex)
-                {
-                    _logger.LogWarning($"Requesting service [{si.Service.Name}] faulted.");
-                    si.StatusCode = HttpStatusCode.ServiceUnavailable;
-                    si.Response = ex.ToString();
-                }
+                    var client = new HttpClient();
+                    try
+                    {
+                        _logger.LogInformation($"Sending a request to service [{si.Service.Name}] with url [{si.Service.Uri}]...");
+                        var response = await client.GetAsync(si.Service.Uri);
+                        si.StatusCode = response.StatusCode;
+                        si.Response = await response.Content.ReadAsStringAsync();
+                    }
+                    catch (Exception ex)
+                    {
+                        _logger.LogWarning($"Requesting service [{si.Service.Name}] faulted.");
+                        si.StatusCode = HttpStatusCode.ServiceUnavailable;
+                        si.Response = ex.ToString();
+                    }
+                }));
             }
+
+            await Task.WhenAll(tasks);
 
             serviceInfos.Add(new()
             {

@@ -88,6 +88,33 @@ Amikor egy felhasználó be akar jelentkezni először megvizsgálom, hogy egyá
 ha igen, akkor a megadott jelszóból az imént említett folyamattal generált kulcsot és hash-t összehasonlítom az adatbázisban tárolttal.
 
 %----------------------------------------------------------------------------
+\subsection{Kommunikációs Szolgáltatások}
+%----------------------------------------------------------------------------
+A kliensoldal frissítésére több megoldás is létezik. Például bizonyos időközönként lehetne kéréseket indítani a szerver felé a friss adatok megszerzéséért.
+Egy másik megoldás a SignalR használata, amellyel a klienseket eseményvezérelten lehet értesíteni, megvalósítja a kétoldalú kommunikációt.
+Így a kliensek csak akkor indítanak kéréseket amikor az adat tényleg változott. Ezzel a technológiával oldottam meg például, hogy az eszközök állapotainak változására
+frissüljön a felület.
+
+Egy másik szerveroldalon használt szolgáltatás a Birdnetes MQTT kommunikációért felelős szolgáltatás, 
+mely felregisztrál a \ref{subsect:birdnetes-ai-service}-as alfejezetben bemutatott AI Service által publikált üzenetekre.
+Ezekben az üzenetekben található a hanganyagok egyedi azonosítója, illetve azok seregélytől való származásának valószínüsége.
+Ha a szolgáltatás kap egy ilyen üzenetet akkor lekérdezi a \ref{subsect:birdnetes-input-service}-es alfejezetben bemutatott Input Service-től
+a hanganyag azonosítójához tartozó metaadatokat. 
+Ezekből felhasználva a kihelyezett eszköz azonosítóját, a hanganyag beérkezésének dátumát és az említett valószínüséget új üzenetek készülnek, melyeket egy pufferben tárolódnak.
+Ezt a folyamatot a \ref{fig:birdmap-mqtt-service}-es ábra szemlélteti.
+
+\begin{figure}[!ht]
+    \centering
+    \includegraphics[width=150mm, keepaspectratio]{figures/mqtt-communication-sequence.png}
+    \caption{A Birdmap MQTT szolgáltatásának szekvenciája}
+    \label{fig:birdmap-mqtt-service}
+\end{figure}
+
+A puffer tartalmát másodperces gyakorisággal elküldöm a klienseknek a SignalR segítségével. 
+Azért van szükség a puffer használatára, mert az MQTT-n érkezett üzenetek gyakorisága akár miliszekundum nagyságrendű is lehet. 
+Míg a szerver képes is az üzeneteket feldolgozni, ha ezeket rögtön tovább küldeném a kliensek felé, azok nem biztos, hogy képesek lennének rá.
+
+%----------------------------------------------------------------------------
 \section{Megjelenítési réteg}
 %----------------------------------------------------------------------------
 A fejezet elején említett \verb+Startup+ osztály ebben a rétegben található, itt kerülnek az egyes szolgáltatások regisztrálásra.
@@ -131,33 +158,6 @@ ahol a végpontok kipróbálhatóak, tesztelhetőek kliensoldal nélkül is.
 \end{figure}
 
 %----------------------------------------------------------------------------
-\subsection{Kommunikációs Szolgáltatások}
-%----------------------------------------------------------------------------
-A kliensoldal frissítésére több megoldás is létezik. Például bizonyos időközönként lehetne kéréseket indítani a szerver felé a friss adatok megszerzéséért.
-Egy másik megoldás a SignalR használata, amellyel a klienseket eseményvezérelten lehet értesíteni, megvalósítja a kétoldalú kommunikációt.
-Így a kliensek csak akkor indítanak kéréseket amikor az adat tényleg változott. Ezzel a technológiával oldottam meg például, hogy az eszközök állapotainak változására
-frissüljön a felület.
-
-Egy másik szerveroldalon használt szolgáltatás a Birdnetes MQTT kommunikációért felelős szolgáltatás, 
-mely felregisztrál a \ref{subsect:birdnetes-ai-service}-as alfejezetben bemutatott AI Service által publikált üzenetekre.
-Ezekben az üzenetekben található a hanganyagok egyedi azonosítója, illetve azok seregélytől való származásának valószínüsége.
-Ha a szolgáltatás kap egy ilyen üzenetet akkor lekérdezi a \ref{subsect:birdnetes-input-service}-es alfejezetben bemutatott Input Service-től
-a hanganyag azonosítójához tartozó metaadatokat. 
-Ezekből felhasználva a kihelyezett eszköz azonosítóját, a hanganyag beérkezésének dátumát és az említett valószínüséget új üzenetek készülnek, melyeket egy pufferben tárolódnak.
-Ezt a folyamatot a \ref{fig:birdmap-mqtt-service}-es ábra szemlélteti.
-
-\begin{figure}[!ht]
-    \centering
-    \includegraphics[width=150mm, keepaspectratio]{figures/mqtt-communication-sequence.png}
-    \caption{A Birdmap MQTT szolgáltatásának szekvenciája}
-    \label{fig:birdmap-mqtt-service}
-\end{figure}
-
-A puffer tartalmát másodperces gyakorisággal elküldöm a klienseknek a SignalR segítségével. 
-Azért van szükség a puffer használatára, mert az MQTT-n érkezett üzenetek gyakorisága akár miliszekundum nagyságrendű is lehet. 
-Míg a szerver képes is az üzeneteket feldolgozni, ha ezeket rögtön tovább küldeném a kliensek felé, azok nem biztos, hogy képesek lennének rá.
-
-%----------------------------------------------------------------------------
 \subsection{Kontrollerek}
 %----------------------------------------------------------------------------
 A kontrollerek határozzák meg, hogy a szerveroldalon milyen végpontokat, milyen paraméterekkel lehet meghívni, ahhoz milyen jogosultságok kellenek.
@@ -180,7 +180,6 @@ Az \verb+Admin+ felhasználók hívhatnak bármilyen végpontot.
         {
             ...
         }
-
         ...
     }
 \end{lstlisting}
