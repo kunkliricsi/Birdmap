@@ -163,7 +163,7 @@ ahol a végpontok kipróbálhatóak, tesztelhetőek kliensoldal nélkül is.
 A kontrollerek határozzák meg, hogy a szerveroldalon milyen végpontokat, milyen paraméterekkel lehet meghívni, ahhoz milyen jogosultságok kellenek.
 A jogosultságok kezelését a JSON Web Token-ekkel oldottam meg. A fejlasználó bejelentkezéskor kap egy ilyen token-t, 
 amelyben tárolom a hozzá tartozó szerepet. A \ref{lst:devices-controller}-as listában látszik, hogy hogyan használom ezeket a szerepeket.
-A \verb+DevicesController+ végpontjait alapértelmezetten \verb+User+ és \verb+Admin+ jogosultságú felhasználó hívhatja, az "online" végpontot azonban csak \verb+Admin+ jogosultságú.
+A \verb+DevicesController+ végpontjait alapértelmezetten \verb+User+ és \verb+Admin+ jogosultságú felhasználó hívhatja, az "api/devices/online" végpontot azonban csak \verb+Admin+ jogosultságú.
 Hasonló képpen oldottam meg ezt a többi kontrollernél is. A \verb+User+ felhasználók csak olyan végpontokat hívhat, mely kizárolag az állapotok olvasásával jár.
 Az \verb+Admin+ felhasználók hívhatnak bármilyen végpontot.
 
