@@ -123,7 +123,7 @@ Komponense a \ref{fig:birdmap-logs}-es ábrán látható.
 \subsection{Eszköz állapot és hangüzenet kezelő szolgáltatás}
 %----------------------------------------------------------------------------
 A szakasz további komponenseinek van egy közös ismertetője. Mégpedig, hogy mindegyiknek szüksége van a kihelyezett eszközök adataira
-és az azok által publikált hangüzenetekből képzett valószínüségre.
+és az azok által publikált hangüzenetekből képzett valószínűségre.
 A Reactnek van egy beépített komponense \verb+Context+\cite{react-context} néven, mellyel különböző komponensek között lehet adatokat megosztani.
 Ezt használva készítettem egy \verb+DevicesContextProvider+ osztályt, melynek feladata a szerver eszköz kontrollerével való kommunikáció a megfelelő szolgáltatáson keresztül,
 illetve a SignalR csatornákra való feliratkozás. Ezekből az adatokból egy \verb+DevicesContext+ készül, mely a \verb+Provider+ által átadásra kerül annak minden gyerekének.
@@ -207,7 +207,7 @@ A \ref{fig:dashboard-heatmap-minute}-es ábrán látható diagram pedig az elmú
 
 A függőleges tengelyen a rendszer eszközei vannak dinamikusan megjelenítve.
 A vízszintes tengelyen pedig az említett időtartományok.
-A diagrammokon látható négyzetek a valószínüség nagyságától függően sötétebbek vagy világosabbak.
+A diagrammokon látható négyzetek a valószínűség nagyságától függően sötétebbek vagy világosabbak.
 \newpage
 %----------------------------------------------------------------------------
 \subsubsection{Riasztás számláló}
@@ -265,25 +265,27 @@ az \verb+Admin+ felhasználók számára nyújtott plusz funkciók a \ref{fig:fr
 %----------------------------------------------------------------------------
 \subsection{Heatmap}
 %----------------------------------------------------------------------------
+Az alkalmazással szemben az egyik legfontosabb követelmény a hőtérképes vizualizáció volt,
+mely ezen az oldalon található. A Google Maps API segítségével megjelenítek egy térképet a felületen,
+majd erre kerül a hőtérképes réteg. A térképre szélességi és hosszúsági körök alapján lehet rajzolni.
+Ezt használva megjelenítem a rendszer összes eszközét azok koordinátái szerint.
+A kék színű ikonok jelölik a bekapcsolt állapotban lévő, a sárga a kikapcsolt állapotban lévő,
+a piros pedig a hibás állapotban lévő eszközöket.
+Ha a felhasználó az egerét az ikonok fölé helyezi, megjelenik egy szövegdoboz, melyben az eszköz azonosítója és státusza látható. 
+Az ikonra kattinta a felhasználó a Devices oldalra kerül, ahol megnyílik a kattintott eszköz \verb+Accordion+-ja.
+
+A \verb+DevicesContext+ tartalmazza az eszközök által küldött üzenetek adatait,
+melyeknek a 0.5 valószínűségtől nagyobb részhalmazát a hőtérkép által kezelhető adatokká konvertálok.
+Egyrészt szükség van az előbb is említett földrajzi koordinátákra, melyeket az üzenetek eszköz azonosítója alapján határozok meg.
+Másrészt szükség van egy súly értékre, mely a pont színezésének pirosságát határozza meg.
+Ezt az értéket az üzenetek valószínűség értékével tettem egyenlővé.
+Minnél több magasabb valószínűségű riasztás érkezik egy adott eszköztől, a körülötte lévő terület annál pirosabb lesz.
+
+A \ref{fig:frontend-heatmap}-ös ábra mutatja a térkép működését miközben 4 eszköz is seregélyeket észelt.
+
 \begin{figure}[!ht]
     \centering
     \includegraphics[width=150mm, keepaspectratio]{figures/heatmap.png}
     \caption{A Heatmap oldal felülete.}
     \label{fig:frontend-heatmap}
 \end{figure}
-
-
-
-
-
-
-
-
-- felépítés architektúra
-- App and navigation
-- Components and services
-- kép minden felületről
-    - kép user és admin felhasználók különbségéről
-        - Device service
-        - dashboard systeminfo service
-    - kép a skeletonról -> igazi adat
