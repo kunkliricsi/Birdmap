@@ -60,7 +60,7 @@ namespace Birdmap.Controllers
             var token = tokenHandler.CreateToken(tokenDescriptor);
             var tokenString = tokenHandler.WriteToken(token);
 
-            var response = _mapper.Map<AuthenticateResponse>(user);
+            AuthenticateResponse response = _mapper.Map<AuthenticateResponse>(user);
             response.AccessToken = tokenString;
             response.TokenType = "Bearer";
             response.ExpiresIn = expiresInSeconds;

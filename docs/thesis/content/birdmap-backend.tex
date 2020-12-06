@@ -33,8 +33,7 @@ Az egyik a \verb+User+, mely az alkalmazás felhasználóinak adatait tárolja.
 A másik a \verb+Service+, mely a külső szolgáltatások adatainak tárolását szolgálja, amelyeket azért tárolok az adatbázisban és nem mondjuk a konfigurációs fájlban,
 mert szerettem volna, hogyha a kezelőfelületen lehetne őket szerkeszteni, törölni.
 
-\lstset{style=sharpc, morekeywords={record, get, set}}
-\begin{lstlisting}[caption=A User és a Service modell]
+\begin{lstlisting}[style=csharp, caption=A User és a Service modell]
     public record User
     {
         public int Id { get; set; }
@@ -51,7 +50,7 @@ mert szerettem volna, hogyha a kezelőfelületen lehetne őket szerkeszteni, tö
     {
         public int Id { get; set; }
         public string Name { get; set; }
-        public Uri Uri { get; set; }
+        public Uri Url { get; set; }
 
         public bool IsFromConfig { get; set; }
     }
@@ -74,19 +73,23 @@ Majd hozzáadja az újonnan beolvasott értékeket.
 \section{Üzleti logikai réteg}
 %----------------------------------------------------------------------------
 Ebben a rétegben található meg a szerver legtöbb szolgáltatása. It vannak implementálva a Birdnetes Command and Control és Input komponensekkel kommunikáló szolgáltatások is, 
-melyeket azok OpenAPI leírói alapján az NSwag\cite{nswag} alkalmazással generáltam. Az OpenAPI a klienseken kívül definiálja még az azok által használt modelleket is.
+melyeket azok OpenAPI leírói alapján az NSwag Studio\cite{nswag-studio} alkalmazással generáltam. Az OpenAPI a klienseken kívül definiálja még az azok által használt modelleket is.
 A Command and Control által használt \verb+Device+ modell tartalmazza annak egyedi azonosítóját, státuszát, koordinátáit és a használt szenzorok listáját, 
 melyeknek szintén van egy modellje \verb+Sensor+ néven. Ennek szintén van azonosítója és státusza. Az Input szolgáltatásnak is van saját modellje, 
 amely a hangüzenetek metaadatait reprezentálja. Többek között tartalmazza a kihelyezett eszköz egyedi azonosítóját és a hangüzenet keltének dátumát. 
 
 Ugyan itt található meg a \verb+User+ és \verb+Service+ entitások létrehozásáért, olvasásáért, szerkesztéséért és törléséért felelős szolgáltatások is.
 Valamint itt található még az autentikációért felelős szolgáltatás is. A felhasználók jelszavainak tárolására a HMAC (Hash-based Message Authentication Code) algorithmust, 
-pontosabban annak a \verb+HMACSHA512+\cite{hmacsha512} C\# implementációját használtam.
+pontosabban annak a \verb+HMACSHA512+\cite{hmacsha512} C\# implementációját használtam. 
 
 Minden jelszóhoz generálok egy egyedi kulcsot és azzal egy hash-t, majd ezeket tárolom a \verb+User+ modell \verb+PasswordSalt+ és \verb+PasswordHash+ mezőiben.
 Amikor egy felhasználó be akar jelentkezni először megvizsgálom, hogy egyáltalán létezik-e az adatbázisban az adott nevű felhasználó, 
 ha igen, akkor a megadott jelszóból az imént említett folyamattal generált kulcsot és hash-t összehasonlítom az adatbázisban tárolttal.
 
+Azért hasznos íly módon, és nem mondjuk egyszerű szöveges formában tárolni a felhasználók jelszavát, mert így a felhasználón kívül senki sem tudja, hogy mi volt az eredeti jelszava,
+az algorithmus egyirányú volta miatt\footnotemark. Ha véletlenül rossz kezekbe kerülne az adatbázis tartalma, akkor sem fognak tudni bejeletkezni a felhasználók adataival.
+
+\footnotetext{Generálni egyszerű és gyors. Visszafejteni közel lehetetlen.}
 %----------------------------------------------------------------------------
 \subsection{Kommunikációs Szolgáltatások}
 %----------------------------------------------------------------------------
@@ -125,18 +128,17 @@ Meg lehet adni különböző szűrőket és kimeneteket, amellyel szelektálni l
 Például az MQTT szolgáltalás napló bejegyzéseit a \ref{lst:nlog-config} lista alapján szűrtem.
 Minden \verb+Debug+ szintől nagyobb és \verb+Error+ szinttől kisebb bejegyzés, mely tartalmazza az \verb+Mqtt+ kulcsszót az \verb+mqttFile+ azonosítójú fájlba kerül.
 
-\lstset{style=xml, morekeywords={targets, target, xsi:type, name, fileName, layout, rules, logger, name, minlevel, maxlevel, writeTo, final}}
-\begin{lstlisting}[caption=Az NLog.config fájl egy részlete, label=lst:nlog-config]
+\begin{lstlisting}[style=xml, caption=Az NLog.config fájl egy részlete, label=lst:nlog-config]
 <targets>
     ...
-    <target xsi:type="File" name="mqttFile" fileName="${basedir}Logs/birdmap-mqtt-${shortdate}.log"
-        layout="..." />
+    <target xsi:type="File" name="mqttFile" fileName="..." layout="..." />
     ...
 </targets>
 
 <rules>
     ...
-    <logger name="*.*Mqtt*.*" minlevel="Trace" maxlevel="Warning" writeTo="mqttFile" final="true"/>
+    <logger name="*.*Mqtt*.*" minlevel="Trace" maxlevel="Warning" writeTo="mqttFile" 
+        final="true"/>
     ...
 </rules>
 \end{lstlisting}
@@ -146,7 +148,11 @@ Azaz, hogy egy kérés-t milyen sorrendben dolgozzák fel a regisztrált szolgá
 A szerveroldali kivételkezelésre szánt szolgáltatás, az \verb+ExceptionHandlerMiddleware+ is itt van használva, 
 amely elkap minden kivételt, amit a csővezeték további részei dobtak és JSON formátumban visszaadja azokat a kliensnek.
 
-Továbbá az NSwag\cite{nswag} szoftvercsomag segítségével regisztrálok egy szolgáltatást, 
+%----------------------------------------------------------------------------
+\subsection{Swagger}
+\label{subsect:backend-swagger}
+%----------------------------------------------------------------------------
+Az NSwag\cite{nswag} szoftvercsomag segítségével regisztrálok egy szolgáltatást, 
 mely a szerveroldalon található kontrollereket felhasználva generál egy OpenAPI specifikációt és annak egy Swagger UI\cite{swagger-ui} felületet,
 ahol a végpontok kipróbálhatóak, tesztelhetőek kliensoldal nélkül is.
 
@@ -161,14 +167,8 @@ ahol a végpontok kipróbálhatóak, tesztelhetőek kliensoldal nélkül is.
 \subsection{Kontrollerek}
 %----------------------------------------------------------------------------
 A kontrollerek határozzák meg, hogy a szerveroldalon milyen végpontokat, milyen paraméterekkel lehet meghívni, ahhoz milyen jogosultságok kellenek.
-A jogosultságok kezelését a JSON Web Token-ekkel oldottam meg. A fejlasználó bejelentkezéskor kap egy ilyen token-t, 
-amelyben tárolom a hozzá tartozó szerepet. A \ref{lst:devices-controller}-as listában látszik, hogy hogyan használom ezeket a szerepeket.
-A \verb+DevicesController+ végpontjait alapértelmezetten \verb+User+ és \verb+Admin+ jogosultságú felhasználó hívhatja, az "api/devices/online" végpontot azonban csak \verb+Admin+ jogosultságú.
-Hasonló képpen oldottam meg ezt a többi kontrollernél is. A \verb+User+ felhasználók csak olyan végpontokat hívhat, mely kizárolag az állapotok olvasásával jár.
-Az \verb+Admin+ felhasználók hívhatnak bármilyen végpontot.
 
-\lstset{style=sharpc, morekeywords={record, async}}
-\begin{lstlisting}[caption=Az eszköz kontroller és annak "online" végpontja, label=lst:devices-controller]
+\begin{lstlisting}[style=csharp, caption=Az eszköz kontroller és annak "online" végpontja, label=lst:devices-controller]
     [Authorize(Roles = "User, Admin")]
     [ApiController]
     [Route("api/[controller]")]
@@ -184,6 +184,42 @@ Az \verb+Admin+ felhasználók hívhatnak bármilyen végpontot.
     }
 \end{lstlisting}
 
-Controllersw
-Dtos
-mapper
+A jogosultságok kezelését a JSON Web Token-ekkel oldottam meg. A fejlasználó bejelentkezéskor kap egy ilyen token-t, 
+amelyben tárolom a hozzá tartozó szerepet. A \ref{lst:devices-controller}-as listában látszik, hogy hogyan használom ezeket a szerepeket.
+A \verb+DevicesController+ végpontjait alapértelmezetten \verb+User+ és \verb+Admin+ jogosultságú felhasználó hívhatja, az "api/devices/online" végpontot azonban csak \verb+Admin+ jogosultságú.
+Hasonló képpen oldottam meg ezt a többi kontrollernél is. A \verb+User+ felhasználók csak olyan végpontokat hívhat, mely kizárolag az állapotok olvasásával jár.
+Az \verb+Admin+ felhasználók hívhatnak bármilyen végpontot.
+
+A szerveroldalon négy különböző kontroller található, melyek mindegyikének alapvető feladata az üzleti logikát megvalósító szolgáltatások használata, a működés naplózás,
+illetve az imént említett végpontok authorizálása és kiszolgálása. Ezeken kívül a kontrollerek speciális feladata a következő:
+\begin{itemize}
+    \item Az \textbf{AuthController} felel a felhasználók bejelentkezésének lebonyolításáért, a JSON Web Token elkészítéséért. Az \verb+[Authorize]+ helyett itt az \verb+[AllowAnonymous]+ attribútum van használva, mellyel azt lehet jelezni, hogy a végpont bejelentkezés nélkül is hívható.
+    \item A \textbf{ServiceController} felel az alkalmazás által használt külső szolgáltatások állapotának lekérdezhetőségéért. Ilyenek például a Birdnetes rendszer vagy az MQTT szolgáltatás állapota.
+    \item A \textbf{DevicesController} felel a Command and Control mikroszolgáltatással való kommunikáció megvalósításáért, illetve a SignalR használatáért. Ha egy felhasználó valamelyik végpontot használva változtat valamelyik eszköz állapotán, akkor a kontroller jelez erről a klienseknek.
+    \item A \textbf{LogController} felel azért, hogy az \verb+Admin+ jogosultságú felhasználók letölthessék a szerveroldalon készült naplófájlokat.
+\end{itemize}
+
+Az adatbázisból érkező adatok gyakran túl sok vagy túl kevés információt tartalmaznak ahhoz, hogy kiolvasás után rögtön elküldjem a kliensoldalnak.
+Például amikor a felhasználó bejelentkezik a kiolvasott \verb+User+ objektum tartalmazza annak jelszavát (hash-elt formában), viszont nem tartalmazza az authorizációhoz használt token adatait.
+Ennek a megoldására adatátviteli objektumokat hoztam létre, melyek csak azokat a mezőket tartalmazzák amelyekre a felhasználónak szüksége van.
+Az adatbázisból kiolvasott objektum hasznos részeit és egyéb használni kívánt információt átmásolom az átviteli objektumba. Majd ezt küldöm el a kliensoldal felé.
+
+Hogy az adatok másolását ne kézzel kelljen csinálnom, az AutoMapper\cite{automapper} szoftvercsomagot alkalmaztam, melynek használata rendkívül egyszerű.
+Meg lehet adni profilokat, ahol két objektum közötti leképzéseket lehet felvenni. A szoftvercsomag automatikusan átmásolja az azonos nevű mezőket az egyik objektumból a másikba,
+de meg lehet adni egyedi leképzéseket is.
+\pagebreak
+\begin{lstlisting}[style=csharp, caption=Egy példa az AutoMapper használatára.]
+    // Creating maps.
+    CreateMap<User, AuthenticateResponse>()
+        .ForMember(m => m.Username, opt => opt.MapFrom(m => m.Name))
+        .ForMember(m => m.UserRole, opt => opt.MapFrom(m => m.Role))
+        .ReverseMap();
+
+    CreateMap<Service, ServiceRequest>()
+        .ReverseMap();
+
+    // Using maps.
+    IMapper mapper = GetMapper();
+    User user = GetUserFromDb();
+    AuthenticateResponse response = mapper.Map<AuthenticateResponse>(user);
+\end{lstlisting}

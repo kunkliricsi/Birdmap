@@ -42,31 +42,126 @@
 %--------------------------------------------------------------------------------------
 % Set up listings
 %--------------------------------------------------------------------------------------
+
+\definecolor{red}{rgb}{0.6,0,0} 
+\definecolor{blue}{rgb}{0,0,0.6}
+\definecolor{lightblue}{rgb}{0,0.5,0.7}
+\definecolor{green}{rgb}{0,0.8,0}
+\definecolor{cyan}{rgb}{0.0,0.6,0.6}
+\definecolor{orange}{rgb}{0.8,0.6,0}
+\definecolor{white}{rgb}{0.98, 0.98, 0.98}
 \definecolor{lightgray}{rgb}{0.95,0.95,0.95}
-\lstset{
+\definecolor{darkviolet}{rgb}{0.58, 0.0, 0.83}
+\definecolor{royalblue}{rgb}{0.25, 0.41, 0.88}
+
+\lstdefinestyle{csharp}{
+	language=csh,
+	basicstyle=\scriptsize\ttfamily,
+	numbers=left,
+	numberstyle=\tiny,
+	numbersep=5pt,
+	tabsize=2,
+	extendedchars=true,
+	breaklines=true,
+	frame=b,
+	stringstyle=\color{red}\ttfamily,
+	showspaces=false,
+	captionpos=b,
+	showtabs=false,
+	xleftmargin=17pt,
+	framexleftmargin=17pt,
+	framexrightmargin=5pt,
+	framexbottommargin=4pt,
+	commentstyle=\color{green},
+	morecomment=[l]{//}, %use comment-line-style!
+	morecomment=[s]{/*}{*/}, %for multiline comments
+	showstringspaces=false,
+	morekeywords={ abstract, event, new, struct,
+		as, explicit, null, switch,
+		base, extern, object, this,
+		get, set,
+		bool, false, operator, throw,
+		break, finally, out, true,
+		byte, fixed, override, try,
+		case, float, params, typeof,
+		catch, for, private, uint,
+		char, foreach, protected, ulong,
+		checked, goto, public, unchecked,
+		class, record, async, if, readonly, unsafe,
+		const, implicit, ref, ushort,
+		continue, in, return, using,
+		decimal, int, sbyte, virtual,
+		default, interface, sealed, volatile,
+		delegate, internal, short, void,
+		do, is, sizeof, while,
+		double, lock, stackalloc,
+		else, long, static,
+		enum, namespace, string},
+	morekeywords=[2]{CreateMap, ForMember, MapFrom, ReverseMap, Onlineall, GetMapper, GetUserFromDb, Map},
+	morekeywords=[3]{Id, Name, PasswordHash, PasswordSalt, Role, IsFromConfig, Url, Username, UserRole, mapper, user, response},
+	keywordstyle=\color{blue},
+	keywordstyle={[2]\color{orange}},
+	keywordstyle={[3]\color{lightblue}},
+	identifierstyle=\color{cyan},
+	backgroundcolor=\color{white}
+}
+
+\lstdefinestyle{jsx}{
+	basicstyle=\scriptsize\ttfamily,
+	numbers=left,
+	numberstyle=\tiny,
+	numbersep=5pt,
+	tabsize=2,
+	extendedchars=true,
+	breaklines=true,
+	frame=b,
+	stringstyle=\color{red}\ttfamily,
+	showspaces=false,
+	captionpos=b,
+	showtabs=false,
+	xleftmargin=17pt,
+	framexleftmargin=17pt,
+	framexrightmargin=5pt,
+	framexbottommargin=4pt,
+	commentstyle=\color{green},
+	morestring=*[d]{"},
+	morecomment=[l]{//}, %use comment-line-style!
+	morecomment=[s]{/*}{*/}, %for multiline comments
+	showstringspaces=false,
+	morekeywords={ },
+	morekeywords=[2]{AuthComponent, LogsComponent, DashboardComponent, DevicesComponent, HeatmapComponent},
+	morekeywords=[3]{exact, path, component},
+	keywordstyle=\color{blue},
+	keywordstyle={[2]\color{orange}},
+	keywordstyle={[3]\color{lightblue}},
+	identifierstyle=\color{cyan},
+	backgroundcolor=\color{white}
+}
+\lstdefinestyle{xml}{
 	basicstyle=\scriptsize\ttfamily, % print whole listing small
-	keywordstyle=\color{black}\bfseries, % bold black keywords
-	identifierstyle=, % nothing happens
 	% default behavior: comments in italic, to change use
 	% commentstyle=\color{green}, % for e.g. green comments
-	stringstyle=\scriptsize,
 	showstringspaces=false, % no special string spaces
 	aboveskip=3pt,
 	belowskip=3pt,
-	backgroundcolor=\color{lightgray},
+	stringstyle=\color{red}\ttfamily,
+	backgroundcolor=\color{white},
+	keywordstyle=\color{blue},
+	identifierstyle=\color{cyan},
 	columns=flexible,
 	keepspaces=true,
 	escapeinside={(*@}{@*)},
 	captionpos=b,
 	breaklines=true,
-	frame=single,
+	frame=b,
 	float=!ht,
 	tabsize=2,
+	morestring=*[d]{"},
+	morekeywords={targets, target, rules, logger},
 	literate=*
 		{á}{{\'a}}1	{é}{{\'e}}1	{í}{{\'i}}1	{ó}{{\'o}}1	{ö}{{\"o}}1	{ő}{{\H{o}}}1	{ú}{{\'u}}1	{ü}{{\"u}}1	{ű}{{\H{u}}}1
 		{Á}{{\'A}}1	{É}{{\'E}}1	{Í}{{\'I}}1	{Ó}{{\'O}}1	{Ö}{{\"O}}1	{Ő}{{\H{O}}}1	{Ú}{{\'U}}1	{Ü}{{\"U}}1	{Ű}{{\H{U}}}1
 }
-
 
 %--------------------------------------------------------------------------------------
 % Set up theorem-like environments
