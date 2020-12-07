@@ -72,15 +72,15 @@ Majd hozzáadja az újonnan beolvasott értékeket.
 %----------------------------------------------------------------------------
 \section{Üzleti logikai réteg}
 %----------------------------------------------------------------------------
-Ebben a rétegben található meg a szerver legtöbb szolgáltatása. It vannak implementálva a Birdnetes Command and Control és Input komponensekkel kommunikáló szolgáltatások is, 
-melyeket azok OpenAPI leírói alapján az NSwag Studio\cite{nswag-studio} alkalmazással generáltam. Az OpenAPI a klienseken kívül definiálja még az azok által használt modelleket is.
+Ebben a rétegben található meg a szerver legtöbb szolgáltatása. It vannak implementálva a Birbnetes Command and Control és Input komponensekkel kommunikáló szolgáltatások is, 
+melyeket azok OpenAPI leírói alapján az NSwag Studio \cite{nswag-studio} alkalmazással generáltam. Az OpenAPI a klienseken kívül definiálja még az azok által használt modelleket is.
 A Command and Control által használt \verb+Device+ modell tartalmazza annak egyedi azonosítóját, státuszát, koordinátáit és a használt szenzorok listáját, 
 melyeknek szintén van egy modellje \verb+Sensor+ néven. Ennek szintén van azonosítója és státusza. Az Input szolgáltatásnak is van saját modellje, 
 amely a hangüzenetek metaadatait reprezentálja. Többek között tartalmazza a kihelyezett eszköz egyedi azonosítóját és a hangüzenet keltének dátumát. 
 
 Ugyan itt található meg a \verb+User+ és \verb+Service+ entitások létrehozásáért, olvasásáért, szerkesztéséért és törléséért felelős szolgáltatások is.
 Valamint itt található még az autentikációért felelős szolgáltatás is. A felhasználók jelszavainak tárolására a HMAC (Hash-based Message Authentication Code) algorithmust, 
-pontosabban annak a \verb+HMACSHA512+\cite{hmacsha512} C\# implementációját használtam. 
+pontosabban annak a \verb+HMACSHA512+ \cite{hmacsha512} C\# implementációját használtam. 
 
 Minden jelszóhoz generálok egy egyedi kulcsot és azzal egy hash-t, majd ezeket tárolom a \verb+User+ modell \verb+PasswordSalt+ és \verb+PasswordHash+ mezőiben.
 Amikor egy felhasználó be akar jelentkezni először megvizsgálom, hogy egyáltalán létezik-e az adatbázisban az adott nevű felhasználó, 
@@ -98,7 +98,7 @@ Egy másik megoldás a SignalR használata, amellyel a klienseket eseményvezér
 Így a kliensek csak akkor indítanak kéréseket amikor az adat tényleg változott. Ezzel a technológiával oldottam meg például, hogy az eszközök állapotainak változására
 frissüljön a felület.
 
-Egy másik szerveroldalon használt szolgáltatás a Birdnetes MQTT kommunikációért felelős szolgáltatás, 
+Egy másik szerveroldalon használt szolgáltatás a Birbnetes MQTT kommunikációért felelős szolgáltatás, 
 mely felregisztrál a \ref{subsect:birdnetes-ai-service}-as alfejezetben bemutatott AI Service által publikált üzenetekre.
 Ezekben az üzenetekben található a hanganyagok egyedi azonosítója, illetve azok seregélytől való származásának valószínüsége.
 Ha a szolgáltatás kap egy ilyen üzenetet akkor lekérdezi a \ref{subsect:birdnetes-input-service}-es alfejezetben bemutatott Input Service-től
@@ -152,8 +152,8 @@ amely elkap minden kivételt, amit a csővezeték további részei dobtak és JS
 \subsection{Swagger}
 \label{subsect:backend-swagger}
 %----------------------------------------------------------------------------
-Az NSwag\cite{nswag} szoftvercsomag segítségével regisztrálok egy szolgáltatást, 
-mely a szerveroldalon található kontrollereket felhasználva generál egy OpenAPI specifikációt és annak egy Swagger UI\cite{swagger-ui} felületet,
+Az NSwag \cite{nswag} szoftvercsomag segítségével regisztrálok egy szolgáltatást, 
+mely a szerveroldalon található kontrollereket felhasználva generál egy OpenAPI specifikációt és annak egy Swagger UI \cite{swagger-ui} felületet,
 ahol a végpontok kipróbálhatóak, tesztelhetőek kliensoldal nélkül is.
 
 \begin{figure}[!ht]
@@ -194,7 +194,7 @@ A szerveroldalon négy különböző kontroller található, melyek mindegyikén
 illetve az imént említett végpontok authorizálása és kiszolgálása. Ezeken kívül a kontrollerek speciális feladata a következő:
 \begin{itemize}
     \item Az \textbf{AuthController} felel a felhasználók bejelentkezésének lebonyolításáért, a JSON Web Token elkészítéséért. Az \verb+[Authorize]+ helyett itt az \verb+[AllowAnonymous]+ attribútum van használva, mellyel azt lehet jelezni, hogy a végpont bejelentkezés nélkül is hívható.
-    \item A \textbf{ServiceController} felel az alkalmazás által használt külső szolgáltatások állapotának lekérdezhetőségéért. Ilyenek például a Birdnetes rendszer vagy az MQTT szolgáltatás állapota.
+    \item A \textbf{ServiceController} felel az alkalmazás által használt külső szolgáltatások állapotának lekérdezhetőségéért. Ilyenek például a Birbnetes rendszer vagy az MQTT szolgáltatás állapota.
     \item A \textbf{DevicesController} felel a Command and Control mikroszolgáltatással való kommunikáció megvalósításáért, illetve a SignalR használatáért. Ha egy felhasználó valamelyik végpontot használva változtat valamelyik eszköz állapotán, akkor a kontroller jelez erről a klienseknek.
     \item A \textbf{LogController} felel azért, hogy az \verb+Admin+ jogosultságú felhasználók letölthessék a szerveroldalon készült naplófájlokat.
 \end{itemize}
@@ -204,7 +204,7 @@ Például amikor a felhasználó bejelentkezik a kiolvasott \verb+User+ objektum
 Ennek a megoldására adatátviteli objektumokat hoztam létre, melyek csak azokat a mezőket tartalmazzák amelyekre a felhasználónak szüksége van.
 Az adatbázisból kiolvasott objektum hasznos részeit és egyéb használni kívánt információt átmásolom az átviteli objektumba. Majd ezt küldöm el a kliensoldal felé.
 
-Hogy az adatok másolását ne kézzel kelljen csinálnom, az AutoMapper\cite{automapper} szoftvercsomagot alkalmaztam, melynek használata rendkívül egyszerű.
+Hogy az adatok másolását ne kézzel kelljen csinálnom, az AutoMapper \cite{automapper} szoftvercsomagot alkalmaztam, melynek használata rendkívül egyszerű.
 Meg lehet adni profilokat, ahol két objektum közötti leképzéseket lehet felvenni. A szoftvercsomag automatikusan átmásolja az azonos nevű mezőket az egyik objektumból a másikba,
 de meg lehet adni egyedi leképzéseket is.
 \pagebreak

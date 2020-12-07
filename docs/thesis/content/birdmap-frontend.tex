@@ -58,7 +58,7 @@ Legfelül sárgával vannak feltüntetve a hívható végpontok, alattuk a hozz�
 \section{Kommunikáció a szerveroldallal}
 %----------------------------------------------------------------------------
 A szerveroldallal való kommunikációt rendkívül egyszerűen tudtam implementálni köszönhetően a \ref{subsect:backend-swagger}-as fejezetben bemutatott Swagger oldalnak
-és annak, hogy az NSwag Studio-val\cite{nswag-studio} a C\#-on kívül lehet TypeScript\footnotemark klienseket is generálni a leíró fájlból.
+és annak, hogy az NSwag Studio-val \cite{nswag-studio} a C\#-on kívül lehet TypeScript\footnotemark klienseket is generálni a leíró fájlból.
 Így készültek el a kommponensek kommunikációért felelős szolgáltatásai.
 
 \footnotetext{JavaScript-re épített statikus típusdefiníciókat tartalmazó nyelv. JavaScript és TypeScript együtt is használható.}
@@ -124,7 +124,7 @@ Komponense a \ref{fig:birdmap-logs}-es ábrán látható.
 %----------------------------------------------------------------------------
 A szakasz további komponenseinek van egy közös ismertetője. Mégpedig, hogy mindegyiknek szüksége van a kihelyezett eszközök adataira
 és az azok által publikált hangüzenetekből képzett valószínűségre.
-A Reactnek van egy beépített komponense \verb+Context+\cite{react-context} néven, mellyel különböző komponensek között lehet adatokat megosztani.
+A Reactnek van egy beépített komponense \verb+Context+ \cite{react-context} néven, mellyel különböző komponensek között lehet adatokat megosztani.
 Ezt használva készítettem egy \verb+DevicesContextProvider+ osztályt, melynek feladata a szerver eszköz kontrollerével való kommunikáció a megfelelő szolgáltatáson keresztül,
 illetve a SignalR csatornákra való feliratkozás. Ezekből az adatokból egy \verb+DevicesContext+ készül, mely a \verb+Provider+ által átadásra kerül annak minden gyerekének.
 A \ref{lst:react-switch}-es listában látható, hogy a \verb+DevicesContextProvider+ szülője a \verb+Dashboard+, \verb+Devices+ és \verb+Heatmap+ komponenseknek.
@@ -145,7 +145,7 @@ Továbbá hogy a különböző diagrammok animációi is zökkenőmentesek legye
 \subsubsection{Külső szolgáltatások}
 %----------------------------------------------------------------------------
 Az alkalmazás használatának szempontjából van néhány olyan külső szolgáltatás, melyek elérhetősége hiányában a rendszer működésképtelen.
-Ilyen például a Birdnetes klasztere vagy a szerver MQTT szolgáltatása. 
+Ilyen például a Birbnetes klasztere vagy a szerver MQTT szolgáltatása. 
 Ezért készítettem el az \ref{fig:dashboard-services-loaded}-ös ábrán látható információs panelt, ahol a szolgáltatások állapotát lehet látni, hogy a felhasználó tudja miért nem működik esetleg az alkalmazás.
 A felület megvalósításhoz a Material UI \verb+Accordion+ elemét használtam, ami lényegében egy lenyíló lista. 
 Ennek fejlécében a szolgáltatás neve, elérési útvonala és státusza látható. A lenyíló elemben a szolgáltatástól érkezett válasz van megjelenítve. 

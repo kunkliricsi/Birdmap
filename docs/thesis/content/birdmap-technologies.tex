@@ -13,19 +13,19 @@ Ebben a szakaszban azokat az eszközöket, alkalmazásokat és fejlesztőkörnye
 %----------------------------------------------------------------------------
 \subsection{Git}
 %----------------------------------------------------------------------------
-A Git\cite{git} egy verziókezelő rendszer. Használatával a felhasználó le tudja menteni egy adott fájlrendszerben található fájlok állapotát.
+A Git \cite{git} egy verziókezelő rendszer. Használatával a felhasználó le tudja menteni egy adott fájlrendszerben található fájlok állapotát.
 Megkönnyíti az egy projekten dolgozó programozók közötti kooperációt. Manapság lassan elképzelhetetlen a fejlesztés valamilyen verziókezelő használata nélkül.
 
 %----------------------------------------------------------------------------
 \subsection{Trello}
 %----------------------------------------------------------------------------
-A Trello\cite{trello} egy webes lista készítő és kezelő alkalmazás. 
+A Trello \cite{trello} egy webes projektmenedszment alkalmazás. 
 Azért használtam a fejlesztés során, mert szerettem volna egy helyet, ami tükrözi a fejlesztés állapotát, ahova le tudom írni az alkalmazással kapcsolatos ötleteimet.
 Különböző listákban tároltam a fejlesztésre váró és a kész feladatokat szerver, kliens és egyéb szerint.
 
 \begin{figure}[!ht]
     \centering
-    \includegraphics[width=150mm, keepaspectratio]{figures/trello-cropped.png}
+    \includegraphics[width=150mm, keepaspectratio]{figures/trello-3.png}
     \caption{Egy példa állapot a Trello felületére a fejlesztés során}
     \label{fig:trello}
 \end{figure}
@@ -33,12 +33,12 @@ Különböző listákban tároltam a fejlesztésre váró és a kész feladatoka
 %----------------------------------------------------------------------------
 \subsection{Visual Studio}
 %----------------------------------------------------------------------------
-A Visual Studio\cite{vs} a Microsoft fejlesztőkörnyezete. Jól alkalmazható a .NET keretrendszer technológiáival, ezért ezt használtam a szerveroldal fejlesztése során.
+A Visual Studio \cite{vs} a Microsoft fejlesztőkörnyezete. Jól alkalmazható a .NET keretrendszer technológiáival, ezért ezt használtam a szerveroldal fejlesztése során.
 
 %----------------------------------------------------------------------------
 \subsection{Visual Studio Code}
 %----------------------------------------------------------------------------
-Egy másik Microsoft termék, viszont a fentivel ellentétben a Visual Studio Code\cite{vs-code} inkább szövegszerkeztő, mint fejlesztőkörnyezet.
+Egy másik Microsoft termék, viszont a fentivel ellentétben a Visual Studio Code \cite{vs-code} inkább szövegszerkeztő, mint fejlesztőkörnyezet.
 Ennek köszönhetően jelentősen gyorsabb és egyszerűbb a használata. Különféle bővítmények használatával nagyon jó program nyelv támogatottságot lehet elérni.
 Többek között ezen okok miatt preferáltam a kliensoldal fejlesztésére. 
 
@@ -58,7 +58,8 @@ Mindemellett a .NET teljesen platformüggetlen, mely az egyik legfontosabb köve
 %----------------------------------------------------------------------------
 \subsection{ASP.NET Core}
 %----------------------------------------------------------------------------
-Az ASP.NET Core a .NET család ingyenes, nyílt forráskódú webes keretrendszere. Gyors és moduláris fejlesztést tesz lehetővé, mely főként a NuGet csomagoknak köszönhető.
+Az ASP.NET Core a .NET család ingyenes, nyílt forráskódú webes keretrendszere. Gyors és moduláris fejlesztést tesz lehetővé, 
+mely főként a csomagkezelő rendszerének, a NuGet-nek \cite{nuget} köszönhető.
 Használatána egyik előnye, hogy ugyan az a C\# kód tud futni a szerver éa a kliens oldalon, de támogat más kliens oldali keretrendszereket is, mint például az Angular-t, a Vue.js-t
 vagy a React.js-t.
 
@@ -66,7 +67,7 @@ vagy a React.js-t.
 \subsection{Entity Framework Core}
 %----------------------------------------------------------------------------
 Az Entity Framework Core (röviden EF Core) egy objektum-relációs leképező keretrendszer a .NET-hez. Az adatbázissal való kommunikációt könnyítését szolgálja. 
-Használatával C\#-ban lehet adatbázis lekérdezéseket írni a LINQ (Language-Integrated Query) segítségével.
+Használatával C\#-ban lehet adatbázis lekérdezéseket írni a LINQ (Language-Integrated Query) szoftvercsomag segítségével.
 
 %----------------------------------------------------------------------------
 \subsection{JSON Web Token}
@@ -82,19 +83,20 @@ A szerveroldal jogosultság kezelését ezzel a csomaggal oldottam meg.
 %----------------------------------------------------------------------------
 \subsection{SignalR}
 %----------------------------------------------------------------------------
-A SignalR egy .NET szoftvercsomag, mely lehetővé teszi a szerveroldal számára a kliensekkel való aszinkron kommunikációt.
+A SignalR \cite{signalr} egy .NET szoftvercsomag, mely lehetővé teszi a szerveroldal számára a kliensekkel való aszinkron kommunikációt.
 A szerver valós időben tud értesítéseket küldeni a kliensek számára, amelyek feliratkoztak az ilyen eseményekre.
 
 %----------------------------------------------------------------------------
 \subsection{MQTT.NET}
 %----------------------------------------------------------------------------
-Az MQTT.NET is egy .NET szoftvercsomag, mely a Birdnetes által is használt, a \ref{subsect:mqtt}-es alfejezetben bemutatott MQTT kommunikáció C\# nyelvű megvalósítását szolgálja.
+Az MQTT.NET is egy .NET szoftvercsomag, mely a Birbnetes által is használt, a \ref{subsect:mqtt}-es alfejezetben bemutatott MQTT kommunikáció C\# nyelvű megvalósítását szolgálja.
 
 %----------------------------------------------------------------------------
 \subsection{NLog}
 %----------------------------------------------------------------------------
-A szerveroldali naplózás megvalósítására több szoftvercsomag is létezik. Az NLog\cite{nlog}-ot választottam, egyrészt mert egyszerű a használata,
-másrészt mert már használtam korábban.
+A szerveroldali naplózás megvalósítására több szoftvercsomag is létezik. Az NLog \cite{nlog}-ot választottam, egyrészt mert egyszerű a használata,
+másrészt mert már korábban használtam. Konfigurációs fájljában meg lehet adni a naplózott események célját, mely lehet akár fájl vagy konzol is.
+Meg lehet még adni az események elrendezését, hogy azok milyen formában kerüljenek a célokba, milyen plusz információt tartalmazzanak.
 
 %----------------------------------------------------------------------------
 \section{Frontend technológiák}
@@ -105,22 +107,22 @@ Választásomnál fő motiváció az volt, hogy szerettem volna valami újat kip
 %----------------------------------------------------------------------------
 \subsection{React.js}
 %----------------------------------------------------------------------------
-A React.js\cite{react} egy JavaScript szoftvercsomag, melyet webes felületek fejlesztésére használnak.
+A React.js \cite{react} egy JavaScript szoftvercsomag, melyet webes felületek fejlesztésére használnak.
 Fő építő elemei a komponensek, melyek elszeparált újrafelhasználható felület egységek.
 Használatának egyik előnye, hogy automatizált az állapot kezelés, tehát ha változik egy komponens állapota, akkor a React újra-rendereli azt.
 
 %----------------------------------------------------------------------------
 \subsection{Material UI}
 %----------------------------------------------------------------------------
-A Material\cite{material} elsősorban egy kezelőfelület tervezési útmutató a Google által, melyet követve szép és minőségi felületeket lehet készíteni.
+A Material \cite{material} elsősorban egy kezelőfelület tervezési útmutató a Google által, melyet követve szép és minőségi felületeket lehet készíteni.
 
-A Material UI\cite{material-ui} egy szoftvercsomag, mely ezeket az útmutatásokat követő egyszerű React komponenseket tartalmaz.
+A Material UI \cite{material-ui} egy szoftvercsomag, mely ezeket az útmutatásokat követő egyszerű React komponenseket tartalmaz.
 Alkalmazásával könnyő esztétikus felhasználói felületeket készíteni, minimalizált a CSS használattal. 
 
 %----------------------------------------------------------------------------
 \subsection{Apexcharts}
 %----------------------------------------------------------------------------
-Az Apexcharts\cite{apexcharts} egy nyílt forráskódú JavaScript szoftvercsomag, amellyel könnyen konfigurálható, modern kinézetű diagrammokat lehet készíteni.
+Az Apexcharts \cite{apexcharts} egy nyílt forráskódú JavaScript szoftvercsomag, amellyel könnyen konfigurálható, modern kinézetű diagrammokat lehet készíteni.
 Sokféle kliensoldali (és szerveroldali) technológiát támogat, köztük a React-et is. A kezelőfelületen található vizualizációk szinte összes elemét ennek használatával csináltam.
 
 %----------------------------------------------------------------------------
@@ -130,5 +132,5 @@ A Google szinte összes termékének van API-ja, ami lehetővé teszi a programo
 A Google Maps sincs másképp és mivel ennek interfésze külön támogatja a hőtérképes réteg használatát is, nem gondoltam, hogy ettől jobb eszközt tudnék találni a feladat megvalósítására.
 
 A Google Maps API-t, ami alapvetően csak egy JavaScript csomag, rengetegen újracsomagolják, hogy különböző részét, különböző keretrendszerekben is lehessen használni.
-Ezek közül én a Google Map React\cite{google-map-react}-et választottam, egyrészt mert támogatja a hőtérképes réteg használatát, 
+Ezek közül én a Google Map React \cite{google-map-react}-et választottam, egyrészt mert támogatja a hőtérképes réteg használatát, 
 másrészt mert lehetővé teszi a térképen való React komponensek renderelését az alapértelmezett markerek helyett.

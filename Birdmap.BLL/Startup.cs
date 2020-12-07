@@ -33,10 +33,10 @@ namespace Birdmap.BLL
                     var service = new LiveInputService(baseUrl, httpClient);
                     return service;
                 });
-                services.AddTransient<IDeviceService, LiveDummyService>(serviceProvider =>
+                services.AddTransient<IDeviceService, LiveDeviceService>(serviceProvider =>
                 {
                     var httpClient = serviceProvider.GetService<HttpClient>();
-                    var service = new LiveDummyService(baseUrl, httpClient);
+                    var service = new LiveDeviceService(baseUrl, httpClient);
                     return service;
                 });
             }

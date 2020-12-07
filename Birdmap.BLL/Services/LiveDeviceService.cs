@@ -17,13 +17,13 @@ namespace Birdmap.BLL.Services
     using System = global::System;
 
     [System.CodeDom.Compiler.GeneratedCode("NSwag", "13.8.2.0 (NJsonSchema v10.2.1.0 (Newtonsoft.Json v12.0.0.0))")]
-    public partial class LiveDummyService : IDeviceService
+    public partial class LiveDeviceService : IDeviceService
     {
         private string _baseUrl = "https://birb.k8s.kmlabz.com";
         private System.Net.Http.HttpClient _httpClient;
         private System.Lazy<Newtonsoft.Json.JsonSerializerSettings> _settings;
 
-        public LiveDummyService(string baseUrl, System.Net.Http.HttpClient httpClient)
+        public LiveDeviceService(string baseUrl, System.Net.Http.HttpClient httpClient)
         {
             _baseUrl = baseUrl;
             _httpClient = httpClient;
