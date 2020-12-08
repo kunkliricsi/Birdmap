@@ -1,4 +1,23 @@
 %----------------------------------------------------------------------------
-\chapter{Kubernetes}
+\chapter{Docker image készítés}
 \label{chapt:birdnetes-kubernetes}
 %----------------------------------------------------------------------------
+Az éles rendszerrel való kommunikáció megvalósításához készítenem kell egy Docker image-et, melyet telepíteni lehet a Birbnetes Kubernetes klaszterébe.
+Ehhez először készítettem egy Dockerfile-t \cite{dockerfile}, mely az image-ek automatikus elkészítését teszi lehetővé.
+Utasításokat lehet benne felsorolni, melyekkel a konténer környezetét kell felépíteni.
+Meg lehet adni kiindulópontokat, mely az image alapjául szolgál.
+Erre a célra én az ASP.NET futtatokörnyeztét használtam, mely tartalmazza az alkalmazás futtatásához szükséges parancsokat.
+Ezek után a Dockerfile utasításait használva bemásolom a \verb+Release+ konfigurációval fordított alkalmazásomat a konténer egy mappájába, 
+majd a belépési pont utasítással megadom az alkalmazás indításához szükséges parancsot.
+Ezt futtatva sikeresen elkészül a Docker image.
+
+Azonban az alkalmazás teljes értékű működéséhez annak szüksége van egy adatbázis konténerre is.
+Az ilyen jellegű többkonténeres rendszer problémákra nyújt megoldást a Docker Compose \cite{docker-compose}.
+Egy YAML fájlban meg lehet adni az alkalmazás futtatásához szükséges szolgáltatásokat, illetve hogy ezek között milyen függőségi viszony van.
+Ennek használatával először készítek egy adatbázis konténert, mely inicializálása után indul csak el az alkalmazásom docker image-ének készítése.
+A két konténer közötti kommunikációhoz az alkalmazásomnak szüksége van még a kapcsolati karakterláncra, mely meghatározza az adatbázis elérésének paramétereit.
+A lokális futtatásnál ez az alkalmazás konfigurációs fájljában található, azonban ez a fájl már a konténer fájlrendszerében van, nehézkes hozzáférni.
+Szerencsére az ASP.NET támogatja a konfigurációk felülírását környezeti változókkal.
+Ehhez fel kell sorolnom a YAML fájl környezeti változói részében a felülírni kívánt konfigurációkat és értékeiket.
+Szintén ebben a fájlban megadtam az alkalmazás eléréséhez használni kívánt portokat.
+Ezek után az alkalmazásom készen áll a klaszterbe való telepítésre.

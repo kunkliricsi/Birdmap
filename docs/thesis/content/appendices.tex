@@ -10,23 +10,78 @@
 %\numberwithin{tabular}{section}
 
 %----------------------------------------------------------------------------
-\section{A TeXstudio felülete}
+\section{A Docker image készítéséhez használt fájlok}
 %----------------------------------------------------------------------------
-\begin{figure}[!ht]
-\centering
-\includegraphics[width=150mm, keepaspectratio]{figures/TeXstudio.png}
-\caption{A TeXstudio \LaTeX-szerkesztő.} 
-\end{figure}
+\begin{lstlisting}[style=dockerfile, caption=A Dockerfile tartalma, label=lst:dockerfile]
+    FROM mcr.microsoft.com/dotnet/aspnet:5.0 AS base
+    WORKDIR /app
+    RUN apt-get update && apt-get install -y curl
+    RUN curl -sL https://deb.nodesource.com/setup_12.x | bash -
+    RUN apt-get update && apt-get install -y nodejs
 
-%----------------------------------------------------------------------------
-\clearpage\section{Válasz az ,,Élet, a világmindenség, meg minden'' kérdésére}
-%----------------------------------------------------------------------------
-A Pitagorasz-tételből levezetve
-\begin{align}
-c^2=a^2+b^2=42.
-\end{align}
-A Faraday-indukciós törvényből levezetve
-\begin{align}
-\rot E=-\frac{dB}{dt}\hspace{1cm}\longrightarrow \hspace{1cm}
-U_i=\oint\limits_\mathbf{L}{\mathbf{E}\mathbf{dl}}=-\frac{d}{dt}\int\limits_A{\mathbf{B}\mathbf{da}}=42.
-\end{align}
+    FROM mcr.microsoft.com/dotnet/sdk:5.0 AS build
+    RUN apt-get update && apt-get install -y curl
+    RUN curl -sL https://deb.nodesource.com/setup_12.x | bash -
+    RUN apt-get update && apt-get install -y nodejs
+    WORKDIR /src
+    COPY ["Birdmap.API/Birdmap.API.csproj", "Birdmap.API/"]
+    COPY ["Birdmap.BLL/Birdmap.BLL.csproj", "Birdmap.BLL/"]
+    COPY ["Birdmap.Common/Birdmap.Common.csproj", "Birdmap.Common/"]
+    COPY ["Birdmap.DAL/Birdmap.DAL.csproj", "Birdmap.DAL/"]
+    RUN dotnet restore "Birdmap.API/Birdmap.API.csproj"
+    COPY . .
+    WORKDIR "/src/Birdmap.API"
+    RUN dotnet build "Birdmap.API.csproj" -c Release -o /app/build
+
+    FROM build AS publish
+    RUN dotnet publish "Birdmap.API.csproj" -c Release -o /app/publish
+
+    FROM base AS final
+    WORKDIR /app
+    COPY --from=publish /app/publish .
+    ENTRYPOINT ["dotnet", "Birdmap.API.dll"]
+\end{lstlisting}
+
+\begin{lstlisting}[style=docker-compose, caption=A docker-compose.yml fájl tartalma, label=lst:docker-compose]
+    version: '3.4'
+
+    services:
+        db:
+            image: "mcr.microsoft.com/mssql/server:2019-latest"
+            environment:
+              - ACCEPT_EULA=Y
+              - SA_PASSWORD=RPSsql12345
+    
+        birdmap.api:
+            image: ${DOCKER_REGISTRY-}birdmapapi
+            ports:
+                - "8000:80"
+                - "8001:443"
+            volumes:
+                - ${APPDATA}/Microsoft/UserSecrets:/root/.microsoft/usersecrets:ro
+                - ${APPDATA}/ASP.NET/Https:/root/.aspnet/https:ro
+            build:
+                context: .
+                dockerfile: Birdmap.API/Dockerfile
+            depends_on:
+                - db
+            environment:
+                ...
+                - Birdmap_LocalDbConnectionString=Data Source=db;Initial Catalog=birdmap;User=sa;Password=RPSsql12345
+                - Birdmap_Defaults__Users__0__Name=admin
+                - Birdmap_Defaults__Users__0__Password=pass
+                - Birdmap_Defaults__Users__0__Role=Admin
+                - Birdmap_Defaults__Users__1__Name=user
+                - Birdmap_Defaults__Users__1__Password=pass
+                - Birdmap_Defaults__Users__1__Role=User
+                - Birdmap_Defaults__Services__Local-Database=https://localhost:8001/health
+                - Birdmap_Defaults__Services__KMLabz-Service=https://birb.k8s.kmlabz.com/devices
+                - Birdmap_UseDummyServices=true
+                - Birdmap_ServicesBaseUrl=https://birb.k8s.kmlabz.com/
+                - Birdmap_Mqtt__BrokerHostSettings__Host=localhost
+                - Birdmap_Mqtt__BrokerHostSettings__Port=1883
+                - Birdmap_Mqtt__ClientSettings__Id=ASP.NET Core client
+                - Birdmap_Mqtt__ClientSettings__Username=username
+                - Birdmap_Mqtt__ClientSettings__Password=password
+                - Birdmap_Mqtt__ClientSettings__Topic=devices/output
+\end{lstlisting}
