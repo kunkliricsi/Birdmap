@@ -12,8 +12,8 @@ hogy ki tudjam választani a vizualizáció szempontjából legfontosabb kompone
 A jellemző adatvizualizációs megoldások közül az alábbi hármat találtam kulcsfontosságúnak a következő célokra:
 \begin{itemize}
     \item \textbf{Hőtérkép}. Hasznos lenne egy olyan felület, ahol az eszközök GPS koordinátái és a seregély detektálást jelző üzenetek alapján, meg lehetne jeleníteni a seregélyek hozzávetőleges előfordulásának helyeit és gyakoriságát egy térképen, hőtérképes formában.
-    \item \textbf{Eszköz állapotok}. Jelenleg a Command and Control mikroszolgáltatás felé indított kéréseken kívül, nincs lehetőség a kihelyezett eszközök állapotának vizsgálatára. Szükség lenne egy olyan felületre, ahol ezek állapotai láthatóak, esetleg dinamikusan is frissülnek.
-    \item \textbf{Diagrammok}. A hőtérképen kívül egyéb olyan diagrammok is hasznosak lehetnek, ahol látható például, hogy melyik eszköz melyik percben észlelt madárhangot vagy, hogy egy eszköz összesen hány madárhangot észelt. Minnél több információ, annál jobb.
+    \item \textbf{Eszközállapotok}. Jelenleg a Command and Control mikroszolgáltatás felé indított kéréseken kívül, nincs lehetőség a kihelyezett eszközök állapotának vizsgálatára. Szükség lenne egy olyan felületre, ahol ezek állapotai láthatóak, esetleg dinamikusan is frissülnek.
+    \item \textbf{Diagramok}. A hőtérképen kívül egyéb olyan diagramok is hasznosak lehetnek, ahol látható például, hogy melyik eszköz melyik percben észlelt madárhangot vagy, hogy egy eszköz összesen hány madárhangot észelt. Minnél több információ, annál jobb.
 \end{itemize}
 Ezeken kívül fontos követelmény volt még, hogy az alkalmazásom futtatható legyen Linux környezetben is, hogy az telepíthető legyen a Birbnetes Kubernetes \cite{kubernetes} klaszterébe.
 
@@ -28,7 +28,7 @@ Az imént vázolt igények kielégítésére sok, széles körben alkalmazott me
 \subsection{Grafana}
 %----------------------------------------------------------------------------
 A Grafana \cite{grafana} az egy nyílt forráskódú platformfüggetlen vizualizációs web alkalmazás.
-Egy támogatott adatbázishoz csatlakoztatva különféle interaktív gráfokat és diagrammokat generál.
+Egy támogatott adatbázishoz csatlakoztatva különféle interaktív gráfokat és diagramokat generál.
 A testreszabhatóság maximalizásának érdekében különböző, akár harmadik fél által készített, bővítmények használatát is támogatja, 
 melyekkel új adatforrások és panel típusok integrálhatók. 
 A \ref{fig:grafana}-es ábra egy jó példa arra, hogy hogyan néz ki egy általános Grafana felület.

@@ -120,7 +120,7 @@ Komponense a \ref{fig:birdmap-logs}-es ábrán látható.
     \label{fig:birdmap-logs}
 \end{figure}
 %----------------------------------------------------------------------------
-\subsection{Eszköz állapot és hangüzenet kezelő szolgáltatás}
+\subsection{Eszközállapot- és hangüzenet-kezelő szolgáltatás}
 %----------------------------------------------------------------------------
 A szakasz további komponenseinek van egy közös ismertetője. Mégpedig, hogy mindegyiknek szüksége van a kihelyezett eszközök adataira
 és az azok által publikált hangüzenetekből képzett valószínűségre.
@@ -133,13 +133,13 @@ A \ref{lst:react-switch}-es listában látható, hogy a \verb+DevicesContextProv
 \subsection{Dashboard}
 %----------------------------------------------------------------------------
 A Dashboard az alkalmazás kezdő oldala. Itt található meg a külső szolgáltatások állapotát vizsgáló komponens,
-illetve a kihelyezett eszközök működési folyamatában áttekintést nyújtó diagrammok mindegyike.
+illetve a kihelyezett eszközök működési folyamatában áttekintést nyújtó diagramok mindegyike.
 
 Az oldal megjelenítésekor elindul egy másodpercenként ismétlődő folyamat,
-mely a \verb+DevicesContext+-ből kiolvasott értékekből legenerálja a diagrammokon megjelenítendő összes adatot.
+mely a \verb+DevicesContext+-ből kiolvasott értékekből legenerálja a diagramokon megjelenítendő összes adatot.
 Ez azonban az adat mennyiségétől függően akár egy-két másodpercig is eltarthat, ami rendkívül lassúvá és használhatatlanná tenné a felületet.
 Ennek elkerülése érdekében az adatfeldolgozó folyamat egyszerre csak egy pár elemet dolgoz fel, mely alfolyamatok között 20 milliszekundum szüneteket iktattam be.
-Továbbá hogy a különböző diagrammok animációi is zökkenőmentesek legyenek, azok adatai cserélése között is van 300 milliszekundum szünet.
+Továbbá hogy a különböző diagramok animációi is zökkenőmentesek legyenek, azok adatai cserélése között is van 300 milliszekundum szünet.
 Így valamivel lasabb az adatfeldolgozás, de a felület használható marad.
 %----------------------------------------------------------------------------
 \subsubsection{Külső szolgáltatások}
@@ -176,38 +176,38 @@ A felhasználói élmény maximalizálása érdekében a frissítés előtt lek�
 \subsubsection{Eszközök és szenzorok állapota}
 %----------------------------------------------------------------------------
 Ennek a komponensnek a szerepe, hogy áttekintést nyújtson az eszközök és szenzorok állapotáról.
-Úgy gondoltam, hogy erre a legcélravezetőbb eszköz a \ref{fig:dashboard-donut}-es ábrán is látható Apexcharts fánk diagrammja.
+Úgy gondoltam, hogy erre a legcélravezetőbb eszköz a \ref{fig:dashboard-donut}-es ábrán is látható Apexcharts fánk diagramja.
 Látható, hogy hány darab eszköz és szenzor van bekapcsolt, kikapcsolt, illetve hibás állapotban.
 Az állapotok változása esetén a \verb+DevicesContextProvider+-nek köszönhetően az adatok automatikusan frissülnek.
 \begin{figure}[!ht]
     \centering
     \includegraphics[width=150mm, keepaspectratio]{figures/dashboard-donut-devices.png}
-    \caption{A Dashboard eszköz- és szenzor állapotok diagrammja}
+    \caption{A Dashboard eszköz- és szenzor állapotok diagramja}
     \label{fig:dashboard-donut}
 \end{figure}
 %----------------------------------------------------------------------------
-\subsubsection{Hőtérkép diagrammok}
+\subsubsection{Hőtérkép diagramok}
 %----------------------------------------------------------------------------
-Ezekkel a diagrammokkal az a célom, hogy az eszközök által küldött észleléseket időrendben vizualizáljam.
-Megvalósításukhoz az Apexcharts Heatmap típusú diagrammját használtam.
+Ezekkel a diagramokkal az a célom, hogy az eszközök által küldött észleléseket időrendben vizualizáljam.
+Megvalósításukhoz az Apexcharts Heatmap típusú diagramját használtam.
 A \ref{fig:dashboard-heatmap-second}-as ábrán látható diagram az elmúlt egy percben küldött, másodpercenként a legnagyobb, hangüzenetekből képzett valószínűségeket ábrozolja.
 A \ref{fig:dashboard-heatmap-minute}-es ábrán látható diagram pedig az elmúlt egy órában percenként a legnagyobbakat.
 \begin{figure}[!ht]
     \centering
     \includegraphics[width=150mm, keepaspectratio]{figures/second-heatmap.png}
-    \caption{Másodperc alapú hőtérképes diagramm}
+    \caption{Másodperc alapú hőtérképes diagram}
     \label{fig:dashboard-heatmap-second}
 \end{figure}
 \begin{figure}[!ht]
     \centering
     \includegraphics[width=150mm, keepaspectratio]{figures/minute-heatmap.png}
-    \caption{Perc alapú hőtérképes diagramm}
+    \caption{Perc alapú hőtérképes diagram}
     \label{fig:dashboard-heatmap-minute}
 \end{figure}
 
 A függőleges tengelyen a rendszer eszközei vannak dinamikusan megjelenítve.
 A vízszintes tengelyen pedig az említett időtartományok.
-A diagrammokon látható négyzetek a valószínűség nagyságától függően sötétebbek vagy világosabbak.
+A diagramokon látható négyzetek a valószínűség nagyságától függően sötétebbek vagy világosabbak.
 \newpage
 %----------------------------------------------------------------------------
 \subsubsection{Riasztás számláló}
@@ -217,7 +217,7 @@ Segítségével megvizsgálható, hogy mely eszközök riasztanak a legtöbbet a
 \begin{figure}[!ht]
     \centering
     \includegraphics[width=150mm, keepaspectratio]{figures/dashboard-column-devices.png}
-    \caption{Eszközönkénti riasztásokat számláló diagramm}
+    \caption{Eszközönkénti riasztásokat számláló diagram}
     \label{fig:dashboard-devices-column}
 \end{figure}
 
@@ -226,7 +226,7 @@ Az egyes oszlopok három részre vannak bontva az üzenetek öt tized, hét tize
 %----------------------------------------------------------------------------
 \subsubsection{Üzenetek gyakorisága}
 %----------------------------------------------------------------------------
-Az oldalon található utolsó diagramm egy vonal diagammn, melynek célja, hogy ábrázolja a rendszer által küldött üzenetek számát másodpercenként.
+Az oldalon található utolsó diagram egy vonal diagammn, melynek célja, hogy ábrázolja a rendszer által küldött üzenetek számát másodpercenként.
 A \ref{fig:dashboard-messages-line}-es ábrán látható a komponens.
 A vízszintes tengelyen a legelső érték az alkalmazás által először észlelt üzenet időpontja.
 Az utolsó érték a legutoljára észlelt időpontja.

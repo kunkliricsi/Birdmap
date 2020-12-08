@@ -9,7 +9,7 @@ Ebben a fejezetben bemutatom a szerveroldal architektúráját, felépítését.
 %----------------------------------------------------------------------------
 A szerveroldal fejlesztésénél a háromrétegú architektúrát alkalmaztam, melynek lényege, hogy az alkalmazást logikailag három elkülönülő részre bontjuk:
 \begin{itemize}
-    \item \textbf{Adat elérési réteg}. Ez a rész felel a tárolt entitások modell definícióiért, illetve azoknak a kiolvasásáért, tárolásáért egy adatbázisból vagy fájlrendszerből.
+    \item \textbf{Adatelérési réteg}. Ez a rész felel a tárolt entitások modell definícióiért, illetve azoknak a kiolvasásáért, tárolásáért egy adatbázisból vagy fájlrendszerből.
     \item \textbf{Megjelenítési réteg}. Ezen réteg feladata a kliensoldal közvetlek kiszolgálása. Bármilyen irányú kommunikáció a kliensek felé ezen a rétegen keresztül történik.
     \item \textbf{Üzleti logikai réteg}. Minden ami nem a közvetlen kommunikációért, megjelenítésért vagy adat elérésért, tárolásért felel, az ide kerül.
     A fenti két réteg között helyezkedik el és feladata a különböző folyamatok értékelése és futtatása, valamint az adatok feldolgozása.
@@ -19,7 +19,7 @@ Az ASP.NET Core beépítetten támogatja a dependency injection-t, mely a \verb+
 Én minden rétegbe tettem egy ilyen \verb+Startup+ osztályt, hogy azok feleljenek a saját szolgáltatásaik konfigurálásáért és regisztrálásáért.
 
 %----------------------------------------------------------------------------
-\section{Adat elérési réteg}
+\section{Adatelérési réteg}
 %----------------------------------------------------------------------------
 Az adatelérést az Entity Framework Core segítségével oldottam meg. Telepítettem egy MSSQL adatbázis szervert a számítógépemre, melynek csatlakozási paramétereivel
 a \verb+Startup+ osztályban felkonfigurálom az EF Core által nyújtott \verb+DbContext+ saját leszármazott változatát. 
