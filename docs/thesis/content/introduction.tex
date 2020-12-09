@@ -3,7 +3,7 @@
 %----------------------------------------------------------------------------
 Szőlőtulajdonosoknak éves szinten jelentős kárt okoznak a seregélyek, akik előszeretettel választják táplálékul a megtermelt szőlőt.
 Erre a problémára dolgoztak ki a tanszéken diáktársaim egy felhőalapú konténerizált rendszert, a Birbnetes-t
-mely a természetben elkelyezett eszközökkel kommunikál, azokat vezérli.
+mely a természetben elhelyezett eszközökkel kommunikál, azokat vezérli.
 Az eszközök bizonyos időközönként hangfelvételt készítenek a környezetükről,
 majd valamilyen formában elküldik ezeket a felvételeket a központi rendszernek,
 amely egy erre a célra kifejlesztett mesterséges intelligenciát használva eldönti
@@ -15,17 +15,17 @@ berendezését, hogy elijessze a madarakat.
 \section{Probléma}
 %----------------------------------------------------------------------------
 A jelen rendszer használata során nincs vizuális visszacsatolás az esetleges riasztásokról azok gyakoriságáról
-és a rendszer állapotáról sem. Különböző diagnosztikai eszközök ugyan implementálva lettek mint például
+és a rendszer állapotáról sem. Különböző diagnosztikai eszközök ugyan implementálva lettek, mint például
 a naplózás vagy a hiba bejelentés, de ezek használata nehézkes, nem kézenfekvő. 
-Szükség van egy olyan megoldásra amivel egy helyen és egyszerűen lehet kezelni és felügyelni a rendszer egyes elemeit.
+Szükség van egy olyan megoldásra, amivel egy helyen és egyszerűen lehet kezelni és felügyelni a rendszer egyes elemeit.
 
 %----------------------------------------------------------------------------
 \section{Megoldás}
 %----------------------------------------------------------------------------
-A jelen szakdolgozat egy olyan webes alkalmazás elkészítését dokumentálja, melyel a felhasználók képesek
+A jelen szakdolgozat egy olyan webes alkalmazás elkészítését dokumentálja, mellyel a felhasználók képesek
 a természetben elhelyezett eszközök állapotát vizsgálni, azokat akár ki és bekapcsolni igény szerint.
 Az egyes rendszer eseményeket vizsgálva a szoftver statisztikákat készít, melyeket különböző diagramokon ábrázolok.
-Ilyen statisztikák például, hogy időben melyik eszköz mikor észlelt madár hangot, vagy hogy hány hang üzenet érkezik
+Ilyen statisztikák például, hogy időben melyik eszköz mikor észlelt madárhangot, vagy hogy hány hang üzenet érkezik
 az eszközöktől másodpercenként.
 
 %----------------------------------------------------------------------------
@@ -33,7 +33,8 @@ az eszközöktől másodpercenként.
 %----------------------------------------------------------------------------
 A szakdolgozatom első részében, a \ref{chapt:birdnetes-introduction}. fejezetben, bemutatom a vizualizálni kívánt rendszer felépítését, az egyes komponensek közötti kapcsolatokat,
 valamint a vizualizációs szempontból releváns technológiákat, amire a rendszer épült.
-A 3. fejezetben ismertetem a jelenleg az iparban is használt mikroszolgáltatás működését vizualizáló alternatívákat, majd a saját megoldásom tervezetét, az arra vonatkozó elvárásokat.
-A 4. fejezetben az alkalmazásom által használt technológiákat mutatom be, ezzel előkészítve az 5. és 6. fejezetet, ahol ismertetem a szerver- és kliensalkalmazások felépítését.
-A 7. és 8. fejezet az alkalmazás teszteléséről és telepítéséről szól.
+A \ref{chapt:birdmap-introduction} fejezetben ismertetem a jelenleg az iparban is használt mikroszolgáltatás működését vizualizáló alternatívákat, majd a saját megoldásom tervezetét, az arra vonatkozó elvárásokat.
+A \ref{chapt:birdmap-technologies} fejezetben az alkalmazásom által használt technológiákat mutatom be, 
+ezzel előkészítve az \ref{chapt:birdmap-backend} és \ref{chapt:birdmap-frontend} fejezetet, ahol ismertetem a szerver- és kliensalkalmazások felépítését.
+A \ref{chapt:birdmap-test} és \ref{chapt:birdnetes-kubernetes} fejezet az alkalmazás teszteléséről és telepítéséről szól.
 Az utolsó fejezetben értékelem a munkám eredményét, levonom a tapasztalatokat és bemutatok néhány továbbfejlesztési lehetőséget.

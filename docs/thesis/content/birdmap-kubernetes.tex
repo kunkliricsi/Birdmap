@@ -6,7 +6,7 @@ Az éles rendszerrel való kommunikáció megvalósításához készítenem kell
 Ehhez először készítettem egy Dockerfile-t \cite{dockerfile}, mely az image-ek automatikus elkészítését teszi lehetővé.
 Utasításokat lehet benne felsorolni, melyekkel a konténer környezetét kell felépíteni.
 Meg lehet adni kiindulópontokat, mely az image alapjául szolgál.
-Erre a célra én az ASP.NET futtatokörnyeztét használtam, mely tartalmazza az alkalmazás futtatásához szükséges parancsokat.
+Erre a célra én az ASP.NET futtatókörnyeztét használtam, mely tartalmazza az alkalmazás futtatásához szükséges parancsokat.
 Ezek után a Dockerfile utasításait használva bemásolom a \verb+Release+ konfigurációval fordított alkalmazásomat a konténer egy mappájába, 
 majd a belépési pont utasítással megadom az alkalmazás indításához szükséges parancsot.
 Ezt futtatva sikeresen elkészül a Docker image.

@@ -7,11 +7,11 @@ Ebben a fejezetben bemutatom a szerveroldal architektúráját, felépítését.
 %----------------------------------------------------------------------------
 \section{Architektúra}
 %----------------------------------------------------------------------------
-A szerveroldal fejlesztésénél a háromrétegú architektúrát alkalmaztam, melynek lényege, hogy az alkalmazást logikailag három elkülönülő részre bontjuk:
+A szerveroldal fejlesztésénél a három rétegú architektúrát alkalmaztam, melynek lényege, hogy az alkalmazást logikailag három elkülönülő részre bontjuk:
 \begin{itemize}
     \item \textbf{Adatelérési réteg}. Ez a rész felel a tárolt entitások modell definícióiért, illetve azoknak a kiolvasásáért, tárolásáért egy adatbázisból vagy fájlrendszerből.
-    \item \textbf{Megjelenítési réteg}. Ezen réteg feladata a kliensoldal közvetlek kiszolgálása. Bármilyen irányú kommunikáció a kliensek felé ezen a rétegen keresztül történik.
-    \item \textbf{Üzleti logikai réteg}. Minden ami nem a közvetlen kommunikációért, megjelenítésért vagy adat elérésért, tárolásért felel, az ide kerül.
+    \item \textbf{Megjelenítési réteg}. Ezen réteg feladata a kliensoldal közvetlen kiszolgálása. Bármilyen irányú kommunikáció a kliensek felé ezen a rétegen keresztül történik.
+    \item \textbf{Üzleti logikai réteg}. Minden, ami nem a közvetlen kommunikációért, megjelenítésért vagy adat elérésért, tárolásért felel, az ide kerül.
     A fenti két réteg között helyezkedik el és feladata a különböző folyamatok értékelése és futtatása, valamint az adatok feldolgozása.
 \end{itemize}
 
@@ -79,15 +79,15 @@ melyeknek szintén van egy modellje \verb+Sensor+ néven. Ennek szintén van azo
 amely a hangüzenetek metaadatait reprezentálja. Többek között tartalmazza a kihelyezett eszköz egyedi azonosítóját és a hangüzenet keltének dátumát. 
 
 Ugyan itt található meg a \verb+User+ és \verb+Service+ entitások létrehozásáért, olvasásáért, szerkesztéséért és törléséért felelős szolgáltatások is.
-Valamint itt található még az autentikációért felelős szolgáltatás is. A felhasználók jelszavainak tárolására a HMAC (Hash-based Message Authentication Code) algorithmust, 
+Valamint itt található még az autentikációért felelős szolgáltatás is. A felhasználók jelszavainak tárolására a HMAC (Hash-based Message Authentication Code) algoritmust, 
 pontosabban annak a \verb+HMACSHA512+ \cite{hmacsha512} C\# implementációját használtam. 
 
 Minden jelszóhoz generálok egy egyedi kulcsot és azzal egy hash-t, majd ezeket tárolom a \verb+User+ modell \verb+PasswordSalt+ és \verb+PasswordHash+ mezőiben.
 Amikor egy felhasználó be akar jelentkezni először megvizsgálom, hogy egyáltalán létezik-e az adatbázisban az adott nevű felhasználó, 
 ha igen, akkor a megadott jelszóból az imént említett folyamattal generált kulcsot és hash-t összehasonlítom az adatbázisban tárolttal.
 
-Azért hasznos íly módon, és nem mondjuk egyszerű szöveges formában tárolni a felhasználók jelszavát, mert így a felhasználón kívül senki sem tudja, hogy mi volt az eredeti jelszava,
-az algorithmus egyirányú volta miatt\footnotemark. Ha véletlenül rossz kezekbe kerülne az adatbázis tartalma, akkor sem fognak tudni bejeletkezni a felhasználók adataival.
+Azért hasznos ily módon, és nem mondjuk egyszerű szöveges formában tárolni a felhasználók jelszavát, mert így a felhasználón kívül senki sem tudja, hogy mi volt az eredeti jelszava,
+az algoritmus egyirányú volta miatt\footnotemark. Ha véletlenül rossz kezekbe kerülne az adatbázis tartalma, akkor sem fognak tudni bejeletkezni a felhasználók adataival.
 
 \footnotetext{Generálni egyszerű és gyors. Visszafejteni közel lehetetlen.}
 %----------------------------------------------------------------------------
@@ -100,10 +100,10 @@ frissüljön a felület.
 
 Egy másik szerveroldalon használt szolgáltatás a Birbnetes MQTT kommunikációért felelős szolgáltatás, 
 mely felregisztrál a \ref{subsect:birdnetes-ai-service}-as alfejezetben bemutatott AI Service által publikált üzenetekre.
-Ezekben az üzenetekben található a hanganyagok egyedi azonosítója, illetve azok seregélytől való származásának valószínüsége.
+Ezekben az üzenetekben található a hanganyagok egyedi azonosítója, illetve azok seregélytől való származásának valószínűsége.
 Ha a szolgáltatás kap egy ilyen üzenetet akkor lekérdezi a \ref{subsect:birdnetes-input-service}-es alfejezetben bemutatott Input Service-től
 a hanganyag azonosítójához tartozó metaadatokat. 
-Ezekből felhasználva a kihelyezett eszköz azonosítóját, a hanganyag beérkezésének dátumát és az említett valószínüséget új üzenetek készülnek, melyeket egy pufferben tárolódnak.
+Ezekből felhasználva a kihelyezett eszköz azonosítóját, a hanganyag beérkezésének dátumát és az említett valószínűséget új üzenetek készülnek, melyeket egy pufferben tárolódnak.
 Ezt a folyamatot a \ref{fig:birdmap-mqtt-service}-es ábra szemlélteti.
 
 \begin{figure}[!ht]
@@ -114,7 +114,7 @@ Ezt a folyamatot a \ref{fig:birdmap-mqtt-service}-es ábra szemlélteti.
 \end{figure}
 
 A puffer tartalmát másodperces gyakorisággal elküldöm a klienseknek a SignalR segítségével. 
-Azért van szükség a puffer használatára, mert az MQTT-n érkezett üzenetek gyakorisága akár miliszekundum nagyságrendű is lehet. 
+Azért van szükség a puffer használatára, mert az MQTT-n érkezett üzenetek gyakorisága akár milliszekundum  nagyságrendű is lehet. 
 Míg a szerver képes is az üzeneteket feldolgozni, ha ezeket rögtön tovább küldeném a kliensek felé, azok nem biztos, hogy képesek lennének rá.
 
 %----------------------------------------------------------------------------
@@ -125,8 +125,8 @@ Itt történik a \ref{subsect:seeding} fejezetben leírt adatbázis seedelése i
 
 Többek között a naplózás is itt kerül inicializálásra, mely az NLog saját konfigurációs fájljával történik.
 Meg lehet adni különböző szűrőket és kimeneteket, amellyel szelektálni lehet, hogy az egyes naplózott események hova kerüljenek.
-Például az MQTT szolgáltalás napló bejegyzéseit a \ref{lst:nlog-config} lista alapján szűrtem.
-Minden \verb+Debug+ szintől nagyobb és \verb+Error+ szinttől kisebb bejegyzés, mely tartalmazza az \verb+Mqtt+ kulcsszót az \verb+mqttFile+ azonosítójú fájlba kerül.
+Például az MQTT szolgáltatás napló bejegyzéseit a \ref{lst:nlog-config} lista alapján szűrtem.
+Minden \verb+Debug+ szinttől nagyobb és \verb+Error+ szinttől kisebb bejegyzés, mely tartalmazza az \verb+Mqtt+ kulcsszót az \verb+mqttFile+ azonosítójú fájlba kerül.
 
 \begin{lstlisting}[style=xml, caption=Az NLog.config fájl egy részlete, label=lst:nlog-config]
 <targets>
@@ -184,14 +184,14 @@ A kontrollerek határozzák meg, hogy a szerveroldalon milyen végpontokat, mily
     }
 \end{lstlisting}
 
-A jogosultságok kezelését a JSON Web Token-ekkel oldottam meg. A fejlasználó bejelentkezéskor kap egy ilyen token-t, 
+A jogosultságok kezelését a JSON Web Token-ekkel oldottam meg. A felhasználó bejelentkezéskor kap egy ilyen token-t, 
 amelyben tárolom a hozzá tartozó szerepet. A \ref{lst:devices-controller}-as listában látszik, hogy hogyan használom ezeket a szerepeket.
 A \verb+DevicesController+ végpontjait alapértelmezetten \verb+User+ és \verb+Admin+ jogosultságú felhasználó hívhatja, az "api/devices/online" végpontot azonban csak \verb+Admin+ jogosultságú.
-Hasonló képpen oldottam meg ezt a többi kontrollernél is. A \verb+User+ felhasználók csak olyan végpontokat hívhat, mely kizárolag az állapotok olvasásával jár.
+Hasonlóképpen oldottam meg ezt a többi kontrollernél is. A \verb+User+ felhasználók csak olyan végpontokat hívhat, mely kizárólag az állapotok olvasásával jár.
 Az \verb+Admin+ felhasználók hívhatnak bármilyen végpontot.
 
 A szerveroldalon négy különböző kontroller található, melyek mindegyikének alapvető feladata az üzleti logikát megvalósító szolgáltatások használata, a működés naplózás,
-illetve az imént említett végpontok authorizálása és kiszolgálása. Ezeken kívül a kontrollerek speciális feladata a következő:
+illetve az imént említett végpontok autorizálása és kiszolgálása. Ezeken kívül a kontrollerek speciális feladata a következő:
 \begin{itemize}
     \item Az \textbf{AuthController} felel a felhasználók bejelentkezésének lebonyolításáért, a JSON Web Token elkészítéséért. Az \verb+[Authorize]+ helyett itt az \verb+[AllowAnonymous]+ attribútum van használva, mellyel azt lehet jelezni, hogy a végpont bejelentkezés nélkül is hívható.
     \item A \textbf{ServiceController} felel az alkalmazás által használt külső szolgáltatások állapotának lekérdezhetőségéért. Ilyenek például a Birbnetes rendszer vagy az MQTT szolgáltatás állapota.
@@ -200,7 +200,7 @@ illetve az imént említett végpontok authorizálása és kiszolgálása. Ezeke
 \end{itemize}
 
 Az adatbázisból érkező adatok gyakran túl sok vagy túl kevés információt tartalmaznak ahhoz, hogy kiolvasás után rögtön elküldjem a kliensoldalnak.
-Például amikor a felhasználó bejelentkezik a kiolvasott \verb+User+ objektum tartalmazza annak jelszavát (hash-elt formában), viszont nem tartalmazza az authorizációhoz használt token adatait.
+Például amikor a felhasználó bejelentkezik a kiolvasott \verb+User+ objektum tartalmazza annak jelszavát (hash-elt formában), viszont nem tartalmazza az autorizációhoz használt token adatait.
 Ennek a megoldására adatátviteli objektumokat hoztam létre, melyek csak azokat a mezőket tartalmazzák amelyekre a felhasználónak szüksége van.
 Az adatbázisból kiolvasott objektum hasznos részeit és egyéb használni kívánt információt átmásolom az átviteli objektumba. Majd ezt küldöm el a kliensoldal felé.
 

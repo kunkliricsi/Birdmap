@@ -9,7 +9,7 @@ Ebben a fejezetben bemutatom a kliensoldal architektúráját. Ismertetem a kül
 %----------------------------------------------------------------------------
 Az alkalmazásnak minden oldala egy külön React komponens, mely mindegyikének saját mappája van a főkönyvtár alatt, 
 ahol az egyes oldalak által használt szolgáltatások és egyéb komponensek találhatóak.
-A közöses használt szolgáltatások és komponensek a common mappába kerültek.
+A közösen használt szolgáltatások és komponensek a common mappába kerültek.
 
 A kliensoldal belépési pontja az \verb+App.js+ fájlban található \verb+App+ komponens.
 Itt egy React \verb+Switch+-ben fel van sorolva az összes oldal komponense azok elérési útvonalai szerint.
@@ -28,7 +28,7 @@ Az a komponens jelenik meg a felületen, amelyiknek \verb+path+ mező értéke m
 </Switch>
 \end{lstlisting}
 
-Hozzáférés szempontjából három fajta oldalt különböztetünk meg:
+Hozzáférés szempontjából háromfajta oldalt különböztetünk meg:
 \begin{itemize}
     \item \textbf{Publikus oldal}. Az oldal bejelentkezés nélkül is látogatható.
     \item \textbf{Privát oldal}. Az oldal csak bejelentkezés után látogatható.
@@ -40,10 +40,10 @@ Paraméterében át lehet adni egy másik megjeleníteni kívánt komponenst, me
 Mivel minden komponens ebbe az bázis komponensbe van csomagolva, így akárhova navigálunk az oldalon a felület mindig egységes marad.
 
 A másik komponens a \verb+PredicateRoute+, melynek paraméterében meg lehet adni egy feltételt, illetve egy másik komponenst.
-Ha a feltétel hamis akkor átírányítja a felhasználót a bejelentkező oldalra, ha igaz akkor megjeleníti a \verb+DefaultLayout+-ba csomagolt komponenst.
+Ha a feltétel hamis akkor átirányítja a felhasználót a bejelentkező oldalra, ha igaz akkor megjeleníti a \verb+DefaultLayout+-ba csomagolt komponenst.
 Publikus oldalnál a feltétel mindig igaz. 
 Privátnál a feltétel a bejelentkezéshez van kötve. 
-Az admin oldal feltétele egyrészt szintén a bejelentkezés, másrészt a felhasználó \verb+Admin+ jogolsultsága.
+Az admin oldal feltétele egyrészt szintén a bejelentkezés, másrészt a felhasználó \verb+Admin+ jogosultsága.
 Ezt a folyamatot próbálja szemléltetni a \ref{fig:birdmap-frontend-architecture}-es ábra. 
 Legfelül sárgával vannak feltüntetve a hívható végpontok, alattuk a hozzájuk kapcsolt megjelenítendő komponensek, azok alatt pedig a hozzáférést szabályozó komponensek.
 
@@ -59,13 +59,13 @@ Legfelül sárgával vannak feltüntetve a hívható végpontok, alattuk a hozz�
 %----------------------------------------------------------------------------
 A szerveroldallal való kommunikációt rendkívül egyszerűen tudtam implementálni köszönhetően a \ref{subsect:backend-swagger}-as fejezetben bemutatott Swagger oldalnak
 és annak, hogy az NSwag Studio-val \cite{nswag-studio} a C\#-on kívül lehet TypeScript\footnotemark klienseket is generálni a leíró fájlból.
-Így készültek el a kommponensek kommunikációért felelős szolgáltatásai.
+Így készültek el a komponensek kommunikációért felelős szolgáltatásai.
 
 \footnotetext{JavaScript-re épített statikus típusdefiníciókat tartalmazó nyelv. JavaScript és TypeScript együtt is használható.}
 %----------------------------------------------------------------------------
 \section{Komponensek}
 %----------------------------------------------------------------------------
-Ebben a szakaszban ismertete az egyes oldalak komponenseit és azok alkomponenseit,
+Ebben a szakaszban ismertetem az egyes oldalak komponenseit és azok alkomponenseit,
 illetve a navigációért felelős fejlécet.
 %----------------------------------------------------------------------------
 \subsection{Navigáció}
@@ -100,7 +100,7 @@ A generált szerverrel kommunikáló szolgáltatás be van csomagolva egy közö
 Ennek célja, hogy a bejelentkezés eredményét több komponens is olvashassa, hiszen az alkalmazás felületét alapvetően megkülönbözteti,
 egyrészt a bejelentkezés sikeressége, másrészt a bejelentkezett felhasználó jogosultsági köre.
 
-Sikeres bejelentkezés után a szerver elküldi a felhasználó szerepét, illetve a hozzáférési token-t, amelyre a kliens többi szolgáltatásának is szüksége lesz a kommunkációhoz. 
+Sikeres bejelentkezés után a szerver elküldi a felhasználó szerepét, illetve a hozzáférési token-t, amelyre a kliens többi szolgáltatásának is szüksége lesz a kommunikációhoz. 
 Ezeket az oldal \verb+sessionStorage+-ában\footnotemark tárolom és a becsomagolt szolgáltatáson keresztül elérhetőek.
 
 Kijelentkezni a navigációs fejlécben található profil ikonra való kattintással lehet.
@@ -190,7 +190,7 @@ Az állapotok változása esetén a \verb+DevicesContextProvider+-nek köszönhe
 %----------------------------------------------------------------------------
 Ezekkel a diagramokkal az a célom, hogy az eszközök által küldött észleléseket időrendben vizualizáljam.
 Megvalósításukhoz az Apexcharts Heatmap típusú diagramját használtam.
-A \ref{fig:dashboard-heatmap-second}-as ábrán látható diagram az elmúlt egy percben küldött, másodpercenként a legnagyobb, hangüzenetekből képzett valószínűségeket ábrozolja.
+A \ref{fig:dashboard-heatmap-second}-as ábrán látható diagram az elmúlt egy percben küldött, másodpercenként a legnagyobb, hangüzenetekből képzett valószínűségeket ábrázolja.
 A \ref{fig:dashboard-heatmap-minute}-es ábrán látható diagram pedig az elmúlt egy órában percenként a legnagyobbakat.
 \begin{figure}[!ht]
     \centering
@@ -226,12 +226,12 @@ Az egyes oszlopok három részre vannak bontva az üzenetek öt tized, hét tize
 %----------------------------------------------------------------------------
 \subsubsection{Üzenetek gyakorisága}
 %----------------------------------------------------------------------------
-Az oldalon található utolsó diagram egy vonal diagammn, melynek célja, hogy ábrázolja a rendszer által küldött üzenetek számát másodpercenként.
+Az oldalon található utolsó diagram egy vonal diagram, melynek célja, hogy ábrázolja a rendszer által küldött üzenetek számát másodpercenként.
 A \ref{fig:dashboard-messages-line}-es ábrán látható a komponens.
 A vízszintes tengelyen a legelső érték az alkalmazás által először észlelt üzenet időpontja.
 Az utolsó érték a legutoljára észlelt időpontja.
 A függőleges tengelyen az adott másodpercben érkező üzenetek száma van ábrázolva.
-Az előzőekkel ellentétben itt az adatok nincsennek szűrve a hangüzenet valószínűsége alapján,
+Az előzőkkel ellentétben itt az adatok nincsennek szűrve a hangüzenet valószínűsége alapján,
 tehát a rendszer által küldött összes üzenet látható.
 \begin{figure}[!ht]
     \centering
@@ -243,11 +243,11 @@ tehát a rendszer által küldött összes üzenet látható.
 %----------------------------------------------------------------------------
 \subsection{Devices}
 %----------------------------------------------------------------------------
-Ez az oldal lehetővé teszi a felhasználók számára az eszközök állapotának áttekintését, \verb+Admin+ felhasználók számára azok menedszelését is.
+Ez az oldal lehetővé teszi a felhasználók számára az eszközök állapotának áttekintését, \verb+Admin+ felhasználók számára azok menedzselését is.
 Az eszközök dinamikusan jelennek meg a \verb+DevicesContextProvider+ adatai alapján, melyek megjelenítésére a Material UI \verb+Accrordion+ komponensét használom.
 Ennek fejlécében az eszköz neve, egyedi azonosítója és státusza található. A lenyíló részben pedig az eszköz által használt szenzorok neve, azonosítója és státusza.
-\verb+Admin+ felhasználók számára a felület két fajta gombbal bővül, mellyekkel be és ki lehet kapcsolni az egyes eszközöket, szenzorokat.
-Az \verb+Accordion+-ok felett található egy külön panel, mellyel egyszerre lehet kezelni az összes eszközt és azok szenzorait.
+\verb+Admin+ felhasználók számára a felület két fajta gombbal bővül, melyekkel be és ki lehet kapcsolni az egyes eszközöket, szenzorokat.
+Az \verb+Accordion+-ok felett található egy külön panel, mellyel egyszerre lehet kezelni az összes eszközt és azok szenzorjait.
 A Devices oldal felülete a \ref{fig:frontend-devices}-es ábrán,
 az \verb+Admin+ felhasználók számára nyújtott plusz funkciók a \ref{fig:frontend-devices-admin}-as ábrán láthatók.
 \begin{figure}[!ht]
@@ -272,14 +272,14 @@ Ezt használva megjelenítem a rendszer összes eszközét azok koordinátái sz
 A kék színű ikonok jelölik a bekapcsolt állapotban lévő, a sárga a kikapcsolt állapotban lévő,
 a piros pedig a hibás állapotban lévő eszközöket.
 Ha a felhasználó az egerét az ikonok fölé helyezi, megjelenik egy szövegdoboz, melyben az eszköz azonosítója és státusza látható. 
-Az ikonra kattinta a felhasználó a Devices oldalra kerül, ahol megnyílik a kattintott eszköz \verb+Accordion+-ja.
+Az ikonra kattintva a felhasználó a Devices oldalra kerül, ahol megnyílik a kattintott eszköz \verb+Accordion+-ja.
 
 A \verb+DevicesContext+ tartalmazza az eszközök által küldött üzenetek adatait,
 melyeknek a 0.5 valószínűségtől nagyobb részhalmazát a hőtérkép által kezelhető adatokká konvertálok.
 Egyrészt szükség van az előbb is említett földrajzi koordinátákra, melyeket az üzenetek eszköz azonosítója alapján határozok meg.
 Másrészt szükség van egy súly értékre, mely a pont színezésének pirosságát határozza meg.
 Ezt az értéket az üzenetek valószínűség értékével tettem egyenlővé.
-Minnél több magasabb valószínűségű riasztás érkezik egy adott eszköztől, a körülötte lévő terület annál pirosabb lesz.
+Minél több magasabb valószínűségű riasztás érkezik egy adott eszköztől, a körülötte lévő terület annál pirosabb lesz.
 
 A \ref{fig:frontend-heatmap}-ös ábra mutatja a térkép működését miközben 4 eszköz is seregélyeket észelt.
 

@@ -33,8 +33,8 @@ Ez több okból is hasznos:
 A mikroszolgáltatások (microservices) nem sok mindenben különböznek egy általános szolgáltatástól. 
 Ugyan úgy valamilyen kéréseket kiszolgáló egységek, legyen az web kérések kiszolgálása HTTP-n keresztül
 vagy akár parancssori utasítások feldolgozása. Az egyetlen fő különbség az a szolgáltatások felelősségköre.
-A mikroszolgáltatások fejlesztésénél a fejlesztők elsősorban arra törekednek, hogy egy komponensnek minnél kevesebb feladata és függősége legyen, 
-ezzel megnő a tesztelhetőség és könyebb a skálázhatóság.
+A mikroszolgáltatások fejlesztésénél a fejlesztők elsősorban arra törekednek, hogy egy komponensnek minél kevesebb feladata és függősége legyen, 
+ezzel megnő a tesztelhetőség és könnyebb a skálázhatóság.
 
 %----------------------------------------------------------------------------
 \subsubsection{Konténerek}
@@ -52,7 +52,7 @@ Kihasználja és ötvözi az imént említett technológiák előnyeit, hogy egy
 Használatával felgyorsulhat és automatizált lehet az egyes konténerek telepítése, futtatása, de talán a legfőbb előnye,
 hogy segítségével könnyedén megoldható a rendszert ért terhelési igények szerinti dinamikus skálázódás. 
 Azok a mikroszolgáltatások, amikre a rendszernek épp nincs szüksége, minimális erőforrást igényelnek a szerveren,
-így nem kell utánnuk annyit fizetni sem. Ezzel ellentétben, ha valamely szolgáltatás után hirtelen megnő az igény,
+így nem kell utánuk annyit fizetni sem. Ezzel ellentétben, ha valamely szolgáltatás után hirtelen megnő az igény,
 akkor az könnyedén duplikálható.
 
 %----------------------------------------------------------------------------
@@ -61,14 +61,14 @@ akkor az könnyedén duplikálható.
 %----------------------------------------------------------------------------
 Az MQTT (Message Queue Telemetry Transport) az egy kliens-szerver publish/subscribe üzenetküldő protokoll. Könnyű implementálni és alacsony a sávszélesség igénye,
 mellyel tökéletes jelöltje a Machine to Machine (M2M), illetve az Internet of Things (IoT) kommunikáció megvalósítására.
-Működéséhez szükség van egy szerverre, amelynek feladata a beérkező üzenetek továbbküldése témák alapján. Egyes kliensek fel tudnak iratkozni bizonyos témákra, míg más kliensek publikálnak
+Működéséhez szükség van egy szerverre, amelynek feladata a beérkező üzenetek tovább küldése témák alapján. Egyes kliensek fel tudnak iratkozni bizonyos témákra, míg más kliensek publikálnak
 és a szerver levezényli a két fél között a kommunikációt.
 
 %----------------------------------------------------------------------------
 \subsection{OpenAPI}
 %----------------------------------------------------------------------------
 Az OpenAPI egy nyilvános alkalmazás-programozási leíró, amely a fejlesztők számára hozzáférést biztosít egy másik alkalmazáshoz.
-Az API-k lírják és meghatározzák, hogy egy alkalmazás hogyan kommunikálhat egy másikkal, 
+Az API-k leírják és meghatározzák, hogy egy alkalmazás hogyan kommunikálhat egy másikkal, 
 melyet használva a fejlesztők könnyedén képesek a kommunikációra képes kódot írni vagy generálni.
 
 %----------------------------------------------------------------------------
@@ -109,7 +109,7 @@ Tartalmaznak még egy hangszórót is, mely a madarak elijesztését szolgálja.
 A kihelyezett IoT eszközök által felvett hangfájlok ezen a komponensen keresztül érkeznek be a rendszerbe.
 Itt történik a hanganyaghoz tartozó metaadatok lementése az Input Service saját relációs adatbázisába. 
 Ilyenek például a beküldő eszköz azonosítója, a beérkezés dátuma vagy a hangüzenet rendszerszintű egyedi azonosítója.
-Amint a szolgáltatás a berékezett üzenettel kapcsolatban elvégezte az összes feladatát, 
+Amint a szolgáltatás a beérkezett üzenettel kapcsolatban elvégezte az összes feladatát, 
 publikál egy üzenetet egy másik üzenetsorra a többi kliensnek feldolgozásra.
 
 %----------------------------------------------------------------------------
@@ -130,6 +130,6 @@ Ha igen, akkor az üzenetsoron küld egy riasztás parancsot a hanganyagot küld
 %----------------------------------------------------------------------------
 \subsubsection{Command and Control Service}
 %----------------------------------------------------------------------------
-A Command and Control Service az előzőekkel ellentétben egyáltalán nem vesz részt a minták fogadásában, feldolgozásában vagy kezelésében.
-Felelősége az eszközök és azok szenzorai állapotának menedzselése és követése.
+A Command and Control Service az előzőkkel ellentétben egyáltalán nem vesz részt a minták fogadásában, feldolgozásában vagy kezelésében.
+Felelősége az eszközök és azok szenzorjai állapotának menedzselése és követése.
 Ezen keresztül lehet az egyes eszközöket ki- és bekapcsolni.
